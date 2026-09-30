@@ -17,7 +17,7 @@ public partial class Produto
 
     public decimal VlProduto { get; set; }
 
-    public int QtEstoque { get; set; }
+    public int QtdEstoque { get; set; }
 
     public bool? IcProdutoAtivo { get; set; }
 
@@ -25,7 +25,7 @@ public partial class Produto
 
     public DateTime? DtAtualizacao { get; set; }
 
-    public virtual Categorium CdCategoriaNavigation { get; set; } = null!;
+    public virtual Categoria CdCategoriaNavigation { get; set; } = null!;
 
     public virtual LojaVirtual CdLojaVirtualNavigation { get; set; } = null!;
 
