@@ -1,0 +1,69 @@
+﻿@model List<Ecommerce.Models.Produto>
+
+@{
+    ViewData["Title"] = "Produtos";
+}
+
+<section class="produtos-page">
+
+    <div class="produtos-header">
+
+        <div>
+            <h1>Produtos</h1>
+            <p>Confira nossos produtos disponíveis.</p>
+        </div>
+
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="produtos-vazio">
+            <p>Nenhum produto encontrado.</p>
+        </div>
+    }
+    else
+    {
+        <div class="produtos-grid">
+
+            @foreach (var produto in Model)
+            {
+                <article class="produto-card">
+
+                    <div class="produto-imagem">
+                        <span>Sem imagem</span>
+                    </div>
+
+                    <div class="produto-conteudo">
+
+                        <h2 class="produto-nome">
+                            @produto.NmProduto
+                        </h2>
+
+                        <p class="produto-descricao">
+                            @produto.DsProduto
+                        </p>
+
+                        <div class="produto-preco">
+                            @produto.VlProduto.ToString("C2")
+                        </div>
+
+                        <div class="produto-estoque">
+                            Estoque: @produto.QtdEstoque
+                        </div>
+
+                        <a class="produto-botao"
+                           asp-controller="Produto"
+                           asp-action="Details"
+                           asp-route-id="@produto.CdProduto">
+                            Ver detalhes
+                        </a>
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+
+</section>

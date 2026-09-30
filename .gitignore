@@ -1,0 +1,18 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Arquivos de compilação
+bin/
+obj/
+
+# IDEs
+.idea/
+*.userprefs
+
+# Logs
+*.log
+
+# Configurações locais
+appsettings.Development.json

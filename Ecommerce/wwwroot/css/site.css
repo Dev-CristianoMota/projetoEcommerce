@@ -1,0 +1,128 @@
+html {
+  font-size: 14px;
+}
+
+/* =========================
+   PRODUTOS
+   ========================= */
+
+.produtos-page {
+    width: 100%;
+}
+
+.produtos-header {
+    margin-bottom: 32px;
+}
+
+    .produtos-header h1 {
+        margin: 0 0 8px;
+        font-size: 32px;
+    }
+
+    .produtos-header p {
+        margin: 0;
+        color: #666;
+    }
+
+/* Grid */
+
+.produtos-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+/* Card */
+
+.produto-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .produto-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+/* Imagem */
+
+.produto-imagem {
+    height: 220px;
+    background-color: #f0f1f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+}
+
+/* Conteúdo */
+
+.produto-conteudo {
+    padding: 20px;
+}
+
+.produto-nome {
+    margin: 0 0 10px;
+    font-size: 18px;
+    line-height: 1.3;
+}
+
+.produto-descricao {
+    min-height: 48px;
+    margin: 0 0 16px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.produto-preco {
+    margin-bottom: 8px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.produto-estoque {
+    margin-bottom: 18px;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Botão */
+
+.produto-botao {
+    display: block;
+    width: 100%;
+    padding: 11px 16px;
+    background-color: #111;
+    color: #fff;
+    border-radius: 6px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+    .produto-botao:hover {
+        background-color: #333;
+    }
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
