@@ -1,34 +1,57 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Ecommerce</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Ecommerce.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ecommerce</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+    <header class="main-header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                nexo<span>.</span>
+            </a>
+            <div class="search-container">
+                <div class="search-icon">
+                    <span class="material-symbols-outlined">
+                        search
+                    </span>
+                </div>
+                <input type="text"
+                       placeholder="O que você está procurando?" />
+
+                <button class="search-button">
+                    Buscar
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+            </div>
+            <div class="user-area">
+                <div class="user-icon">
+                    <span class="material-symbols-outlined">
+                        person
+                    </span>
+                </div>
+                <div class="user-text">
+                    <span class="welcome">
+                        Bem-vindo(a)
+                    </span>
+                    <a href="#">
+                        Entre ou cadastre-se
+                    </a>
                 </div>
             </div>
-        </nav>
+            <button class="cart">
+                <span class="material-symbols-outlined">
+                    shopping_cart
+                </span>
+                <span>
+                    Carrinho
+                </span>
+            </button>
+        </div>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -36,13 +59,69 @@
         </main>
     </div>
 
-    <!--
-        <footer class="border-top footer text-muted">
-            <div class="container">
-                &copy; 2026 - Ecommerce - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="nexo-footer">
+        <div class="footer-newsletter">
+            <div class="newsletter-content">
+                <span class="footer-eyebrow">FIQUE POR DENTRO</span>
+                <h2>
+                    O que vem por aí, direto<br>
+                    na sua caixa de entrada.
+                </h2>
+                <p>
+                    Novidades, inspirações e boas descobertas. Sem excesso.
+                </p>
             </div>
-        </footer>
-    -->
+
+            <form class="newsletter-form">
+                <label for="newsletter-email">Seu melhor e-mail</label>
+                <div class="newsletter-input">
+                    <input type="email"
+                           id="newsletter-email"
+                           placeholder="voce@exemplo.com"
+                           required>
+                    <button type="submit" aria-label="Inscrever-se">
+                        <span class="material-symbols-outlined">
+                            arrow_forward
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-main">
+            <div class="footer-brand">
+                <a href="/" class="logoBranca">
+                    nexo<span>.</span>
+                </a>
+                <p>Conectando você ao que importa.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Explore</h3>
+
+                <a href="#">Todos os produtos</a>
+                <a href="#">Áudio</a>
+                <a href="#">Fotografia</a>
+            </div>
+            <div class="footer-column">
+                <h3>Lojas</h3>
+
+                <a href="#">AudioLab</a>
+                <a href="#">Frame Studio</a>
+            </div>
+            <div class="footer-column">
+                <h3>Sua conta</h3>
+
+                <a href="#">Minha conta</a>
+                <a href="#">Meu carrinho</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Nexo. Interface demonstrativa.</span>
+            <span>Feito por Cristiano Faria Mota.</span>
+        </div>
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

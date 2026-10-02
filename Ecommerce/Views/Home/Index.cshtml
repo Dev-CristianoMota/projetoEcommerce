@@ -1,10 +1,317 @@
-﻿<h1>Ecommerce</h1>
+﻿@using Ecommerce.Models.DTO
+@{
+    ViewData["Title"] = "Ecommerce";
+}
+@{
+    var categorias = ViewBag.CategoriasMaisVendidas
+        as List<DTOCategoriaMaisVendida>;
+}
 
-@if (ViewBag.Conexao)
-{
-    <p>Conexão com o banco realizada com sucesso!</p>
-}
-else
-{
-    <p>Não foi possível conectar ao banco.</p>
-}
+
+<nav class="navigation">
+
+<div class="navigation-content">
+
+    <div class="nav-left">
+
+        <a href="#" class="nav-item all-products">
+
+            <span class="material-symbols-outlined">
+                view_comfy_alt
+            </span>
+
+            Todos os produtos
+
+        </a>
+
+
+        <div class="nav-divider"></div>
+
+        @if (categorias != null)
+        {
+            foreach (var categoria in categorias)
+            {
+                <a href="#" class="nav-item">
+                    @categoria.NmCategoria
+                </a>
+            }
+        }
+
+    </div>
+
+
+    <a href="#" class="special-offers">
+
+        Ofertas especiais
+
+        <span class="material-symbols-outlined">
+            arrow_forward
+        </span>
+
+    </a>
+
+</div>
+
+</nav>
+    
+<main class="main-content">
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-label">
+                <span class="hero-line"></span>
+                <span>A ESCOLHA É SUA. O EXTRA É NOSSO.</span>
+            </div>
+            <h1>O próximo nível<br />
+                começa <strong>aqui.</strong>
+            </h1>
+            <p>
+                Descubra produtos que combinam com o seu jeito de viver.
+                <br />
+                Tecnologia, design e novas possibilidades em um só lugar.
+            </p>
+            <a href="#" class="hero-button">
+                <span>
+                    Explorar coleção
+                </span>
+                <span class="button-arrow">
+                    →
+                </span>
+            </a>
+            <div class="hero-pagination">
+                <div class="pagination-line">
+                    <span></span>
+                </div>
+                <span class="pagination-number">
+                    01 / 03
+                </span>
+            </div>
+        </div>
+
+        <div class="hero-image">
+            <img src="~/images/banner-headphone.jpg"
+                 alt="Fone de ouvido" />
+            <div class="image-caption">
+                SOM QUE TE LEVA ALÉM — STUDIO PRO
+            </div>
+        </div>
+    </section>
+    
+    <section class="benefits">
+        <div class="benefit">
+            <div class="benefit-icon">
+                <span class="material-symbols-outlined">
+                    local_shipping
+                </span>
+            </div>
+            <div class="benefit-text">
+                <h3> Entrega para todo o Brasil </h3>
+                <p> Rápida, segura e do seu jeito </p>
+            </div>
+        </div>
+        <div class="benefit">
+            <div class="benefit-icon">
+                <span class="material-symbols-outlined">
+                    verified_user
+                </span>
+            </div>
+            <div class="benefit-text">
+                <h3>
+                    Compra com confiança
+                </h3>
+                <p>
+                    Uma experiência tranquila
+                </p>
+            </div>
+        </div>
+        <div class="benefit">
+            <div class="benefit-icon">
+                <span class="material-symbols-outlined">
+                    undo
+                </span>
+            </div>
+            <div class="benefit-text">
+                <h3>Troca descomplicada</h3>
+                <p>Você em primeiro lugar</p>
+            </div>
+        </div>
+        <div class="benefit last-benefit">
+            <div class="benefit-icon">
+                <span class="material-symbols-outlined">
+                    stars_2
+                </span>
+            </div>
+            <div class="benefit-text">
+                <h3>Achados especiais</h3>
+                <p>Escolhas que valem a pena</p>
+            </div>
+        </div>
+    </section>
+    <section class="products-section">
+      <div class="products-container">
+
+        <!-- Cabeçalho -->
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">FEITO PARA VOCÊ</span>
+            <h2>Os favoritos do momento.</h2>
+            <p>Uma seleção que todo mundo está de olho.</p>
+          </div>
+
+          <a href="#" class="view-all">
+            Ver todos os produtos
+            <span>→</span>
+          </a>
+        </div>
+
+        <!-- Produtos -->
+        <div class="products-grid">
+
+          <!-- Produto 1 -->
+          <article class="product-card">
+
+            <div class="product-image product-image-1">
+              <span class="badge">Mais vendido</span>
+
+              <button class="favorite" aria-label="Adicionar aos favoritos">
+                ♡
+              </button>
+
+              <button class="add-button" aria-label="Adicionar ao carrinho">
+                +
+              </button>
+
+              <img
+                src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
+                alt="Fone de ouvido Studio Pro"
+              >
+            </div>
+
+            <div class="product-info">
+              <span class="product-category">AUDIOLAB</span>
+
+              <h3>Fone de ouvido Studio Pro</h3>
+
+              <div class="price">
+                <strong>R$ 899,00</strong>
+                <del>R$ 1.199,00</del>
+              </div>
+
+              <p class="installment">
+                ou 10x de R$ 89,90 sem juros
+              </p>
+            </div>
+
+          </article>
+
+
+          <!-- Produto 2 -->
+          <article class="product-card">
+
+            <div class="product-image product-image-2">
+              <span class="badge">Novidade</span>
+
+              <button class="favorite" aria-label="Adicionar aos favoritos">
+                ♡
+              </button>
+
+              <button class="add-button" aria-label="Adicionar ao carrinho">
+                +
+              </button>
+
+              <img
+                src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=80"
+                alt="Câmera Mirrorless X100"
+              >
+            </div>
+
+            <div class="product-info">
+              <span class="product-category">FRAME STUDIO</span>
+
+              <h3>Câmera Mirrorless X100</h3>
+
+              <div class="price">
+                <strong>R$ 4.299,00</strong>
+              </div>
+
+              <p class="installment">
+                ou 10x de R$ 429,90 sem juros
+              </p>
+            </div>
+
+          </article>
+
+
+          <!-- Produto 3 -->
+          <article class="product-card">
+
+            <div class="product-image product-image-3">
+              <button class="favorite" aria-label="Adicionar aos favoritos">
+                ♡
+              </button>
+
+              <button class="add-button" aria-label="Adicionar ao carrinho">
+                +
+              </button>
+
+              <img
+                src="https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=900&q=80"
+                alt="Fones sem fio Air Buds"
+              >
+            </div>
+
+            <div class="product-info">
+              <span class="product-category">AUDIOLAB</span>
+
+              <h3>Fones sem fio Air Buds</h3>
+
+              <div class="price">
+                <strong>R$ 549,00</strong>
+                <del>R$ 699,00</del>
+              </div>
+
+              <p class="installment">
+                ou 10x de R$ 54,90 sem juros
+              </p>
+            </div>
+
+          </article>
+
+
+          <!-- Produto 4 -->
+          <article class="product-card">
+
+            <div class="product-image product-image-4">
+              <button class="favorite" aria-label="Adicionar aos favoritos">
+                ♡
+              </button>
+
+              <button class="add-button" aria-label="Adicionar ao carrinho">
+                +
+              </button>
+
+              <img
+                src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
+                alt="Relógio Classic One"
+              >
+            </div>
+
+            <div class="product-info">
+              <span class="product-category">FRAME STUDIO</span>
+
+              <h3>Relógio Classic One</h3>
+
+              <div class="price">
+                <strong>R$ 749,00</strong>
+              </div>
+
+              <p class="installment">
+                ou 10x de R$ 74,90 sem juros
+              </p>
+            </div>
+
+          </article>
+
+        </div>
+      </div>
+    </section>
+</main>

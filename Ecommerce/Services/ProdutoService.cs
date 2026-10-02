@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Data;
 using Ecommerce.Models;
+using Ecommerce.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Services;
@@ -91,6 +92,24 @@ public class ProdutoService
         return await _context.Produtos
             .AsNoTracking()
             .Where(p => p.CdCategoria == cdCategoria)
+            .ToListAsync();
+    }
+
+    public async Task<List<DTOProdutoMaisVendido>> ObterMaisVendidosAsync(int quantidade = 5)
+    {
+        return await _context.ItemPedidos
+            .Where(i => i.CdPedidoNavigation.SgStatusPedido != "C")
+            .GroupBy(i => new { i.CdProduto, i.CdProdutoNavigation.NmProduto, i.CdProdutoNavigation.VlProduto })
+            .Select(g => new DTOProdutoMaisVendido
+
+            {
+                CdProduto = g.Key.CdProduto,
+                NmProduto = g.Key.NmProduto,
+                VlProduto = g.Key.VlProduto,
+                QtdVendida = g.Sum(i => i.QtItem)
+            })
+            .OrderByDescending(p => p.QtdVendida)
+            .Take(quantidade)
             .ToListAsync();
     }
 }

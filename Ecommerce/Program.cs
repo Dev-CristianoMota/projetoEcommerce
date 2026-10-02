@@ -16,6 +16,7 @@ builder.Services.AddDbContext<EcommerceDbContext>(options =>
 );
 
 builder.Services.AddScoped<ProdutoService>();
+builder.Services.AddScoped<CategoriaService>();
 
 var app = builder.Build();
 
