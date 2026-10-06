@@ -21,6 +21,10 @@ public partial class Usuario
 
     public DateTime DtCriacao { get; set; }
 
+    public DateTime? DtAtualizacao { get; set; }
+
+    public bool IcUsuarioAtivo { get; set; }
+
     public virtual TipoUsuario CdTipoUsuarioNavigation { get; set; } = null!;
 
     public virtual ICollection<LojaVirtual> LojaVirtuals { get; set; } = new List<LojaVirtual>();

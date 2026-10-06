@@ -1,0 +1,269 @@
+﻿/* Tudo escopado em .login-page para não vazar para outras páginas */
+
+.login-page {
+    --blue: #3366e0;
+    --blue-hover: #2753c2;
+    --navy: #14284b;
+    --text: #5b6b84;
+    --muted: #8a97ab;
+    --border: #dfe5ee;
+    --page-bg: #f4f7fc;
+    --hero-bg: #e6eefc;
+    --white: #ffffff;
+    --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: var(--font);
+    color: var(--navy);
+    background: var(--page-bg);
+    padding: 64px 24px;
+    -webkit-font-smoothing: antialiased;
+}
+
+    .login-page *,
+    .login-page *::before,
+    .login-page *::after {
+        box-sizing: border-box;
+    }
+
+    /* ===== Card ===== */
+    .login-page .login-card {
+        width: 100%;
+        max-width: 1360px;
+        min-height: 597px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: var(--white);
+        box-shadow: 0 20px 60px rgba(20, 40, 75, 0.06);
+    }
+
+    .login-page .eyebrow {
+        display: block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--blue);
+    }
+
+    /* ===== Lado esquerdo ===== */
+    .login-page .login-hero {
+        background: var(--hero-bg);
+        padding: 72px 75px 48px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+        .login-page .login-hero .eyebrow {
+            margin: 0 0 34px;
+        }
+
+    .login-page .login-hero__title {
+        margin: 0;
+        font-size: clamp(38px, 4.2vw, 52px);
+        font-weight: 800;
+        line-height: 1.08;
+        letter-spacing: -0.045em;
+        color: var(--navy);
+    }
+
+        .login-page .login-hero__title .highlight {
+            color: var(--blue);
+        }
+
+    .login-page .login-hero__text {
+        margin: 32px 0 0;
+        max-width: 340px;
+        font-size: 13.5px;
+        line-height: 1.7;
+        color: var(--text);
+    }
+
+    .login-page .login-hero__footer {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .login-page .login-hero__line {
+        display: block;
+        width: 36px;
+        height: 2px;
+        background: var(--blue);
+    }
+
+    .login-page .login-hero__slogan {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--text);
+    }
+
+    /* ===== Lado direito ===== */
+    .login-page .login-form-wrap {
+        padding: 64px 82px 48px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .login-page .login-form__title {
+        margin: 22px 0 0;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        color: var(--navy);
+    }
+
+    .login-page .login-form__subtitle {
+        margin: 10px 0 0;
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    /* ===== Abas ===== */
+    .login-page .tabs {
+        display: flex;
+        gap: 30px;
+        margin-top: 30px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .login-page .tab {
+        position: relative;
+        padding: 0 0 14px;
+        background: none;
+        border: 0;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+        .login-page .tab:hover {
+            color: var(--navy);
+        }
+
+        .login-page .tab.is-active {
+            color: var(--blue);
+        }
+
+            .login-page .tab.is-active::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -1px;
+                height: 2px;
+                background: var(--blue);
+            }
+
+    /* ===== Formulário ===== */
+    .login-page .login-form {
+        margin-top: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    .login-page .field {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .login-page .field label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .login-page .field input {
+            width: 100%;
+            height: 44px;
+            padding: 0 14px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--navy);
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+            .login-page .field input::placeholder {
+                color: #aab4c4;
+                font-weight: 500;
+            }
+
+            .login-page .field input:focus {
+                border-color: var(--blue);
+                box-shadow: 0 0 0 3px rgba(51, 102, 224, 0.12);
+            }
+
+    /* ===== Botão ===== */
+    .login-page .login-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 48px;
+        margin-top: 4px;
+        padding: 0 20px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--white);
+        background: var(--blue);
+        border: 0;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+        .login-page .login-btn:hover {
+            background: var(--blue-hover);
+        }
+
+    /* ===== Caixa de demonstração ===== */
+    .login-page .demo-box {
+        margin-top: 22px;
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        background: #f1f4f9;
+        border-radius: 2px;
+    }
+
+        .login-page .demo-box strong {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .login-page .demo-box span {
+            font-size: 11px;
+            color: var(--text);
+        }
+
+/* ===== Responsivo ===== */
+@media (max-width: 900px) {
+    .login-page .login-card {
+        grid-template-columns: 1fr;
+    }
+
+    .login-page .login-hero {
+        padding: 48px 32px 32px;
+        gap: 40px;
+    }
+
+    .login-page .login-form-wrap {
+        padding: 48px 32px;
+    }
+}

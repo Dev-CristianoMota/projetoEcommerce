@@ -10,7 +10,7 @@ namespace Ecommerce.Controllers
         private readonly ProdutoService _produtoService;
         private readonly CategoriaService _categoriaService;
 
-        public HomeController(EcommerceDbContext context, ProdutoService produtoService, CategoriaService categoriaService)
+        public HomeController(EcommerceDbContext context, ProdutoService produtoService, CategoriaService categoriaService, UsuarioService usuarioService)
         {
             _context = context;
             _produtoService = produtoService;
@@ -21,12 +21,11 @@ namespace Ecommerce.Controllers
         {
             ViewBag.Conexao = _context.Database.CanConnect();
 
-            var produtosMaisVendidos = await _produtoService.ObterMaisVendidosAsync(5);
+            var categorias = await _categoriaService.ObterCategoriasMaisVendidasAsync(5);
+            
+            ViewBag.CategoriasMaisVendidas = categorias;
 
-            ViewBag.CategoriasMaisVendidas =
-                await _categoriaService.ObterCategoriasMaisVendidasAsync(5);
-
-            return View(produtosMaisVendidos);
+            return View();
         }
     }
 }

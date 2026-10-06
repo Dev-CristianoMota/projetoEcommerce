@@ -1,4 +1,4 @@
-﻿namespace Ecommerce.Models.DTO
+﻿namespace Ecommerce.DTO
 {
     public class DTOCategoriaMaisVendida
     {

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Ecommerce.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header class="main-header">
@@ -38,7 +39,7 @@
                     <span class="welcome">
                         Bem-vindo(a)
                     </span>
-                    <a href="#">
+                    <a asp-controller="Usuario" asp-action="Login">
                         Entre ou cadastre-se
                     </a>
                 </div>

@@ -1,0 +1,72 @@
+﻿@using Ecommerce.DTO
+@model LoginViewModel
+@{
+    var categorias = ViewBag.CategoriasMaisVendidas as List<DTOCategoriaMaisVendida>;
+}
+
+@section Styles {
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+}
+
+<div class="login-page">
+    <section class="login-card">
+
+        <!-- Lado esquerdo: apresentação -->
+        <div class="login-hero">
+            <div class="login-hero__content">
+                <span class="eyebrow">Bem-vindo à Nexo</span>
+                <h1 class="login-hero__title">
+                    O melhor daqui <br />
+                    fica ainda melhor <br />
+                    <span class="highlight">com você.</span>
+                </h1>
+                <p class="login-hero__text">
+                    Entre para salvar suas descobertas, acompanhar seus
+                    pedidos e aproveitar cada oportunidade.
+                </p>
+            </div>
+
+            <div class="login-hero__footer">
+                <span class="login-hero__line"></span>
+                <span class="login-hero__slogan">Escolhas que conectam.</span>
+            </div>
+        </div>
+
+        <!-- Lado direito: formulário -->
+        <div class="login-form-wrap">
+            <span class="eyebrow">Sua conta Nexo</span>
+            <h2 class="login-form__title">Bom ter você de volta.</h2>
+            <p class="login-form__subtitle">Acesse sua conta para continuar de onde parou.</p>
+
+            <div class="tabs" role="tablist">
+                <button class="tab is-active" type="button" role="tab" aria-selected="true">Entrar</button>
+                <button class="tab" type="button" role="tab" aria-selected="false">Criar conta</button>
+            </div>
+
+            <form class="login-form" asp-controller="Usuario" asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="login-error"></div>
+
+                <div class="field">
+                    <label asp-for="Email">E-mail ou Apelido</label>
+                    <input asp-for="Email"/>
+                    <span asp-validation-for="Email" class="login-error"></span>
+                </div>
+
+                <div class="field">
+                    <label asp-for="Senha">Senha</label>
+                    <input asp-for="Senha" type="password" placeholder="Mínimo de 6 caracteres" />
+                    <span asp-validation-for="Senha" class="login-error"></span>
+                </div>
+
+                <button type="submit" class="login-btn"> Entrar </button>
+            </form>
+
+            <div class="demo-box">
+                <strong>Acesso para demonstração</strong>
+                <span>E-mail: cliente@nexo.com · Senha: demo123</span>
+            </div>
+        </div>
+    </section>
+</div>

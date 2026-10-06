@@ -1,6 +1,6 @@
 ﻿using Ecommerce.Data;
+using Ecommerce.DTO;
 using Ecommerce.Models;
-using Ecommerce.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Services;
