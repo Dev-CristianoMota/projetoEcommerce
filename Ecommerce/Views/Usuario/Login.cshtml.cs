@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Ecommerce.Views.Login
+namespace Ecommerce.Views.Usuario
 {
     public class LoginModel : PageModel
     {

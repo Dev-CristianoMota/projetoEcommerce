@@ -277,6 +277,9 @@ public partial class EcommerceDbContext : DbContext
             entity.Property(e => e.DtCriacao)
                 .HasColumnType("datetime")
                 .HasColumnName("dt_criacao");
+            entity.Property(e => e.DtAtualizacao)
+                .HasColumnType("datetime")
+                .HasColumnName("dt_atualizacao");
             entity.Property(e => e.NmApelido)
                 .HasMaxLength(50)
                 .HasColumnName("nm_apelido");
@@ -284,7 +287,7 @@ public partial class EcommerceDbContext : DbContext
                 .HasMaxLength(180)
                 .HasColumnName("nm_email");
             entity.Property(e => e.NmSenha)
-                .HasMaxLength(64)
+                .HasMaxLength(255)
                 .HasColumnName("nm_senha");
             entity.Property(e => e.NmTelefone)
                 .HasMaxLength(11)
@@ -292,6 +295,10 @@ public partial class EcommerceDbContext : DbContext
             entity.Property(e => e.NmUsuario)
                 .HasMaxLength(150)
                 .HasColumnName("nm_usuario");
+            entity.Property(e => e.IcUsuarioAtivo)
+                .IsRequired()
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("ic_usuario_ativo");
 
             entity.HasOne(d => d.CdTipoUsuarioNavigation).WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.CdTipoUsuario)

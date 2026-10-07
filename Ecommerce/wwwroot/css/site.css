@@ -286,8 +286,13 @@ a.logo:hover
     color: #9AA5B5;
 }
 
-.user-text a 
+#txtLogado
 {
+    font-size: 13px;
+    color: #666;
+}
+
+.user-text a {
     font-size: 14px;
     font-weight: 700;
     color: #263449 !important;

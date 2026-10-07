@@ -31,17 +31,19 @@
             </div>
             <div class="user-area">
                 <div class="user-icon">
-                    <span class="material-symbols-outlined">
-                        person
-                    </span>
+                    <span class="material-symbols-outlined">person</span>
                 </div>
                 <div class="user-text">
-                    <span class="welcome">
-                        Bem-vindo(a)
-                    </span>
-                    <a asp-controller="Usuario" asp-action="Login">
-                        Entre ou cadastre-se
-                    </a>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <span id="txtLogado">Olá, @User.Identity.Name?.Split(' ')[0]</span>
+                        <a asp-controller="Usuario" asp-action="Conta">Minha Conta</a>
+                    }
+                    else
+                    {
+                        <span class="welcome">Bem-vindo(a)</span>
+                        <a asp-controller="Usuario" asp-action="Login">Entre ou cadastre-se</a>
+                    }
                 </div>
             </div>
             <button class="cart">

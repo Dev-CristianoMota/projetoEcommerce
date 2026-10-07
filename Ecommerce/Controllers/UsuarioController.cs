@@ -1,9 +1,10 @@
-﻿using System.Security.Claims;
-using Ecommerce.DTO;
-using Ecommerce.Services;
+﻿using Ecommerce.DTO;
+using Ecommerce.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Ecommerce.Controllers;
 
@@ -17,7 +18,7 @@ public class UsuarioController : Controller
     }
 
     [HttpGet]
-    public IActionResult Login() => View("~/Views/Login/Login.cshtml", new LoginViewModel());
+    public IActionResult Login() => View("~/Views/Usuario/Login.cshtml", new LoginViewModel());
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -36,7 +37,9 @@ public class UsuarioController : Controller
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, usuario.CdUsuario.ToString()),
-            new(ClaimTypes.Email, usuario.NmEmail)
+            new(ClaimTypes.Email, usuario.NmEmail),
+            new(ClaimTypes.Name, usuario.NmUsuario),
+            new(ClaimTypes.Role, usuario.CdTipoUsuario.ToString())
         };
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
