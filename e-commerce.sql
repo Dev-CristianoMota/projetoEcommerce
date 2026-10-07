@@ -19,11 +19,13 @@ CREATE TABLE usuario
     cd_usuario  INT NOT NULL AUTO_INCREMENT,
     nm_apelido  VARCHAR(50) NOT NULL,
     nm_usuario  VARCHAR(150) NOT NULL,
-    nm_telefone VARCHAR(11) NOT NULL,
+    nm_telefone VARCHAR(11) NULL,
     nm_email  VARCHAR(180) NOT NULL,
-    nm_senha  VARCHAR(64) NOT NULL,
+    nm_senha  VARCHAR(255) NOT NULL,
     cd_tipo_usuario  INT NOT NULL,
-    dt_criacao  DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(4),
+    dt_criacao  DATETIME NOT NULL,
+    dt_atualizacao DATETIME,
+    ic_usuario_ativo BOOL NOT NULL,
 
     CONSTRAINT pk_usuario PRIMARY KEY (cd_usuario),
     CONSTRAINT uq_usuario_apelido UNIQUE (nm_apelido),
@@ -43,7 +45,7 @@ CREATE TABLE loja_virtual
     nm_loja_virtual  VARCHAR(200)  NOT NULL,
     ds_loja_virtual  TEXT NULL,
     ic_loja_ativa  BOOLEAN NOT NULL DEFAULT TRUE,
-    dt_criacao  DATETIME(4) NOT NULL DEFAULT CURRENT_TIMESTAMP(4),
+    dt_criacao  DATETIME NOT NULL,
 
     CONSTRAINT pk_loja_virtual PRIMARY KEY (cd_loja_virtual),
     CONSTRAINT uq_loja_virtual_nome UNIQUE (nm_loja_virtual),
@@ -74,8 +76,8 @@ CREATE TABLE produto
     vl_produto  DECIMAL(10,2) NOT NULL,
     qt_estoque  INT NOT NULL DEFAULT 0,
     ic_produto_ativo  BOOLEAN NOT NULL DEFAULT TRUE,
-    dt_criacao  DATETIME(4) NOT NULL DEFAULT CURRENT_TIMESTAMP(4),
-    dt_atualizacao  DATETIME(4) NULL ON UPDATE CURRENT_TIMESTAMP(4),
+    dt_criacao  DATETIME NOT NULL,
+    dt_atualizacao  DATETIME NULL,
 
     CONSTRAINT  pk_produto PRIMARY KEY (cd_produto),
     CONSTRAINT ck_produto_vl_produto CHECK (vl_produto >= 0),
@@ -96,8 +98,8 @@ CREATE TABLE cupom
     cd_promocional  VARCHAR(45) NOT NULL,
     sg_tipo_desconto  CHAR(1) NOT NULL,
     vl_desconto  DECIMAL(10,2) NOT NULL,
-    dt_inicio_validade  DATETIME(4) NOT NULL,
-    dt_fim_validade  DATETIME(4) NOT NULL,
+    dt_inicio_validade  DATETIME NOT NULL,
+    dt_fim_validade  DATETIME NOT NULL,
     ic_cupom_ativo  BOOLEAN NOT NULL DEFAULT TRUE,
 
     CONSTRAINT pk_cupom PRIMARY KEY (cd_cupom),
@@ -119,8 +121,8 @@ CREATE TABLE pedido
     vl_subtotal_pedido  DECIMAL(10,2) NOT NULL DEFAULT 0,
     vl_desconto_pedido  DECIMAL(10,2) NOT NULL DEFAULT 0,
     vl_total_pedido  DECIMAL(10,2) NOT NULL DEFAULT 0,
-    dt_criacao_pedido  DATETIME(4) NOT NULL DEFAULT CURRENT_TIMESTAMP(4),
-    dt_atualizacao_pedido  DATETIME(4) NULL ON UPDATE CURRENT_TIMESTAMP(4),
+    dt_criacao_pedido  DATETIME NOT NULL,
+    dt_atualizacao_pedido  DATETIME NULL,
 
     CONSTRAINT pk_pedido PRIMARY KEY (cd_pedido),
     CONSTRAINT ck_pedido_status CHECK (sg_status_pedido IN ('P', 'A', 'E', 'T', 'C')),
@@ -158,4 +160,3 @@ CREATE TABLE item_pedido
         FOREIGN KEY (cd_produto) REFERENCES produto (cd_produto)
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
-
