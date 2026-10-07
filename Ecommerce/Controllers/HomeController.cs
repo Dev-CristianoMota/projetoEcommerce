@@ -21,7 +21,7 @@ namespace Ecommerce.Controllers
         {
             ViewBag.Conexao = _context.Database.CanConnect();
 
-            var categorias = await _categoriaService.ObterCategoriasMaisVendidasAsync(5);
+            var categorias = await _categoriaService.ObterCategoriasMaisVendidasAsync(12);
             
             ViewBag.CategoriasMaisVendidas = categorias;
 

@@ -15,20 +15,20 @@ namespace Ecommerce.Services
 
         public async Task<List<DTOCategoriaMaisVendida>> ObterCategoriasMaisVendidasAsync(int quantidade)
         {
-            return await _context.ItemPedidos
-                .Where(i => i.CdPedidoNavigation.SgStatusPedido != "C")
-                .GroupBy(i => new {
-                    i.CdProdutoNavigation.CdCategoria,
-                    i.CdProdutoNavigation.CdCategoriaNavigation.NmCategoria
-                })
-                .Select(g => new DTOCategoriaMaisVendida
+            return await _context.Categoria
+                .Select(c => new DTOCategoriaMaisVendida
                 {
-                    CdCategoria = g.Key.CdCategoria,
-                    NmCategoria = g.Key.NmCategoria,
-                    QtdVendida = g.Sum(i => i.QtItem),
-                    QtdProdutosVendidos = g.Select(i => i.CdProduto).Distinct().Count()
+                    CdCategoria = c.CdCategoria,
+                    NmCategoria = c.NmCategoria,
+                    QtdVendida = c.Produtos
+                        .SelectMany(p => p.ItemPedidos)
+                        .Where(i => i.CdPedidoNavigation.SgStatusPedido != "C")
+                        .Sum(i => (int?)i.QtItem) ?? 0,
+                    QtdProdutosVendidos = c.Produtos
+                        .Count(p => p.ItemPedidos.Any(i => i.CdPedidoNavigation.SgStatusPedido != "C"))
                 })
                 .OrderByDescending(c => c.QtdVendida)
+                .ThenBy(c => c.NmCategoria)
                 .Take(quantidade)
                 .ToListAsync();
         }

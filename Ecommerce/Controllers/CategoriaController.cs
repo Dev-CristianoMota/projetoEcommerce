@@ -1,8 +1,9 @@
 ﻿using Ecommerce.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Controllers
 {
-    public class CategoriaController
+    public class CategoriaController : Controller
     {
         private readonly CategoriaService _categoriaService;
 
@@ -10,7 +11,5 @@ namespace Ecommerce.Controllers
         {
             _categoriaService = categoriaService;
         }
-
-
     }
 }

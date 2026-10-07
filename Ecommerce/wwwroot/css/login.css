@@ -10,7 +10,6 @@
     --page-bg: #f4f7fc;
     --hero-bg: #e6eefc;
     --white: #ffffff;
-    --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
     font-family: var(--font);
     color: var(--navy);
     background: var(--page-bg);

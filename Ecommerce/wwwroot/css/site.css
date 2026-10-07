@@ -492,6 +492,10 @@ nav.navigation {
     transition: transform 0.2s ease;
 }
 
+.hero-button:hover .material-symbols-outlined {
+    transform: translateX(4px);
+}
+
 
 /* =========================================================
    PAGINAÇÃO
@@ -675,7 +679,7 @@ nav.navigation {
     justify-content: space-between;
     background-color: #F0F5FD;
     overflow: hidden;
-    margin-bottom: 100px;
+    margin-bottom: 70px;
 }
 
 
@@ -887,6 +891,237 @@ nav.navigation {
         font-weight: 400;
         line-height: 1.3;
     }
+
+
+
+
+
+
+/* =========================================================
+   CATEGORIAS
+========================================================= */
+
+.categories {
+    width: 100%;
+    margin: 0 auto 100px auto;
+    padding: 0px;
+    box-sizing: border-box;
+    background-color: #FFFFFF;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.categories-header {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+
+/* =========================================================
+   TÍTULO + LINK
+========================================================= */
+
+.categories-title {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+    .categories-title h2 {
+        margin: 0;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .categories-title a {
+        color: #2463E8;
+        font-size: 13px;
+        font-weight: 400;
+        text-decoration: none;
+    }
+
+        .categories-title a:hover {
+            text-decoration: underline;
+        }
+
+
+/* =========================================================
+   PAGINAÇÃO
+========================================================= */
+
+.categories-pagination {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 7px;
+    margin-right: 2px;
+}
+
+    .categories-pagination span {
+        width: 5px;
+        height: 5px;
+        display: block;
+        border-radius: 50%;
+        background-color: #E0E0E0;
+    }
+
+        .categories-pagination span.active {
+            background-color: #3678EE;
+        }
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 20px;
+    row-gap: 20px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.category-card {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: #FFFFFF;
+    border: 1px solid #DCDCDC;
+    text-decoration: none;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+    .category-card:hover {
+        border-color: #C7C7C7;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    }
+
+
+/* =========================================================
+   ÁREA DA IMAGEM
+========================================================= */
+
+.category-image {
+    width: 106px;
+    min-width: 106px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f5fd;
+}
+
+    .category-image img {
+        width: 82px;
+        height: 82px;
+        display: block;
+        object-fit: contain;
+    }
+
+
+/* =========================================================
+   NOME DA CATEGORIA
+========================================================= */
+
+.category-name {
+    flex: 1;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    color: #171717;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .categories {
+        max-width: 95%;
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .categories {
+        padding: 20px 15px;
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 12px;
+        row-gap: 12px;
+    }
+
+    .categories-title {
+        gap: 12px;
+    }
+
+        .categories-title h2 {
+            font-size: 17px;
+        }
+
+        .categories-title a {
+            font-size: 12px;
+        }
+}
+
+
+@media (max-width: 480px) {
+
+    .categories {
+        max-width: 100%;
+        border-radius: 0;
+    }
+
+    .categories-header {
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    .categories-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .categories-pagination {
+        display: none;
+    }
+
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
 
 
 /* =========================================================

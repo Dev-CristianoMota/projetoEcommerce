@@ -26,15 +26,29 @@
 
         <div class="nav-divider"></div>
 
-        @if (categorias != null)
-        {
-            foreach (var categoria in categorias)
-            {
-                <a href="#" class="nav-item">
-                    @categoria.NmCategoria
-                </a>
-            }
-        }
+        <a href="#" class="nav-item">
+            Celulares e Telefones        
+        </a>
+
+        <a href="#" class="nav-item">
+            Moda e Acessórios
+        </a>
+
+        <a href="#" class="nav-item">
+            Eletrodomésticos
+        </a>
+
+        <a href="#" class="nav-item">
+            Casa e Decoração
+        </a>
+
+        <a href="#" class="nav-item">
+            Veículos e Peças
+        </a>
+
+        <a href="#" class="nav-item">
+            Alimentos
+        </a>
 
     </div>
 
@@ -159,7 +173,9 @@
 
           <a href="#" class="view-all">
             Ver todos os produtos
-            <span>→</span>
+            <span class="material-symbols-outlined">
+                arrow_forward
+            </span>
           </a>
         </div>
 
@@ -354,7 +370,9 @@
 
                 <a href="#" class="view-all">
                     Ver todos os produtos
-                    <span>→</span>
+                    <span class="material-symbols-outlined">
+                        arrow_forward
+                    </span>
                 </a>
             </div>
 
@@ -568,5 +586,34 @@
 
         </div>
 
+    </section>
+
+    <section class="categories">
+        <div class="section-header">
+            <div>
+                <span class="eyebrow">FEITO PARA VOCÊ</span>
+                <h2>Principais Categorias</h2>
+                <p>Uma seleção que todo mundo está de olho.</p>
+            </div>
+
+            <a href="#" class="view-all">
+                Ver todas as Categorias
+                <span class="material-symbols-outlined">
+                    arrow_forward
+                </span>
+            </a>
+        </div>
+
+        <div class="categories-grid">
+            @foreach (var c in categorias)
+            {
+                <a href="#" class="category-card">
+                    <div class="category-image">
+                        <img src="/images/categorias/@(c.CdCategoria).webp" alt="@c.NmCategoria">
+                    </div>
+                    <div class="category-name">@c.NmCategoria</div>
+                </a>
+            }
+        </div>
     </section>
 </main>
