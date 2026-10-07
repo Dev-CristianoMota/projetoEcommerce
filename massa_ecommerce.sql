@@ -30,15 +30,15 @@ INSERT INTO tipo_usuario (cd_tipo_usuario, nm_tipo_usuario) VALUES(3, 'Admin');
  
  
 INSERT INTO usuario (cd_usuario, nm_apelido, nm_usuario, nm_telefone, nm_email, nm_senha, cd_tipo_usuario, dt_criacao, dt_atualizacao, ic_usuario_ativo) VALUES
-    (1, 'admin', 'Administrador do Sistema', '11998765432', 'admin@ecommerce.com', SHA2('Senha@123', 256), 3, NOW(), NOW(), true),
-    (2, 'carlos_tech', 'Carlos Almeida', '21987654321', 'carlos.almeida@email.com', SHA2('Senha@123', 256), 1, NOW(), NOW(), true),
-    (3, 'marina_vendas', 'Marina Costa', '31976543210', 'marina.costa@email.com', SHA2('Senha@123', 256), 1, NOW(), NOW(), true),
-    (4, 'joao_comprador', 'João Pereira', '41965432109', 'joao.pereira@email.com', SHA2('Senha@123', 256), 2, NOW(), NOW(), true),
-    (5, 'ana_compradora',   'Ana Souza',      '11912345678', 'ana.souza@email.com',      SHA2('Senha@123', 256), 2, NOW(), NOW(), true),
-    (6, 'bruno_comprador',  'Bruno Martins',  '21923456789', 'bruno.martins@email.com',  SHA2('Senha@123', 256), 2, NOW(), NOW(), true),
-    (7, 'carla_compradora', 'Carla Oliveira', '31934567890', 'carla.oliveira@email.com', SHA2('Senha@123', 256), 2, NOW(), NOW(), true),
-    (8, 'diego_comprador',  'Diego Santos',   '41945678901', 'diego.santos@email.com',   SHA2('Senha@123', 256), 2, NOW(), NOW(), true),
-    (9, 'elisa_compradora', 'Elisa Ferreira', '51956789012', 'elisa.ferreira@email.com', SHA2('Senha@123', 256), 2, NOW(), NOW(), true);
+    (1, 'admin', 'Administrador do Sistema', '11998765432', 'admin@ecommerce.com', 'AQAAAAIAAYagAAAAEFQInuSAsQk8Ti5CAIDPzVTPWLYDkGoGp3ep2Qq+qOsKtnTjii+d+5dzSnQATPQhOQ==', 3, NOW(), NOW(), true),
+    (2, 'carlos_tech', 'Carlos Almeida', '21987654321', 'carlos.almeida@email.com', 'AQAAAAIAAYagAAAAEFQInuSAsQk8Ti5CAIDPzVTPWLYDkGoGp3ep2Qq+qOsKtnTjii+d+5dzSnQATPQhOQ==', 1, NOW(), NOW(), true),
+    (3, 'marina_vendas', 'Marina Costa', '31976543210', 'marina.costa@email.com', 'AQAAAAIAAYagAAAAEFQInuSAsQk8Ti5CAIDPzVTPWLYDkGoGp3ep2Qq+qOsKtnTjii+d+5dzSnQATPQhOQ==', 1, NOW(), NOW(), true),
+    (4, 'joao_comprador', 'João Pereira', '41965432109', 'joao.pereira@email.com', 'AQAAAAIAAYagAAAAEFQInuSAsQk8Ti5CAIDPzVTPWLYDkGoGp3ep2Qq+qOsKtnTjii+d+5dzSnQATPQhOQ==', 2, NOW(), NOW(), true),
+    (5, 'ana_compradora',   'Ana Souza',      '11912345678', 'ana.souza@email.com', 'AQAAAAIAAYagAAAAEFQInuSAsQk8Ti5CAIDPzVTPWLYDkGoGp3ep2Qq+qOsKtnTjii+d+5dzSnQATPQhOQ==', 2, NOW(), NOW(), true),
+    (6, 'bruno_comprador',  'Bruno Martins',  '21923456789', 'bruno.martins@email.com', 'AQAAAAIAAYagAAAAEFQInuSAsQk8Ti5CAIDPzVTPWLYDkGoGp3ep2Qq+qOsKtnTjii+d+5dzSnQATPQhOQ==', 2, NOW(), NOW(), true),
+    (7, 'carla_compradora', 'Carla Oliveira', '31934567890', 'carla.oliveira@email.com', 'AQAAAAIAAYagAAAAEFQInuSAsQk8Ti5CAIDPzVTPWLYDkGoGp3ep2Qq+qOsKtnTjii+d+5dzSnQATPQhOQ==', 2, NOW(), NOW(), true),
+    (8, 'diego_comprador',  'Diego Santos',   '41945678901', 'diego.santos@email.com', 'AQAAAAIAAYagAAAAEFQInuSAsQk8Ti5CAIDPzVTPWLYDkGoGp3ep2Qq+qOsKtnTjii+d+5dzSnQATPQhOQ==', 2, NOW(), NOW(), true),
+    (9, 'elisa_compradora', 'Elisa Ferreira', '51956789012', 'elisa.ferreira@email.com', 'AQAAAAIAAYagAAAAEFQInuSAsQk8Ti5CAIDPzVTPWLYDkGoGp3ep2Qq+qOsKtnTjii+d+5dzSnQATPQhOQ==', 2, NOW(), NOW(), true);
  
  
 INSERT INTO loja_virtual (cd_loja_virtual, cd_usuario, nm_loja_virtual, ds_loja_virtual, dt_criacao) VALUES
