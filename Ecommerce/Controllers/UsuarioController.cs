@@ -2,6 +2,7 @@
 using Ecommerce.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -17,20 +18,37 @@ public class UsuarioController : Controller
         _usuarioService = usuarioService;
     }
 
+    [AllowAnonymous]
     [HttpGet]
-    public IActionResult Login() => View("~/Views/Usuario/Login.cshtml", new LoginViewModel());
+    public IActionResult Login(string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        return View(new LoginViewModel());
+    }
 
+    [Authorize]
+    public IActionResult Conta()
+    {
+        return View();
+    }
+
+    [AllowAnonymous]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginViewModel model)
+    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View(model);
+        }
 
         var usuario = await _usuarioService.LoginAsync(model.Email, model.Senha);
 
         if (usuario is null)
         {
             ModelState.AddModelError(string.Empty, "E-mail ou senha inválidos.");
+            ViewData["ReturnUrl"] = returnUrl;
             return View(model);
         }
 
@@ -47,10 +65,14 @@ public class UsuarioController : Controller
             CookieAuthenticationDefaults.AuthenticationScheme,
             new ClaimsPrincipal(identity));
 
+        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            return LocalRedirect(returnUrl);
+
         return RedirectToAction("Index", "Home");
     }
 
-    [HttpPost]
+    [Authorize]
+    [HttpGet]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {

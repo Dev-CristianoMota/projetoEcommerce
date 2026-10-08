@@ -1,0 +1,166 @@
+﻿@using Ecommerce.DTO
+@{
+    ViewData["Title"] = "Ecommerce";
+}
+
+@section Styles {
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="~/css/perfil.css" asp-append-version="true" />
+}
+
+<nav class="navigation">
+
+<div class="navigation-content">
+
+    <div class="nav-left">
+
+        <a href="#" class="nav-item all-products">
+
+            <span class="material-symbols-outlined">
+                view_comfy_alt
+            </span>
+
+            Todos os produtos
+
+        </a>
+
+
+        <div class="nav-divider"></div>
+
+        <a href="#" class="nav-item">
+            Celulares e Telefones        
+        </a>
+
+        <a href="#" class="nav-item">
+            Moda e Acessórios
+        </a>
+
+        <a href="#" class="nav-item">
+            Eletrodomésticos
+        </a>
+
+        <a href="#" class="nav-item">
+            Casa e Decoração
+        </a>
+
+        <a href="#" class="nav-item">
+            Veículos e Peças
+        </a>
+
+        <a href="#" class="nav-item">
+            Alimentos
+        </a>
+
+    </div>
+
+
+    <a href="#" class="special-offers">
+
+        Ofertas especiais
+
+        <span class="material-symbols-outlined">
+            arrow_forward
+        </span>
+
+    </a>
+
+</div>
+
+</nav>
+
+<main class="profile">
+    <nav class="breadcrumb">
+        <a href="#">
+            Início
+        </a>
+        <span>/</span>
+        <span>
+            Minha conta
+        </span>
+    </nav>
+    
+    <section class="profile-intro">
+        <span class="profile-label">
+            SEU ESPAÇO
+        </span>
+        <h1>
+            Olá, Marina<span>.</span>
+        </h1>
+        <p>
+            Que bom ter você por aqui.
+        </p>
+    </section>
+
+    <section class="profile-cards">
+        <article class="profile-card">
+            <div class="profile-card-icon">
+                <span class="material-symbols-outlined">
+                    person_outline
+                </span>
+            </div>
+
+            <h2>
+                Meus dados
+            </h2>
+
+            <div class="profile-data">
+                <div class="data-row">
+                    <span>
+                        Nome completo
+                    </span>
+                    <strong>
+                        Marina Costa
+                    </strong>
+                </div>
+                <div class="data-row">
+                    <span>
+                        E-mail
+                    </span>
+                    <strong>
+                        cliente@nexo.com
+                    </strong>
+                </div>
+
+                <div class="data-row">
+                    <span>
+                        Tipo de conta
+                    </span>
+                    <strong>
+                        Cliente
+                    </strong>
+                </div>
+            </div>
+
+            <a href="#" class="logout">
+                <span class="material-symbols-outlined">
+                    logout
+                </span>
+                Sair da conta
+            </a>
+        </article>
+
+        <article class="profile-card orders-card">
+            <div class="profile-card-icon">
+                <span class="material-symbols-outlined">
+                    inventory_2
+                </span>
+            </div>
+            <h2>
+                Meus pedidos
+            </h2>
+
+            <div class="orders-empty">
+                <p>
+                    Você ainda não fez nenhum pedido nesta demonstração.
+                </p>
+                <a href="#">
+                    Explorar produtos
+                    <span class="material-symbols-outlined">
+                        arrow_forward
+                    </span>
+                </a>
+            </div>
+        </article>
+    </section>
+</main>
