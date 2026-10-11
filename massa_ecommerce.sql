@@ -5,7 +5,7 @@
 -- ATENÇÃO: o bloco de limpeza abaixo apaga TODOS os dados das
 -- tabelas, para o script poder ser executado quantas vezes precisar.
 --
--- Senha de todos os usuários de teste: Senha@123 (guardada como SHA-256)
+-- Senha de todos os usuários de teste: Senha@123 (guardada como hash do ASP.NET Core Identity)
 -- As datas são relativas a NOW(), então os cupons continuam
 -- "vencidos" ou "válidos" mesmo se você rodar o script outro dia.
 -- ============================================================
@@ -15,6 +15,7 @@ USE db_ecommerce;
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE item_pedido;
 TRUNCATE TABLE pedido;
+TRUNCATE TABLE endereco;
 TRUNCATE TABLE cupom;
 TRUNCATE TABLE produto;
 TRUNCATE TABLE categoria;
@@ -39,6 +40,23 @@ INSERT INTO usuario (cd_usuario, nm_apelido, nm_usuario, nm_telefone, nm_email, 
     (7, 'carla_compradora', 'Carla Oliveira', '31934567890', 'carla.oliveira@email.com', 'AQAAAAIAAYagAAAAEFQInuSAsQk8Ti5CAIDPzVTPWLYDkGoGp3ep2Qq+qOsKtnTjii+d+5dzSnQATPQhOQ==', 2, NOW(), NOW(), true),
     (8, 'diego_comprador',  'Diego Santos',   '41945678901', 'diego.santos@email.com', 'AQAAAAIAAYagAAAAEFQInuSAsQk8Ti5CAIDPzVTPWLYDkGoGp3ep2Qq+qOsKtnTjii+d+5dzSnQATPQhOQ==', 2, NOW(), NOW(), true),
     (9, 'elisa_compradora', 'Elisa Ferreira', '51956789012', 'elisa.ferreira@email.com', 'AQAAAAIAAYagAAAAEFQInuSAsQk8Ti5CAIDPzVTPWLYDkGoGp3ep2Qq+qOsKtnTjii+d+5dzSnQATPQhOQ==', 2, NOW(), NOW(), true);
+
+
+-- Endereços
+-- O admin (usuário 1) não tem endereço de propósito, para testar usuário sem endereço.
+-- O João (usuário 4) tem 3: Casa (principal), Trabalho e um apartamento antigo
+-- desativado, que continua vinculado ao pedido 1 (histórico preservado).
+INSERT INTO endereco (cd_endereco, cd_usuario, nm_identificacao, nm_destinatario, nm_cep, nm_logradouro, nm_numero, ds_complemento, nm_bairro, nm_cidade, sg_uf, ic_endereco_principal, ic_endereco_ativo, dt_criacao, dt_atualizacao) VALUES
+    (1,  4, 'Casa', 'João Pereira',   '80010000', 'Rua XV de Novembro', '1200', 'Apto 52', 'Centro', 'Curitiba', 'PR', TRUE,  TRUE,  NOW(), NULL),
+    (2,  4, 'Trabalho', 'João Pereira',   '80420010', 'Avenida Sete de Setembro', '3500', 'Sala 810', 'Batel', 'Curitiba', 'PR', FALSE, TRUE,  NOW(), NULL),
+    (3,  4, 'Apartamento', 'João Pereira',   '80215901', 'Rua Padre Anchieta', '450',  NULL, 'Bigorrilho', 'Curitiba', 'PR', FALSE, FALSE, NOW(), NOW()),
+    (4,  5, 'Casa', 'Ana Souza',      '01310100', 'Avenida Paulista', '1578', 'Bloco B, apto 91', 'Bela Vista', 'São Paulo', 'SP', TRUE,  TRUE,  NOW(), NULL),
+    (5,  6, 'Casa', 'Bruno Martins',  '22040020', 'Rua Barata Ribeiro', '320',  'Apto 704', 'Copacabana', 'Rio de Janeiro', 'RJ', TRUE,  TRUE,  NOW(), NULL),
+    (6,  7, 'Casa', 'Carla Oliveira', '30130010', 'Avenida Afonso Pena', '1500', NULL, 'Centro', 'Belo Horizonte', 'MG', TRUE,  TRUE,  NOW(), NULL),
+    (7,  8, 'Casa', 'Diego Santos',   '80250104', 'Rua Marechal Deodoro', '630',  'Conjunto 12', 'Centro', 'Curitiba', 'PR', TRUE,  TRUE,  NOW(), NULL),
+    (8,  9, 'Casa', 'Elisa Ferreira', '90010150', 'Rua dos Andradas', '1234', 'Apto 301', 'Centro Histórico', 'Porto Alegre',   'RS', TRUE,  TRUE,  NOW(), NULL),
+    (9,  2, 'Apartamento', 'Carlos Almeida', '20040020', 'Rua da Assembleia', '10', '1201', 'Centro', 'Rio de Janeiro', 'RJ', TRUE,  TRUE,  NOW(), NULL),
+    (10, 3, 'Casa', 'Marina Costa',   '30140071', 'Rua da Bahia', '1148', 'Sala 5', 'Lourdes', 'Belo Horizonte', 'MG', TRUE,  TRUE,  NOW(), NULL);
  
  
 INSERT INTO loja_virtual (cd_loja_virtual, cd_usuario, nm_loja_virtual, ds_loja_virtual, dt_criacao) VALUES
@@ -84,11 +102,11 @@ INSERT INTO produto (cd_produto, cd_loja_virtual, cd_categoria, nm_produto, ds_p
  
     (9, 2, 5, 'Camiseta Básica Algodão', 'Camiseta 100% algodão, disponível em várias cores', 39.90, 200, NOW()),
     (10, 2, 5, 'Calça Jeans Slim', 'Jeans com elastano e corte slim', 129.90, 90, NOW()),
-    (11, 2, 7, 'Tênis Esportivo Running', 'Amortecimento reforçado para corrida', 299.90, 45, NOW()),
+    (11, 2, 9, 'Tênis Esportivo Running', 'Amortecimento reforçado para corrida', 299.90, 45, NOW()),
     (12, 2, 4, 'Conjunto de Panelas Antiaderentes', 'Kit com 5 peças e revestimento antiaderente', 349.90, 20, NOW()),
-    (13, 2, 8, 'Perfume Floral 100 ml', 'Fragrância floral, eau de parfum', 219.90, 35, NOW()),
-    (14, 2, 9, 'Blocos de Montar 500 peças', 'Indicado para crianças a partir de 6 anos', 119.90, 60, NOW()),
-    (15, 2, 6, 'Livro Clean Code', 'Guia de boas práticas para escrever código limpo', 89.90, 30, NOW());
+    (13, 2, 7, 'Perfume Floral 100 ml', 'Fragrância floral, eau de parfum', 219.90, 35, NOW()),
+    (14, 2, 16, 'Blocos de Montar 500 peças', 'Indicado para crianças a partir de 6 anos', 119.90, 60, NOW()),
+    (15, 2, 10, 'Livro Clean Code', 'Guia de boas práticas para escrever código limpo', 89.90, 30, NOW());
  
 INSERT INTO cupom (cd_cupom, cd_promocional, sg_tipo_desconto, vl_desconto, dt_inicio_validade, dt_fim_validade) VALUES
     (1, 'BEMVINDO10',  'P', 10.00, NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY)),
@@ -98,31 +116,31 @@ INSERT INTO cupom (cd_cupom, cd_promocional, sg_tipo_desconto, vl_desconto, dt_i
     (5, 'BLACKWEEK20', 'P', 20.00, NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY));
  
 -- Pedidos (status: P=Pendente, A=Aprovado, E=Enviado, T=Entregue, C=Cancelado)
--- Valores corrigidos nos pedidos 6, 9, 19 e 21 (ver itens abaixo).
-INSERT INTO pedido (cd_pedido, cd_usuario, cd_loja_virtual, cd_cupom, sg_status_pedido, vl_subtotal_pedido, vl_desconto_pedido, vl_total_pedido, dt_criacao_pedido) VALUES
-    (1,  4, 1, NULL, 'T',  429.70,   0.00,  429.70, NOW()),
-    (2,  4, 1, 1,    'E', 1918.90, 191.89, 1727.01, NOW()),
-    (3,  4, 2, 2,    'P',  419.60,  30.00,  389.60, NOW()),
-    (4,  4, 1, NULL, 'E', 3899.90,   0.00, 3899.90, NOW()),
-    (5,  5, 1, 3,    'T', 3598.00, 539.70, 3058.30, NOW()),
-    (6,  6, 2, NULL, 'P',  299.90,   0.00,  299.90, NOW()),
-    (7,  7, 1, 1,    'E',  409.80,  40.98,  368.82, NOW()),
-    (8,  8, 2, 5,    'T',  479.80,  95.96,  383.84, NOW()),
-    (9,  9, 1, NULL, 'P', 2798.90,   0.00, 2798.90, NOW()),
-    (10, 5, 2, 4,    'E',  349.90,  52.49,  297.41, NOW()),
-    (11, 6, 1, NULL, 'T',  319.80,   0.00,  319.80, NOW()),
-    (12, 7, 2, 1,    'P',  259.80,  25.98,  233.82, NOW()),
-    (13, 8, 1, 2,    'E',  199.90,  30.00,  169.90, NOW()),
-    (14, 9, 2, NULL, 'T',  429.70,   0.00,  429.70, NOW()),
-    (15, 4, 1, 3,    'P',  209.80,  31.47,  178.33, NOW()),
-    (16, 5, 2, NULL, 'E',  249.80,   0.00,  249.80, NOW()),
-    (17, 6, 1, 5,    'T', 4099.80, 819.96, 3279.84, NOW()),
-    (18, 7, 2, 4,    'P',  519.80,  77.97,  441.83, NOW()),
-    (19, 8, 1, NULL, 'E',  249.90,   0.00,  249.90, NOW()),
-    (20, 9, 2, 2,    'T',  419.60,  30.00,  389.60, NOW()),
-    (21, 4, 1, NULL, 'P',  499.80,   0.00,  499.80, NOW()),
-    (22, 5, 2, 3,    'E',  509.70,  76.46,  433.24, NOW()),
-    (23, 6, 1, NULL, 'T', 2599.00,   0.00, 2599.00, NOW());
+-- cd_endereco_entrega: sempre um endereço do próprio comprador do pedido.
+INSERT INTO pedido (cd_pedido, cd_usuario, cd_loja_virtual, cd_cupom, cd_endereco_entrega, sg_status_pedido, vl_subtotal_pedido, vl_desconto_pedido, vl_total_pedido, dt_criacao_pedido) VALUES
+    (1,  4, 1, NULL, 3, 'T',  429.70,   0.00,  429.70, NOW()),
+    (2,  4, 1, 1,    1, 'E', 1918.90, 191.89, 1727.01, NOW()),
+    (3,  4, 2, 2,    1, 'P',  419.60,  30.00,  389.60, NOW()),
+    (4,  4, 1, NULL, 1, 'E', 3899.90,   0.00, 3899.90, NOW()),
+    (5,  5, 1, 3,    4, 'T', 3598.00, 539.70, 3058.30, NOW()),
+    (6,  6, 2, NULL, 5, 'P',  299.90,   0.00,  299.90, NOW()),
+    (7,  7, 1, 1,    6, 'E',  409.80,  40.98,  368.82, NOW()),
+    (8,  8, 2, 5,    7, 'T',  479.80,  95.96,  383.84, NOW()),
+    (9,  9, 1, NULL, 8, 'P', 2798.90,   0.00, 2798.90, NOW()),
+    (10, 5, 2, 4,    4, 'E',  349.90,  52.49,  297.41, NOW()),
+    (11, 6, 1, NULL, 5, 'T',  319.80,   0.00,  319.80, NOW()),
+    (12, 7, 2, 1,    6, 'P',  259.80,  25.98,  233.82, NOW()),
+    (13, 8, 1, 2,    7, 'E',  199.90,  30.00,  169.90, NOW()),
+    (14, 9, 2, NULL, 8, 'T',  429.70,   0.00,  429.70, NOW()),
+    (15, 4, 1, 3,    1, 'P',  209.80,  31.47,  178.33, NOW()),
+    (16, 5, 2, NULL, 4, 'E',  249.80,   0.00,  249.80, NOW()),
+    (17, 6, 1, 5,    5, 'T', 4099.80, 819.96, 3279.84, NOW()),
+    (18, 7, 2, 4,    6, 'P',  519.80,  77.97,  441.83, NOW()),
+    (19, 8, 1, NULL, 7, 'E',  249.90,   0.00,  249.90, NOW()),
+    (20, 9, 2, 2,    8, 'T',  419.60,  30.00,  389.60, NOW()),
+    (21, 4, 1, NULL, 1, 'P',  499.80,   0.00,  499.80, NOW()),
+    (22, 5, 2, 3,    4, 'E',  509.70,  76.46,  433.24, NOW()),
+    (23, 6, 1, NULL, 5, 'T', 2599.00,   0.00, 2599.00, NOW());
  
 INSERT INTO item_pedido (cd_item_pedido, cd_pedido, cd_produto, qt_item, vl_preco_unitario) VALUES
     -- Pedido 1 (loja 1): 2 x 89.90 + 249.90 = 429.70
@@ -188,6 +206,15 @@ INSERT INTO item_pedido (cd_item_pedido, cd_pedido, cd_produto, qt_item, vl_prec
     (38, 23, 7, 1, 2599.00);
 
 SELECT * FROM usuario;
+
+SELECT * FROM endereco;
+
+-- Pedidos com o endereço de entrega
+SELECT pe.cd_pedido, u.nm_usuario, e.nm_identificacao, e.nm_logradouro, e.nm_numero, e.nm_cidade, e.sg_uf
+FROM pedido pe
+JOIN usuario u  ON u.cd_usuario  = pe.cd_usuario
+JOIN endereco e ON e.cd_endereco = pe.cd_endereco_entrega
+ORDER BY pe.cd_pedido;
 
 SELECT * FROM produto p
 	JOIN loja_virtual l ON (l.cd_loja_virtual = p.cd_loja_virtual)
