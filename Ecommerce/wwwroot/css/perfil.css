@@ -1,6 +1,6 @@
 ﻿.profile {
     width: 76%;
-    margin: 0 auto 150px auto;
+    margin: 0 auto 100px auto;
 }
 
 .flex-items {
@@ -22,18 +22,18 @@
     font-size: 11px;
 }
 
-    .breadcrumb a {
-        color: #8493a6;
-        text-decoration: none;
-    }
+.breadcrumb a {
+    color: #8493a6;
+    text-decoration: none;
+}
 
-    .breadcrumb span {
-        color: #aeb8c4;
-    }
+.breadcrumb span {
+    color: #aeb8c4;
+}
 
-        .breadcrumb span:last-child {
-            color: #526b87;
-        }
+.breadcrumb span:last-child {
+    color: #526b87;
+}
 
 
 /* =========================================================

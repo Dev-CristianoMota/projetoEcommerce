@@ -19,6 +19,7 @@ builder.Services.AddDbContext<EcommerceDbContext>(options =>
 builder.Services.AddScoped<ProdutoService>();
 builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<EnderecoService>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

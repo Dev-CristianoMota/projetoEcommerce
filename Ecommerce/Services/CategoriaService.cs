@@ -23,8 +23,7 @@ namespace Ecommerce.Services
                     QtdVendida = c.Produtos
                         .SelectMany(p => p.ItemPedidos)
                         .Where(i => i.CdPedidoNavigation.SgStatusPedido != "C")
-                        .Sum(i => (int?)i.QtItem) ?? 0,
-                    QtdProdutosVendidos = c.Produtos
+                        .Sum(i => (int?)i.QtItem) ?? 0, QtdProdutosVendidos = c.Produtos
                         .Count(p => p.ItemPedidos.Any(i => i.CdPedidoNavigation.SgStatusPedido != "C"))
                 })
                 .OrderByDescending(c => c.QtdVendida)

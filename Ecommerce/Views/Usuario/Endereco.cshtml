@@ -1,0 +1,310 @@
+﻿
+@model List<Ecommerce.DTO.DTOEndereco>
+
+@section Styles {
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="~/css/endereco.css" asp-append-version="true" />
+}
+
+<nav class="navigation">
+
+    <div class="navigation-content">
+
+        <div class="nav-left">
+
+            <a href="#" class="nav-item all-products">
+
+                <span class="material-symbols-outlined">
+                    view_comfy_alt
+                </span>
+
+                Todos os produtos
+
+            </a>
+
+
+            <div class="nav-divider"></div>
+
+            <a href="#" class="nav-item">
+                Celulares e Telefones
+            </a>
+
+            <a href="#" class="nav-item">
+                Moda e Acessórios
+            </a>
+
+            <a href="#" class="nav-item">
+                Eletrodomésticos
+            </a>
+
+            <a href="#" class="nav-item">
+                Casa e Decoração
+            </a>
+
+            <a href="#" class="nav-item">
+                Veículos e Peças
+            </a>
+
+            <a href="#" class="nav-item">
+                Alimentos
+            </a>
+
+        </div>
+
+
+        <a href="#" class="special-offers">
+
+            Ofertas especiais
+
+            <span class="material-symbols-outlined">
+                arrow_forward
+            </span>
+
+        </a>
+
+    </div>
+
+</nav>
+
+<main class="principal">
+    <nav class="breadcrumb">
+        <a href="#">
+            Início
+        </a>
+        <span>/</span>
+        <a href="#">
+            Central Minha Conta
+        </a>
+        <span>/</span>
+        <span>
+            Enderecos
+        </span>
+    </nav>
+
+    <section class="addresses">
+        <div class="addresses-header">
+            <div class="addresses-heading">
+                <div class="addresses-heading-icon">
+                    <span class="material-symbols-outlined">
+                        location_on
+                    </span>
+                </div>
+
+                <div>
+                    <h2>Meus endereços</h2>
+                    <p>Gerencie seus endereços de entrega.</p>
+                </div>
+            </div>
+
+            <a asp-controller="Usuario"
+               asp-action="EnderecoCadastrar"
+               class="address-add-button">
+                <span class="material-symbols-outlined">add</span>
+                Novo endereço
+            </a>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="addresses-empty">
+                <div class="addresses-empty-icon">
+                    <span class="material-symbols-outlined">
+                        location_off
+                    </span>
+                </div>
+
+                <h3>Nenhum endereço cadastrado</h3>
+
+                <p>
+                    Você ainda não possui endereços salvos.
+                    Cadastre um endereço para facilitar suas próximas compras.
+                </p>
+
+                <a asp-controller="Usuario"
+                   asp-action="EnderecoCadastrar"
+                   class="address-empty-button">
+                    Cadastrar endereço
+                </a>
+            </div>
+        }
+        else
+        {
+            var enderecoPrincipal = Model
+                .FirstOrDefault(e => e.IcEnderecoPrincipal);
+
+            var enderecosSecundarios = Model
+                .Where(e => !e.IcEnderecoPrincipal)
+                .ToList();
+
+            <div class="addresses-count">
+                <span>
+    @Model.Count @(Model.Count == 1
+                        ? "endereço cadastrado"
+                                    : "endereços cadastrados")
+                </span>
+            </div>
+
+            @if (enderecoPrincipal != null)
+            {
+                <div class="addresses-group">
+                    <div class="addresses-group-header">
+                        <span class="material-symbols-outlined">
+                            verified
+                        </span>
+                        <h3>Endereço principal</h3>
+                    </div>
+
+                    <article class="address-card address-card-primary">
+                        <div class="address-card-top">
+                            <div class="address-card-identification">
+                                <div class="address-card-icon">
+                                    <span class="material-symbols-outlined">
+                                        home
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <h4>@enderecoPrincipal.NmIdentificacao</h4>
+                                    <span class="address-recipient">
+                                        @enderecoPrincipal.NmDestinatario
+                                    </span>
+                                </div>
+                            </div>
+
+                            <span class="address-primary-badge">
+                                <span class="material-symbols-outlined">
+                                    check_circle
+                                </span>
+                                Principal
+                            </span>
+                        </div>
+
+                        <div class="address-card-body">
+                            <p>
+                                @enderecoPrincipal.Logradouro,
+                                @enderecoPrincipal.Numero
+                            </p>
+
+                            @if (!string.IsNullOrWhiteSpace(
+                                enderecoPrincipal.DsComplemento))
+                            {
+                                <p>@enderecoPrincipal.DsComplemento</p>
+                            }
+
+                            <p>
+                                @enderecoPrincipal.Bairro
+                                <span class="address-separator">·</span>
+                                @enderecoPrincipal.Cidade -
+                                @enderecoPrincipal.UF
+                            </p>
+
+                            <p class="address-cep">
+                                CEP: @enderecoPrincipal.CEP
+                            </p>
+                        </div>
+
+                        <div class="address-card-footer">
+                            <a asp-controller="Usuario"
+                               asp-action="EnderecoEditar"
+                               asp-route-id="@enderecoPrincipal.CdEndereco"
+                               class="address-action">
+                                <span class="material-symbols-outlined">
+                                    edit
+                                </span>
+                                Editar endereço
+                            </a>
+                        </div>
+                    </article>
+                </div>
+            }
+
+            @if (enderecosSecundarios.Any())
+            {
+                <div class="addresses-group addresses-secondary-group">
+                    <div class="addresses-group-header">
+                        <span class="material-symbols-outlined">
+                            location_on
+                        </span>
+                        <h3>Endereços secundários</h3>
+                    </div>
+
+                    <div class="addresses-grid">
+                        @foreach (var endereco in enderecosSecundarios)
+                        {
+                            <article class="address-card">
+                                <div class="address-card-top">
+                                    <div class="address-card-identification">
+                                        <div class="address-card-icon">
+                                            <span class="material-symbols-outlined">
+                                                location_on
+                                            </span>
+                                        </div>
+
+                                        <div>
+                                            <h4>@endereco.NmIdentificacao</h4>
+                                            <span class="address-recipient">
+                                                @endereco.NmDestinatario
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="address-card-body">
+                                    <p>
+                                        @endereco.Logradouro,
+                                        @endereco.Numero
+                                    </p>
+
+                                    @if (!string.IsNullOrWhiteSpace(
+                                        endereco.DsComplemento))
+                                    {
+                                        <p>@endereco.DsComplemento</p>
+                                    }
+
+                                    <p>
+                                        @endereco.Bairro
+                                        <span class="address-separator">·</span>
+                                        @endereco.Cidade -
+                                        @endereco.UF
+                                    </p>
+
+                                    <p class="address-cep">
+                                        CEP: @endereco.CEP
+                                    </p>
+                                </div>
+
+                                <div class="address-card-footer">
+                                    <a asp-controller="Usuario"
+                                       asp-action="EnderecoEditar"
+                                       asp-route-id="@endereco.CdEndereco"
+                                       class="address-action">
+                                        <span class="material-symbols-outlined">
+                                            edit
+                                        </span>
+                                        Editar
+                                    </a>
+
+                                    <form asp-controller="Usuario"
+                                          asp-action="EnderecoDefinirPrincipal"
+                                          asp-route-id="@endereco.CdEndereco"
+                                          method="post">
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="address-action address-set-primary">
+                                            <span class="material-symbols-outlined">
+                                                push_pin
+                                            </span>
+                                            Tornar principal
+                                        </button>
+                                    </form>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </section>
+</main>
