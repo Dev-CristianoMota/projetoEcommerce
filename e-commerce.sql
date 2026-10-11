@@ -38,6 +38,33 @@ CREATE TABLE usuario
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE endereco
+(
+    cd_endereco  INT NOT NULL AUTO_INCREMENT,
+    cd_usuario  INT NOT NULL,
+    nm_identificacao  VARCHAR(50) NOT NULL,
+    nm_destinatario  VARCHAR(150) NOT NULL,
+    nm_cep  CHAR(8) NOT NULL,
+    nm_logradouro  VARCHAR(255) NOT NULL,
+    nm_numero  VARCHAR(10) NOT NULL,
+    ds_complemento  VARCHAR(100) NULL,
+    nm_bairro  VARCHAR(100) NOT NULL,
+    nm_cidade  VARCHAR(100) NOT NULL,
+    sg_uf  CHAR(2) NOT NULL,
+    ic_endereco_principal  BOOLEAN NOT NULL DEFAULT FALSE,
+    ic_endereco_ativo  BOOLEAN NOT NULL DEFAULT TRUE,
+    dt_criacao  DATETIME NOT NULL,
+    dt_atualizacao  DATETIME NULL,
+ 
+    CONSTRAINT pk_endereco PRIMARY KEY (cd_endereco),
+    CONSTRAINT ck_endereco_cep CHECK (nm_cep REGEXP '^[0-9]{8}$'),
+ 
+    CONSTRAINT fk_endereco_usuario
+        FOREIGN KEY (cd_usuario) REFERENCES usuario (cd_usuario)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+
 CREATE TABLE loja_virtual 
 (
     cd_loja_virtual  INT NOT NULL AUTO_INCREMENT,
@@ -117,6 +144,7 @@ CREATE TABLE pedido
     cd_usuario  INT NOT NULL,
     cd_loja_virtual  INT NOT NULL,
     cd_cupom  INT NULL,
+    cd_endereco_entrega  INT NULL,
     sg_status_pedido  CHAR(1) NOT NULL DEFAULT 'P',
     vl_subtotal_pedido  DECIMAL(10,2) NOT NULL DEFAULT 0,
     vl_desconto_pedido  DECIMAL(10,2) NOT NULL DEFAULT 0,
@@ -136,7 +164,10 @@ CREATE TABLE pedido
         ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT fk_pedido_cupom
         FOREIGN KEY (cd_cupom) REFERENCES cupom (cd_cupom)
-        ON DELETE SET NULL ON UPDATE CASCADE
+        ON DELETE SET NULL ON UPDATE CASCADE,
+	CONSTRAINT fk_pedido_endereco
+        FOREIGN KEY (cd_endereco_entrega) REFERENCES endereco (cd_endereco)
+        ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 
