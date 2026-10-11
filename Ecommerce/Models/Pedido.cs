@@ -32,4 +32,8 @@ public partial class Pedido
     public virtual Usuario CdUsuarioNavigation { get; set; } = null!;
 
     public virtual ICollection<ItemPedido> ItemPedidos { get; set; } = new List<ItemPedido>();
+
+    public int? CdEnderecoEntrega { get; set; }
+
+    public virtual Endereco? CdEnderecoEntregaNavigation { get; set; }
 }

@@ -1,15 +1,14 @@
-﻿using Ecommerce.DTO;
+﻿using Ecommerce.Helpers;
 using Ecommerce.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Ecommerce.Controllers;
 
-public class UsuarioController : Controller
+public class UsuarioController : BaseController
 {
     private readonly UsuarioService _usuarioService;
 
@@ -18,7 +17,6 @@ public class UsuarioController : Controller
         _usuarioService = usuarioService;
     }
 
-    [AllowAnonymous]
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
     {
@@ -26,56 +24,66 @@ public class UsuarioController : Controller
         return View(new LoginViewModel());
     }
 
-    [Authorize]
-    public IActionResult Conta()
-    {
-        return View();
-    }
-
-    [AllowAnonymous]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
     {
-        if (!ModelState.IsValid)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View(model);
-        }
+        ViewData["ReturnUrl"] = returnUrl;
 
+        if (!ModelState.IsValid)
+            return View(model);
+
+        // model.Email recebe o e-mail OU o apelido digitado
         var usuario = await _usuarioService.LoginAsync(model.Email, model.Senha);
 
         if (usuario is null)
         {
-            ModelState.AddModelError(string.Empty, "E-mail ou senha inválidos.");
-            ViewData["ReturnUrl"] = returnUrl;
+            ModelState.AddModelError(string.Empty, "Usuário ou senha inválidos.");
             return View(model);
         }
+
+        HttpContext.Session.SetObject(ChaveSessao, usuario);
 
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, usuario.CdUsuario.ToString()),
-            new(ClaimTypes.Email, usuario.NmEmail),
             new(ClaimTypes.Name, usuario.NmUsuario),
-            new(ClaimTypes.Role, usuario.CdTipoUsuario.ToString())
+            new(ClaimTypes.Email, usuario.NmEmail),
+            new(ClaimTypes.Role, usuario.NmTipoUsuario),
+            new("apelido", usuario.NmApelido),
+            new("cd_tipo_usuario", usuario.CdTipoUsuario.ToString())
         };
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
         await HttpContext.SignInAsync(
             CookieAuthenticationDefaults.AuthenticationScheme,
             new ClaimsPrincipal(identity));
 
         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-            return LocalRedirect(returnUrl);
+            return Redirect(returnUrl);
 
         return RedirectToAction("Index", "Home");
     }
 
     [Authorize]
     [HttpGet]
+    public async Task<IActionResult> Conta()
+    {
+        var logado = UsuarioLogado;
+        if (logado is null)
+            return RedirectToAction(nameof(Login));
+
+        var usuario = await _usuarioService.BuscarPorIdAsync(logado.CdUsuario);
+        if (usuario is null)
+            return RedirectToAction(nameof(Login));
+
+        return View(usuario);
+    }
+
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
+        HttpContext.Session.Clear();
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Index", "Home");
     }

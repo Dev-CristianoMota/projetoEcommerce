@@ -31,6 +31,8 @@ public partial class EcommerceDbContext : DbContext
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
+    public virtual DbSet<Endereco> Enderecos { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySql("server=localhost;database=db_ecommerce;user=root;password=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.43-mysql"));
@@ -162,6 +164,8 @@ public partial class EcommerceDbContext : DbContext
             entity.Property(e => e.CdCupom).HasColumnName("cd_cupom");
             entity.Property(e => e.CdLojaVirtual).HasColumnName("cd_loja_virtual");
             entity.Property(e => e.CdUsuario).HasColumnName("cd_usuario");
+            entity.Property(e => e.CdEnderecoEntrega).HasColumnName("cd_endereco_entrega");
+
             entity.Property(e => e.DtAtualizacaoPedido)
                 .HasColumnType("datetime")
                 .HasColumnName("dt_atualizacao_pedido");
@@ -197,6 +201,11 @@ public partial class EcommerceDbContext : DbContext
                 .HasForeignKey(d => d.CdUsuario)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_pedido_usuario");
+
+            entity.HasOne(d => d.CdEnderecoEntregaNavigation).WithMany(p => p.Pedidos)
+                .HasForeignKey(d => d.CdEnderecoEntrega)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_pedido_endereco");
         });
 
         modelBuilder.Entity<Produto>(entity =>
@@ -304,6 +313,36 @@ public partial class EcommerceDbContext : DbContext
                 .HasForeignKey(d => d.CdTipoUsuario)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_usuario_tipo_usuario");
+        });
+
+        modelBuilder.Entity<Endereco>(entity =>
+        {
+            entity.HasKey(e => e.CdEndereco).HasName("PRIMARY");
+
+            entity.ToTable("endereco");
+
+            entity.HasIndex(e => e.CdUsuario, "fk_endereco_usuario");
+
+            entity.Property(e => e.CdEndereco).HasColumnName("cd_endereco");
+            entity.Property(e => e.CdUsuario).HasColumnName("cd_usuario");
+            entity.Property(e => e.NmIdentificacao).HasMaxLength(50).HasColumnName("nm_identificacao");
+            entity.Property(e => e.NmDestinatario).HasMaxLength(150).HasColumnName("nm_destinatario");
+            entity.Property(e => e.CEP).HasMaxLength(8).IsFixedLength().HasColumnName("nm_cep");
+            entity.Property(e => e.Logradouro).HasMaxLength(255).HasColumnName("nm_logradouro");
+            entity.Property(e => e.Numero).HasMaxLength(10).HasColumnName("nm_numero");
+            entity.Property(e => e.DsComplemento).HasMaxLength(100).HasColumnName("ds_complemento");
+            entity.Property(e => e.Bairro).HasMaxLength(100).HasColumnName("nm_bairro");
+            entity.Property(e => e.Cidade).HasMaxLength(100).HasColumnName("nm_cidade");
+            entity.Property(e => e.UF).HasMaxLength(2).IsFixedLength().HasColumnName("sg_uf");
+            entity.Property(e => e.IcEnderecoPrincipal).HasColumnName("ic_endereco_principal");
+            entity.Property(e => e.IcEnderecoAtivo).HasColumnName("ic_endereco_ativo");
+            entity.Property(e => e.DtCriacao).HasColumnType("datetime").HasColumnName("dt_criacao");
+            entity.Property(e => e.DtAtualizacao).HasColumnType("datetime").HasColumnName("dt_atualizacao");
+
+            entity.HasOne(d => d.CdUsuarioNavigation).WithMany(p => p.Enderecos)
+                .HasForeignKey(d => d.CdUsuario)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_endereco_usuario");
         });
 
         OnModelCreatingPartial(modelBuilder);

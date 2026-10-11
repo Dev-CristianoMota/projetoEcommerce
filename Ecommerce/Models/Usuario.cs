@@ -30,4 +30,6 @@ public partial class Usuario
     public virtual ICollection<LojaVirtual> LojaVirtuals { get; set; } = new List<LojaVirtual>();
 
     public virtual ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
+
+    public virtual ICollection<Endereco> Enderecos { get; set; } = new List<Endereco>();
 }

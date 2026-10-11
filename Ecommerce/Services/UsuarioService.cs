@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Data;
+using Ecommerce.DTO;
 using Ecommerce.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -26,16 +27,33 @@ public class UsuarioService
             .FirstOrDefaultAsync(u => u.CdUsuario == id);
     }
 
-    public async Task<Usuario?> LoginAsync(string email, string senha)
+    public async Task<DTOUsuarioLogado?> LoginAsync(string identificador, string senha)
     {
+        if (string.IsNullOrWhiteSpace(identificador) || string.IsNullOrEmpty(senha))
+            return null;
+
+        var valor = identificador.Trim();
+
         var usuario = await _context.Usuarios
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.NmEmail == email.Trim().ToLower() && u.IcUsuarioAtivo);
+            .Include(u => u.CdTipoUsuarioNavigation)
+            .FirstOrDefaultAsync(u =>
+                (u.NmEmail == valor || u.NmApelido == valor) && u.IcUsuarioAtivo);
 
         if (usuario is null) return null;
 
         var resultado = _hasher.VerifyHashedPassword(usuario, usuario.NmSenha, senha);
-        return resultado == PasswordVerificationResult.Failed ? null : usuario;
+        if (resultado == PasswordVerificationResult.Failed) return null;
+
+        return new DTOUsuarioLogado
+        {
+            CdUsuario = usuario.CdUsuario,
+            NmApelido = usuario.NmApelido,
+            NmUsuario = usuario.NmUsuario,
+            NmEmail = usuario.NmEmail,
+            CdTipoUsuario = usuario.CdTipoUsuario,
+            NmTipoUsuario = usuario.CdTipoUsuarioNavigation.NmTipoUsuario
+        };
     }
 
     public async Task<Usuario> CriarUsuarioAsync(Usuario usuario)

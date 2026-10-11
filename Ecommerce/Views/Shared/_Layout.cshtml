@@ -36,7 +36,7 @@
                 <div class="user-text">
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <span id="txtLogado">Olá, @User.Identity.Name?.Split(' ')[0]</span>
+                        <span id="txtLogado">Olá, @User.Identity.Name.Split(' ')[0]</span>
                         <a asp-controller="Usuario" asp-action="Conta">Minha Conta</a>
                     }
                     else
