@@ -1,5 +1,7 @@
-﻿using Ecommerce.Helpers;
-using Ecommerce.Models;
+﻿using Ecommerce.DTO;
+using Ecommerce.Helpers;
+using Ecommerce.Services;
+using Ecommerce.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -11,10 +13,12 @@ namespace Ecommerce.Controllers;
 public class UsuarioController : BaseController
 {
     private readonly UsuarioService _usuarioService;
+    private readonly PedidoService _pedidoService;
 
-    public UsuarioController(UsuarioService usuarioService)
+    public UsuarioController(UsuarioService usuarioService, PedidoService pedidoService)
     {
         _usuarioService = usuarioService;
+        _pedidoService = pedidoService;
     }
 
     [HttpGet]
@@ -33,7 +37,6 @@ public class UsuarioController : BaseController
         if (!ModelState.IsValid)
             return View(model);
 
-        // model.Email recebe o e-mail OU o apelido digitado
         var usuario = await _usuarioService.LoginAsync(model.Email, model.Senha);
 
         if (usuario is null)
@@ -64,20 +67,38 @@ public class UsuarioController : BaseController
         return RedirectToAction("Index", "Home");
     }
 
+
+
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> Conta()
     {
         var logado = UsuarioLogado;
+
         if (logado is null)
             return RedirectToAction(nameof(Login));
 
-        var usuario = await _usuarioService.BuscarPorIdAsync(logado.CdUsuario);
+        var usuario = await _usuarioService.BuscarPorIdAsync(
+            4
+        );
+
         if (usuario is null)
             return RedirectToAction(nameof(Login));
 
-        return View(usuario);
+        var ultimoPedido = await _pedidoService.BuscarUltimoPedidoAsync(
+            4
+        );
+
+        int model = ultimoPedido;
+
+        //var model = new ContaViewModel
+        //{
+        //    UltimoPedido = ultimoPedido
+        //};
+
+        return View(model);
     }
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -86,5 +107,75 @@ public class UsuarioController : BaseController
         HttpContext.Session.Clear();
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Index", "Home");
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> MeusDados()
+    {
+        var logado = UsuarioLogado;
+        if (logado is null)
+            return RedirectToAction(nameof(Login));
+
+        var dados = await _usuarioService.ListarDadosAsync(logado.CdUsuario);
+        if (dados is null)
+            return RedirectToAction(nameof(Login));
+
+        return View(dados);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Editar(DadosUsuarioViewModel model)
+    {
+        var logado = UsuarioLogado;
+        if (logado is null)
+            return RedirectToAction(nameof(Login));
+
+        if (!ModelState.IsValid)
+            return await VoltarParaEdicaoAsync(logado.CdUsuario, model);
+
+        var resultado = await _usuarioService.EditarAsync(logado.CdUsuario, model);
+
+        if (!resultado.Sucesso)
+        {
+            ModelState.AddModelError(string.Empty, resultado.Erro ?? "Não foi possível salvar.");
+            return await VoltarParaEdicaoAsync(logado.CdUsuario, model);
+        }
+
+        await AtualizarSessaoAsync(resultado.Usuario!);
+
+        TempData["Sucesso"] = "Dados atualizados com sucesso!";
+        return RedirectToAction(nameof(MeusDados));
+    }
+
+    private async Task<IActionResult> VoltarParaEdicaoAsync(int cdUsuario, DadosUsuarioViewModel model)
+    {
+        var atual = await _usuarioService.ListarDadosAsync(cdUsuario);
+        model.NmTipoUsuario = atual?.NmTipoUsuario;
+        model.DtCriacao = atual?.DtCriacao ?? default;
+
+        ViewData["Editando"] = true;
+        return View("MeusDados", model);
+    }
+
+    private async Task AtualizarSessaoAsync(DTOUsuarioLogado usuario)
+    {
+        HttpContext.Session.SetObject(ChaveSessao, usuario);
+
+        var claims = new List<Claim>
+    {
+        new(ClaimTypes.NameIdentifier, usuario.CdUsuario.ToString()),
+        new(ClaimTypes.Name, usuario.NmUsuario),
+        new(ClaimTypes.Email, usuario.NmEmail),
+        new(ClaimTypes.Role, usuario.NmTipoUsuario),
+        new("apelido", usuario.NmApelido),
+        new("cd_tipo_usuario", usuario.CdTipoUsuario.ToString())
+    };
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(identity));
     }
 }

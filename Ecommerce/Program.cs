@@ -20,6 +20,7 @@ builder.Services.AddScoped<ProdutoService>();
 builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<EnderecoService>();
+builder.Services.AddScoped<PedidoService>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

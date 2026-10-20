@@ -1,0 +1,467 @@
+﻿/* ============================================================
+   Meus dados
+   ============================================================ */
+
+.principal {
+    width: 76%;
+    margin: 0 auto 100px auto;
+}
+
+/* ---------- Breadcrumb ---------- */
+
+.breadcrumb {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    font-size: 11px;
+}
+
+    .breadcrumb a {
+        color: #8493a6;
+        text-decoration: none;
+    }
+
+    .breadcrumb span {
+        color: #aeb8c4;
+    }
+
+        .breadcrumb span:last-child {
+            color: #526b87;
+        }
+
+/* ---------- Container ---------- */
+
+.addresses {
+    width: 100%;
+    margin-top: 35px;
+    padding: 26px 28px;
+    border: 1px solid #dce4ed;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+    /* O atributo hidden precisa vencer os display: flex abaixo */
+    .addresses [hidden] {
+        display: none !important;
+    }
+
+/* ---------- Cabeçalho ---------- */
+
+.addresses-header,
+.addresses-heading,
+.addresses-group-header,
+.address-card-top,
+.address-card-footer {
+    display: flex;
+    align-items: center;
+}
+
+.addresses-header {
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 26px;
+}
+
+.addresses-heading {
+    gap: 13px;
+    min-width: 0;
+}
+
+.addresses-heading-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 7px;
+    background-color: #edf3ff;
+    color: #3266df;
+}
+
+    .addresses-heading-icon .material-symbols-outlined {
+        font-size: 23px;
+    }
+
+.addresses-heading h2 {
+    margin: 0;
+    color: #142a43;
+    font-size: 19px;
+    font-weight: 750;
+    letter-spacing: -0.4px;
+}
+
+.addresses-heading p {
+    margin: 5px 0 0;
+    color: #8292a5;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* ---------- Botão principal (Editar dados / Salvar) ---------- */
+
+.address-add-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 43px;
+    padding: 0 15px;
+    flex-shrink: 0;
+    border: 1px solid #142a43;
+    border-radius: 5px;
+    background-color: #142a43;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 750;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    .address-add-button .material-symbols-outlined {
+        font-size: 19px;
+    }
+
+    .address-add-button:hover {
+        background-color: #234568;
+    }
+
+/* ---------- Grupos ---------- */
+
+.addresses-group {
+    margin-top: 22px;
+}
+
+    .addresses-group:first-of-type {
+        margin-top: 0;
+    }
+
+.addresses-secondary-group {
+    margin-top: 30px;
+}
+
+.addresses-group-header {
+    gap: 9px;
+    margin-bottom: 14px;
+}
+
+    .addresses-group-header > .material-symbols-outlined {
+        color: #3266df;
+        font-size: 20px;
+    }
+
+    .addresses-group-header h3 {
+        margin: 0;
+        color: #142a43;
+        font-size: 14px;
+        font-weight: 750;
+    }
+
+/* ---------- Card ---------- */
+
+.address-card {
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid #e1e7ef;
+    border-radius: 7px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .address-card:hover {
+        border-color: #cbd8ed;
+        box-shadow: 0 4px 12px rgba(20, 42, 67, 0.045);
+    }
+
+.address-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 7px;
+    background-color: #edf3ff;
+    color: #3266df;
+}
+
+    .address-card-icon .material-symbols-outlined {
+        font-size: 22px;
+    }
+
+.address-card h4 {
+    margin: 0;
+    color: #142a43;
+    font-size: 13px;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}
+
+.address-recipient {
+    display: block;
+    margin-top: 5px;
+    color: #8292a5;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
+
+.address-card-footer {
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 19px;
+    padding-top: 15px;
+    border-top: 1px solid #e7ebf0;
+}
+
+/* ---------- Card de dados (visualização e edição) ---------- */
+
+.profile-card {
+    padding: 24px;
+}
+
+    .profile-card:hover {
+        border-color: #e1e7ef;
+        box-shadow: none;
+    }
+
+/* Visualização */
+
+.profile-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.profile-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+    .profile-info-item strong {
+        color: #142a43;
+        font-size: 13px;
+        font-weight: 750;
+        overflow-wrap: anywhere;
+    }
+
+.profile-info-label {
+    color: #8292a5;
+    font-size: 11px;
+}
+
+/* Edição */
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 20px;
+}
+
+.profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+    .profile-field label {
+        color: #142a43;
+        font-size: 11px;
+        font-weight: 750;
+    }
+
+    .profile-field input {
+        width: 100%;
+        min-height: 43px;
+        padding: 0 13px;
+        border: 1px solid #dce4ed;
+        border-radius: 5px;
+        background-color: #ffffff;
+        color: #142a43;
+        font-family: inherit;
+        font-size: 12px;
+        box-sizing: border-box;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .profile-field input::placeholder {
+            color: #aab6c5;
+        }
+
+        .profile-field input:focus {
+            outline: none;
+            border-color: #3266df;
+            box-shadow: 0 0 0 3px rgba(50, 102, 223, 0.12);
+        }
+
+        /* Campo com erro de validação (classe do ASP.NET) */
+        .profile-field input.input-validation-error {
+            border-color: #d46a6a;
+            background-color: #fffafa;
+        }
+
+.profile-hint {
+    color: #8292a5;
+    font-size: 10px;
+}
+
+.profile-error {
+    color: #b23b3b;
+    font-size: 10px;
+}
+
+    .profile-error:empty {
+        display: none;
+    }
+
+.profile-footer {
+    margin-top: 24px;
+}
+
+.profile-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 43px;
+    padding: 0 15px;
+    border: 1px solid #dce4ed;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #526b87;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 750;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+    .profile-secondary-button:hover {
+        border-color: #cbd8ed;
+        color: #142a43;
+    }
+
+/* ---------- Alertas ---------- */
+
+.profile-alert {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 22px;
+    padding: 12px 15px;
+    border-radius: 5px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+    .profile-alert:empty {
+        display: none;
+    }
+
+    .profile-alert .material-symbols-outlined {
+        font-size: 19px;
+    }
+
+    /* o validation summary gera <ul> dentro da div */
+    .profile-alert ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+.profile-alert-success {
+    border: 1px solid #cfe8d8;
+    background-color: #f1faf4;
+    color: #2f7a4d;
+}
+
+.profile-alert-error {
+    border: 1px solid #f3d3d3;
+    background-color: #fdf4f4;
+    color: #b23b3b;
+}
+
+/* ---------- Atalhos ---------- */
+
+.addresses-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.profile-shortcuts .profile-shortcut {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+    .profile-shortcuts .profile-shortcut:hover {
+        border-color: #cbd8ed;
+        box-shadow: 0 4px 12px rgba(20, 42, 67, 0.045);
+    }
+
+/* ---------- Acessibilidade ---------- */
+
+.addresses a:focus-visible,
+.addresses button:focus-visible {
+    outline: 2px solid #3266df;
+    outline-offset: 3px;
+}
+
+/* ---------- Responsivo ---------- */
+
+@media (max-width: 900px) {
+    .addresses-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .addresses {
+        padding: 21px 16px;
+    }
+
+    .addresses-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .addresses-heading h2 {
+        font-size: 17px;
+    }
+
+    .address-add-button {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .address-card,
+    .profile-card {
+        padding: 16px;
+    }
+
+    .profile-info-grid,
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+        .profile-footer .address-add-button,
+        .profile-footer .profile-secondary-button {
+            width: 100%;
+            box-sizing: border-box;
+        }
+}

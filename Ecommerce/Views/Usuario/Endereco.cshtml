@@ -1,6 +1,11 @@
 ﻿
 @model List<Ecommerce.DTO.DTOEndereco>
 
+@{
+    var limiteAtingido = Model != null
+        && Model.Count >= Ecommerce.Services.EnderecoService.MaxEnderecos;
+}
+
 @section Styles {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -69,13 +74,11 @@
 
 <main class="principal">
     <nav class="breadcrumb">
-        <a href="#">
+        <a href="/">
             Início
         </a>
         <span>/</span>
-        <a href="#">
-            Central Minha Conta
-        </a>
+        <a asp-controller="Usuario" asp-action="Conta">Minha Conta</a>
         <span>/</span>
         <span>
             Enderecos
@@ -96,14 +99,22 @@
                     <p>Gerencie seus endereços de entrega.</p>
                 </div>
             </div>
-
-            <a asp-controller="Usuario"
-               asp-action="EnderecoCadastrar"
-               class="address-add-button">
+            <button type="button"
+                    class="address-add-button js-novo-endereco"
+                    disabled="@limiteAtingido"
+                    title="@(limiteAtingido ? "Limite de endereços atingido" : "")">
                 <span class="material-symbols-outlined">add</span>
                 Novo endereço
-            </a>
+            </button>
         </div>
+        @if (limiteAtingido)
+        {
+            <p class="addresses-limit-notice">
+                <span class="material-symbols-outlined">info</span>
+                Você atingiu o limite de @Ecommerce.Services.EnderecoService.MaxEnderecos endereços.
+                Exclua um endereço para cadastrar outro ou edite um ja existente.
+            </p>
+        }
 
         @if (Model == null || !Model.Any())
         {
@@ -121,11 +132,9 @@
                     Cadastre um endereço para facilitar suas próximas compras.
                 </p>
 
-                <a asp-controller="Usuario"
-                   asp-action="EnderecoCadastrar"
-                   class="address-empty-button">
+                <button type="button" class="address-empty-button js-novo-endereco">
                     Cadastrar endereço
-                </a>
+                </button>
             </div>
         }
         else
@@ -139,9 +148,7 @@
 
             <div class="addresses-count">
                 <span>
-    @Model.Count @(Model.Count == 1
-                        ? "endereço cadastrado"
-                                    : "endereços cadastrados")
+                    @Model.Count @(Model.Count == 1 ? "endereço cadastrado" : "endereços cadastrados")
                 </span>
             </div>
 
@@ -205,15 +212,28 @@
                         </div>
 
                         <div class="address-card-footer">
-                            <a asp-controller="Usuario"
-                               asp-action="EnderecoEditar"
-                               asp-route-id="@enderecoPrincipal.CdEndereco"
-                               class="address-action">
-                                <span class="material-symbols-outlined">
-                                    edit
-                                </span>
-                                Editar endereço
-                            </a>
+                            <button type="button"
+                                    class="address-action address-edit"
+                                    data-cd-endereco="@enderecoPrincipal.CdEndereco"
+                                    data-identificacao="@enderecoPrincipal.NmIdentificacao"
+                                    data-destinatario="@enderecoPrincipal.NmDestinatario"
+                                    data-cep="@enderecoPrincipal.CEP"
+                                    data-logradouro="@enderecoPrincipal.Logradouro"
+                                    data-numero="@enderecoPrincipal.Numero"
+                                    data-complemento="@enderecoPrincipal.DsComplemento"
+                                    data-bairro="@enderecoPrincipal.Bairro"
+                                    data-cidade="@enderecoPrincipal.Cidade"
+                                    data-uf="@enderecoPrincipal.UF">
+                                <span class="material-symbols-outlined">edit</span>
+                                Editar
+                            </button>
+                            <button type="button"
+                                    class="address-action address-delete"
+                                    data-cd-endereco="@enderecoPrincipal.CdEndereco"
+                                    data-principal="true">
+                                <span class="material-symbols-outlined">delete</span>
+                                Excluir
+                            </button>
                         </div>
                     </article>
                 </div>
@@ -275,30 +295,36 @@
                                 </div>
 
                                 <div class="address-card-footer">
-                                    <a asp-controller="Usuario"
-                                       asp-action="EnderecoEditar"
-                                       asp-route-id="@endereco.CdEndereco"
-                                       class="address-action">
-                                        <span class="material-symbols-outlined">
-                                            edit
-                                        </span>
+                                    <button type="button"
+                                            class="address-action address-edit"
+                                            data-cd-endereco="@endereco.CdEndereco"
+                                            data-identificacao="@endereco.NmIdentificacao"
+                                            data-destinatario="@endereco.NmDestinatario"
+                                            data-cep="@endereco.CEP"
+                                            data-logradouro="@endereco.Logradouro"
+                                            data-numero="@endereco.Numero"
+                                            data-complemento="@endereco.DsComplemento"
+                                            data-bairro="@endereco.Bairro"
+                                            data-cidade="@endereco.Cidade"
+                                            data-uf="@endereco.UF">
+                                        <span class="material-symbols-outlined">edit</span>
                                         Editar
-                                    </a>
+                                    </button>
 
-                                    <form asp-controller="Usuario"
-                                          asp-action="EnderecoDefinirPrincipal"
-                                          asp-route-id="@endereco.CdEndereco"
-                                          method="post">
-                                        @Html.AntiForgeryToken()
+                                    <button type="button"
+                                            class="address-action address-set-primary"
+                                            data-cd-endereco="@endereco.CdEndereco">
+                                        <span class="material-symbols-outlined">push_pin</span>
+                                        Tornar principal
+                                    </button>
 
-                                        <button type="submit"
-                                                class="address-action address-set-primary">
-                                            <span class="material-symbols-outlined">
-                                                push_pin
-                                            </span>
-                                            Tornar principal
-                                        </button>
-                                    </form>
+                                    <button type="button"
+                                            class="address-action address-delete"
+                                            data-cd-endereco="@endereco.CdEndereco"
+                                            data-principal="false">
+                                        <span class="material-symbols-outlined">delete</span>
+                                        Excluir
+                                    </button>
                                 </div>
                             </article>
                         }
@@ -308,3 +334,223 @@
         }
     </section>
 </main>
+
+@Html.AntiForgeryToken()
+
+<dialog id="dialogPrincipal" class="confirm-dialog" data-url="@Url.Action("TornarEnderecoPrincipal", "Endereco")">
+    <div class="confirm-dialog-content">
+        <div class="confirm-dialog-icon">
+            <span class="material-symbols-outlined">push_pin</span>
+        </div>
+
+        <h3 class="confirm-dialog-title">Tornar endereço principal?</h3>
+        <p class="confirm-dialog-text">
+            Este endereço passará a ser o padrão nas suas compras.
+            O endereço principal atual se tornará secundário.
+        </p>
+
+        <p id="dialogErro" class="confirm-dialog-error" hidden></p>
+
+        <div class="confirm-dialog-actions">
+            <button type="button" id="btnNao"
+                    class="confirm-dialog-btn confirm-dialog-btn-secondary">
+                Não tornar
+            </button>
+            <button type="button" id="btnSim"
+                    class="confirm-dialog-btn confirm-dialog-btn-primary">
+                Sim, tornar principal
+            </button>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="dialogEditar"
+        class="confirm-dialog edit-dialog"
+        data-url="@Url.Action("EditarEndereco", "Endereco")">
+    <form id="formEditar" class="confirm-dialog-content" novalidate>
+        <div class="confirm-dialog-icon">
+            <span class="material-symbols-outlined">edit_location</span>
+        </div>
+        <h3 class="confirm-dialog-title">Editar endereço</h3>
+
+        <input type="hidden" name="CdEndereco" />
+
+        <div class="edit-form-grid">
+            <label class="edit-field edit-field-full">
+                Identificação
+                <input type="text" name="NmIdentificacao" maxlength="50" placeholder="Casa, Trabalho..." required />
+            </label>
+
+            <label class="edit-field edit-field-full">
+                Destinatário
+                <input type="text" name="NmDestinatario" maxlength="100" required />
+            </label>
+
+            <label class="edit-field">
+                CEP
+                <input type="text" name="CEP" maxlength="9" inputmode="numeric" placeholder="00000-000" required />
+            </label>
+
+            <label class="edit-field">
+                UF
+                <input type="text" name="UF" maxlength="2" style="text-transform:uppercase" required />
+            </label>
+
+            <label class="edit-field edit-field-full">
+                Logradouro
+                <input type="text" name="Logradouro" maxlength="150" required />
+            </label>
+
+            <label class="edit-field">
+                Número
+                <input type="text" name="Numero" maxlength="10" required />
+            </label>
+
+            <label class="edit-field">
+                Complemento
+                <input type="text" name="DsComplemento" maxlength="100" />
+            </label>
+
+            <label class="edit-field">
+                Bairro
+                <input type="text" name="Bairro" maxlength="100" required />
+            </label>
+
+            <label class="edit-field">
+                Cidade
+                <input type="text" name="Cidade" maxlength="100" required />
+            </label>
+        </div>
+
+        <p id="dialogEditarErro" class="confirm-dialog-error" hidden></p>
+
+        <div class="confirm-dialog-actions">
+            <button type="button" id="btnEditarCancelar"
+                    class="confirm-dialog-btn confirm-dialog-btn-secondary">
+                Cancelar
+            </button>
+            <button type="submit" id="btnEditarSalvar"
+                    class="confirm-dialog-btn confirm-dialog-btn-primary">
+                Salvar alterações
+            </button>
+        </div>
+    </form>
+</dialog>
+
+<dialog id="dialogExcluir"
+        class="confirm-dialog"
+        data-url="@Url.Action("ExcluirEndereco", "Endereco")">
+    <div class="confirm-dialog-content">
+        <div class="confirm-dialog-icon confirm-dialog-icon-danger">
+            <span class="material-symbols-outlined">delete</span>
+        </div>
+
+        <h3 class="confirm-dialog-title">Excluir endereço?</h3>
+        <p class="confirm-dialog-text">
+            Esta ação não pode ser desfeita.
+        </p>
+        <p id="dialogExcluirAviso" class="confirm-dialog-text confirm-dialog-warning" hidden>
+            Este é o seu endereço principal. Outro endereço será definido
+            como principal automaticamente.
+        </p>
+
+        <p id="dialogExcluirErro" class="confirm-dialog-error" hidden></p>
+
+        <div class="confirm-dialog-actions">
+            <button type="button" id="btnExcluirNao"
+                    class="confirm-dialog-btn confirm-dialog-btn-secondary">
+                Cancelar
+            </button>
+            <button type="button" id="btnExcluirSim"
+                    class="confirm-dialog-btn confirm-dialog-btn-danger">
+                Sim, excluir
+            </button>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="dialogCadastrar"
+        class="confirm-dialog edit-dialog"
+        data-url="@Url.Action("CadastrarEndereco", "Endereco")">
+    <form id="formCadastrar" class="confirm-dialog-content" novalidate>
+        <div class="confirm-dialog-icon">
+            <span class="material-symbols-outlined">add_location_alt</span>
+        </div>
+        <h3 class="confirm-dialog-title">Novo endereço</h3>
+
+        <div class="cep-search">
+            <label class="edit-field">
+                CEP
+                <input type="text" name="CEP" inputmode="numeric" maxlength="9"
+                       placeholder="00000-000" autocomplete="postal-code"
+                       pattern="\d{5}-?\d{3}" required />
+            </label>
+            <button type="button" id="btnBuscarCep"
+                    class="confirm-dialog-btn confirm-dialog-btn-secondary" disabled>
+                Buscar
+            </button>
+        </div>
+        <p id="cepStatus" class="cep-status" hidden></p>
+
+        <fieldset id="camposEndereco" class="cad-fields" disabled>
+            <div class="edit-form-grid">
+                <label class="edit-field edit-field-full">
+                    Identificação
+                    <input type="text" name="NmIdentificacao" maxlength="50" placeholder="Casa, Trabalho..." required />
+                </label>
+
+                <label class="edit-field edit-field-full">
+                    Destinatário
+                    <input type="text" name="NmDestinatario" maxlength="100" required />
+                </label>
+
+                <label class="edit-field edit-field-full">
+                    Logradouro
+                    <input type="text" name="Logradouro" maxlength="150" required />
+                </label>
+
+                <label class="edit-field">
+                    Número
+                    <input type="text" name="Numero" maxlength="10" required />
+                </label>
+
+                <label class="edit-field">
+                    Complemento
+                    <input type="text" name="DsComplemento" maxlength="100" />
+                </label>
+
+                <label class="edit-field">
+                    Bairro
+                    <input type="text" name="Bairro" maxlength="100" required />
+                </label>
+
+                <label class="edit-field">
+                    Cidade
+                    <input type="text" name="Cidade" maxlength="100" required />
+                </label>
+
+                <label class="edit-field">
+                    UF
+                    <input type="text" name="UF" maxlength="2" style="text-transform:uppercase" required />
+                </label>
+            </div>
+        </fieldset>
+
+        <p id="dialogCadastrarErro" class="confirm-dialog-error" hidden></p>
+
+        <div class="confirm-dialog-actions">
+            <button type="button" id="btnCadastrarCancelar"
+                    class="confirm-dialog-btn confirm-dialog-btn-secondary">
+                Cancelar
+            </button>
+            <button type="submit" id="btnCadastrarSalvar"
+                    class="confirm-dialog-btn confirm-dialog-btn-primary" disabled>
+                Cadastrar endereço
+            </button>
+        </div>
+    </form>
+</dialog>
+
+@section Scripts {
+    <script src="~/js/endereco.js" asp-append-version="true"></script>
+}

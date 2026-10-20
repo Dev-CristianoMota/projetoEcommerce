@@ -1,0 +1,196 @@
+﻿@using Ecommerce.DTO;
+@using Ecommerce.ViewModels;
+@model DadosUsuarioViewModel
+
+@{
+    ViewData["Title"] = "Meus dados";
+    var editando = ViewData["Editando"] is true;
+}
+
+@section Styles {
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="~/css/meus-dados.css" asp-append-version="true" />
+}
+
+<main class="principal">
+
+    <nav class="breadcrumb" aria-label="Navegação">
+        <a href="/">Início</a>
+        <span>/</span>
+        <a asp-controller="Usuario" asp-action="Conta">Minha Conta</a>
+        <span>/</span>
+        <span>Meus dados</span>
+    </nav>
+
+    <section class="addresses">
+
+        <div class="addresses-header">
+            <div class="addresses-heading">
+                <div class="addresses-heading-icon">
+                    <span class="material-symbols-outlined">person</span>
+                </div>
+                <div>
+                    <h2>Meus dados</h2>
+                    <p>Mantenha suas informações pessoais e de contato sempre atualizadas.</p>
+                </div>
+            </div>
+
+            <button type="button" id="btn-editar-dados" class="address-add-button"
+                    hidden="@(editando ? "hidden" : null)">
+                <span class="material-symbols-outlined">edit</span>
+                Editar dados
+            </button>
+        </div>
+
+        @if (TempData["Sucesso"] is string sucesso)
+        {
+            <div class="profile-alert profile-alert-success" role="status">
+                <span class="material-symbols-outlined">check_circle</span>
+                @sucesso
+            </div>
+        }
+
+        <div asp-validation-summary="ModelOnly" class="profile-alert profile-alert-error"></div>
+
+        <div class="addresses-group">
+            <div class="addresses-group-header">
+                <span class="material-symbols-outlined">badge</span>
+                <h3>Dados pessoais</h3>
+            </div>
+
+            @* ===== Modo visualização (ListarDadosAsync) ===== *@
+            <div id="dados-visualizacao" class="address-card profile-card" hidden="@(editando ? "hidden" : null)">
+                <div class="profile-info-grid">
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">Nome completo</span>
+                        <strong>@Model.NmUsuario</strong>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">Apelido</span>
+                        <strong>@Model.NmApelido</strong>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">E-mail</span>
+                        <strong>@Model.NmEmail</strong>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">Telefone</span>
+                        <strong>@Model.TelefoneFormatado</strong>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">Tipo de conta</span>
+                        <strong>@Model.NmTipoUsuario</strong>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">Membro desde</span>
+                        <strong>@Model.DtCriacao.ToString("dd/MM/yyyy")</strong>
+                    </div>
+                </div>
+            </div>
+
+            @* ===== Modo edição (EditarAsync) ===== *@
+            <form id="dados-edicao" class="address-card profile-card"
+                  asp-controller="Usuario" asp-action="Editar" method="post"
+                  hidden="@(editando ? null : "hidden")">
+
+                <div class="profile-grid">
+
+                    <div class="profile-field">
+                        <label asp-for="NmUsuario"></label>
+                        <input asp-for="NmUsuario" autocomplete="name" />
+                        <span asp-validation-for="NmUsuario" class="profile-error"></span>
+                    </div>
+
+                    <div class="profile-field">
+                        <label asp-for="NmApelido"></label>
+                        <input asp-for="NmApelido" autocomplete="username" />
+                        <span asp-validation-for="NmApelido" class="profile-error"></span>
+                    </div>
+
+                    <div class="profile-field">
+                        <label asp-for="NmEmail"></label>
+                        <input asp-for="NmEmail" type="email" autocomplete="email" />
+                        <span asp-validation-for="NmEmail" class="profile-error"></span>
+                    </div>
+
+                    <div class="profile-field">
+                        <label asp-for="NmTelefone"></label>
+                        <input asp-for="NmTelefone" type="tel" value="@Model.TelefoneFormatado"
+                               placeholder="(00) 00000-0000" autocomplete="tel" />
+                        <span class="profile-hint">DDD + número.</span>
+                        <span asp-validation-for="NmTelefone" class="profile-error"></span>
+                    </div>
+
+                </div>
+
+                <div class="address-card-footer profile-footer">
+                    <button type="submit" class="address-add-button">
+                        <span class="material-symbols-outlined">save</span>
+                        Salvar alterações
+                    </button>
+                    <button type="button" id="btn-cancelar-edicao" class="profile-secondary-button">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="addresses-group addresses-secondary-group">
+            <div class="addresses-group-header">
+                <span class="material-symbols-outlined">shortcut</span>
+                <h3>Atalhos</h3>
+            </div>
+
+            <div class="addresses-grid profile-shortcuts">
+                <a class="address-card profile-shortcut" asp-controller="Usuario" asp-action="Pedido">
+                    <div class="address-card-icon">
+                        <span class="material-symbols-outlined">shopping_bag</span>
+                    </div>
+                    <div>
+                        <h4>Meus Pedidos</h4>
+                        <span class="address-recipient">Gerencie seus Pedidos</span>
+                    </div>
+                </a>
+                <a class="address-card profile-shortcut" asp-controller="Endereco" asp-action="Endereco">
+                    <div class="address-card-icon">
+                        <span class="material-symbols-outlined">location_on</span>
+                    </div>
+                    <div>
+                        <h4>Meus endereços</h4>
+                        <span class="address-recipient">Gerencie seus endereços de entrega</span>
+                    </div>
+                </a>
+                <a class="address-card profile-shortcut" asp-controller="Endereco" asp-action="Endereco">
+                    <div class="address-card-icon">
+                        <span class="material-symbols-outlined">wallet</span>
+                    </div>
+                    <div>
+                        <h4>Minha Carteira</h4>
+                        <span class="address-recipient">Gerencie Carteira</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<script>
+    (function () {
+        var visualizacao = document.getElementById('dados-visualizacao');
+        var form = document.getElementById('dados-edicao');
+        var btnEditar = document.getElementById('btn-editar-dados');
+        var btnCancelar = document.getElementById('btn-cancelar-edicao');
+
+        function alternar(editar) {
+            visualizacao.hidden = editar;
+            form.hidden = !editar;
+            btnEditar.hidden = editar;
+            if (editar) form.querySelector('input').focus();
+        }
+
+        btnEditar.addEventListener('click', function () { alternar(true); });
+        btnCancelar.addEventListener('click', function () { form.reset(); alternar(false); });
+    })();
+</script>

@@ -1,8 +1,11 @@
 ﻿using Ecommerce.Data;
 using Ecommerce.DTO;
 using Ecommerce.Models;
+using Ecommerce.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+public record ResultadoEdicao(bool Sucesso, string? Erro = null, DTOUsuarioLogado? Usuario = null);
+
 public class UsuarioService
 {
     private readonly EcommerceDbContext _context;
@@ -18,6 +21,23 @@ public class UsuarioService
         return await _context.Usuarios
             .AsNoTracking()
             .ToListAsync();
+    }
+
+    public async Task<DadosUsuarioViewModel?> ListarDadosAsync(int cdUsuario)
+    {
+        return await _context.Usuarios
+            .AsNoTracking()
+            .Where(u => u.CdUsuario == cdUsuario && u.IcUsuarioAtivo)
+            .Select(u => new DadosUsuarioViewModel
+            {
+                NmUsuario = u.NmUsuario,
+                NmApelido = u.NmApelido,
+                NmEmail = u.NmEmail,
+                NmTelefone = u.NmTelefone,
+                NmTipoUsuario = u.CdTipoUsuarioNavigation.NmTipoUsuario,
+                DtCriacao = u.DtCriacao
+            })
+            .FirstOrDefaultAsync();
     }
 
     public async Task<Usuario?> BuscarPorIdAsync(int id)
@@ -65,5 +85,56 @@ public class UsuarioService
         _context.Usuarios.Add(usuario);
         await _context.SaveChangesAsync();
         return usuario;
+    }
+
+    public async Task<ResultadoEdicao> EditarAsync(int cdUsuario, DadosUsuarioViewModel dados)
+    {
+        if (dados is null)
+            return new ResultadoEdicao(false, "Dados inválidos.");
+
+        var usuario = await _context.Usuarios
+            .Include(u => u.CdTipoUsuarioNavigation)
+            .FirstOrDefaultAsync(u => u.CdUsuario == cdUsuario && u.IcUsuarioAtivo);
+
+        if (usuario is null)
+            return new ResultadoEdicao(false, "Usuário não encontrado.");
+
+        var apelido = dados.NmApelido?.Trim() ?? "";
+        var nome = dados.NmUsuario?.Trim() ?? "";
+        var email = dados.NmEmail?.Trim() ?? "";
+        var telefone = new string((dados.NmTelefone ?? "").Where(char.IsDigit).ToArray());
+
+        if (apelido.Length == 0 || nome.Length == 0 || email.Length == 0)
+            return new ResultadoEdicao(false, "Preencha apelido, nome e e-mail.");
+
+        if (telefone.Length is < 10 or > 11)
+            return new ResultadoEdicao(false, "Telefone deve ter DDD + número (10 ou 11 dígitos).");
+
+        if (await _context.Usuarios.AnyAsync(u => u.CdUsuario != cdUsuario && u.NmApelido == apelido))
+            return new ResultadoEdicao(false, "Este apelido já está em uso.");
+
+        if (await _context.Usuarios.AnyAsync(u => u.CdUsuario != cdUsuario && u.NmEmail == email))
+            return new ResultadoEdicao(false, "Este e-mail já está em uso.");
+
+        if (await _context.Usuarios.AnyAsync(u => u.CdUsuario != cdUsuario && u.NmTelefone == telefone))
+            return new ResultadoEdicao(false, "Este telefone já está em uso.");
+
+        usuario.NmApelido = apelido;
+        usuario.NmUsuario = nome;
+        usuario.NmEmail = email;
+        usuario.NmTelefone = telefone;
+        usuario.DtAtualizacao = DateTime.Now;
+
+        await _context.SaveChangesAsync();
+
+        return new ResultadoEdicao(true, null, new DTOUsuarioLogado
+        {
+            CdUsuario = usuario.CdUsuario,
+            NmApelido = usuario.NmApelido,
+            NmUsuario = usuario.NmUsuario,
+            NmEmail = usuario.NmEmail,
+            CdTipoUsuario = usuario.CdTipoUsuario,
+            NmTipoUsuario = usuario.CdTipoUsuarioNavigation.NmTipoUsuario
+        });
     }
 }

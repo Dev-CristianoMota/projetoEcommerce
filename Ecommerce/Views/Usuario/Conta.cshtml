@@ -1,7 +1,8 @@
-﻿@model Ecommerce.Models.Usuario
-@using Ecommerce.DTO
+﻿@using System.Globalization
+@model int
+
 @{
-    ViewData["Title"] = "Ecommerce";
+    ViewData["Title"] = "Minha Conta";
 }
 
 @section Styles {
@@ -72,12 +73,12 @@
 
 <main class="profile">
     <nav class="breadcrumb">
-        <a href="#">
+        <a href="/">
             Início
         </a>
         <span>/</span>
         <span>
-            Central Minha Conta
+            Minha Conta
         </span>
     </nav>
     
@@ -114,7 +115,7 @@
         </div>
 
             <a asp-controller="Usuario"
-                asp-action="Editar"
+                asp-action="MeusDados"
                 class="profile-edit-btn">
                 <span>EDITAR DADOS</span>
                 <span class="material-symbols-outlined">
@@ -157,7 +158,7 @@
             </a>
 
             <a asp-controller="Usuario"
-               asp-action="Editar"
+               asp-action="MeusDados"
                class="atalho">
                 <span class="atalho-icon material-symbols-outlined">
                     person
@@ -217,164 +218,151 @@
             </form>
         </div>
     </section>
-    <section class="last-order">
-        <div class="last-order-header">
-            <div class="last-order-heading">
-                <div class="last-order-icon">
-                    <span class="material-symbols-outlined">
-                        receipt_long
-                    </span>
-                </div>
-
-                <div>
-                    <h2>Último pedido</h2>
-                    <p>Confira os detalhes da sua compra mais recente.</p>
-                </div>
+    
+@* <section class="last-order">
+    <div class="last-order-header">
+        <div class="last-order-heading">
+            <div class="last-order-icon">
+                <span class="material-symbols-outlined">receipt_long</span>
             </div>
 
+            <div>
+                <h2>Último pedido</h2>
+                <p>Confira os detalhes da sua compra mais recente.</p>
+            </div>
+        </div>
+
+        <p>Pedidos encontrados para este usuário: <strong>@Model</strong></p>
+        
+        @* @if (Model?.UltimoPedido != null)
+        {
             <a asp-controller="Pedido"
                asp-action="Index"
                class="last-order-all">
                 Ver todos
-                <span class="material-symbols-outlined">
-                    arrow_forward
-                </span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+        }
+    </div>
+
+    @if (Model?.UltimoPedido == null)
+    {
+        <div class="last-order-empty">
+            <p>Você ainda não fez nenhum pedido.</p>
+            <a asp-controller="Home" asp-action="Index">
+                Explorar produtos
             </a>
         </div>
+    }
+    else
+    {
+        var pedido = Model.UltimoPedido;
 
         <div class="last-order-content">
-
             <div class="last-order-info">
                 <div class="last-order-number">
                     <span class="last-order-label">NÚMERO DO PEDIDO</span>
-                    <strong>#000184</strong>
+
+                    <strong>@pedido.NumeroFormatado</strong>
+
                     <span class="last-order-date">
-                        Realizado em 08/10/2026 às 14:35
+                        Realizado em
+                        @pedido.DtCriacao.ToString("dd/MM/yyyy 'às' HH:mm")
                     </span>
                 </div>
 
-                <span class="last-order-status status-transit">
+                <span class="last-order-status @pedido.StatusCss">
                     <span class="status-dot"></span>
-                    Em transporte
+                    @pedido.StatusTexto
                 </span>
             </div>
 
             <div class="last-order-store">
-                <span class="material-symbols-outlined">
-                    storefront
-                </span>
+                <span class="material-symbols-outlined">storefront</span>
 
                 <div>
                     <span>Vendido por</span>
-                    <strong>Tech Store</strong>
+                    <strong>@pedido.NmLoja</strong>
                 </div>
             </div>
 
             <div class="last-order-section-title">
                 <h3>Produtos do pedido</h3>
-                <span>3 itens</span>
+
+                <span>
+                    @pedido.QtTotalItens
+                    @(pedido.QtTotalItens == 1 ? "item" : "itens")
+                </span>
             </div>
 
             <div class="last-order-products">
+                @foreach (var item in pedido.Itens)
+                {
+                    <div class="last-order-product">
+                        <div class="product-placeholder">
+                            <span class="material-symbols-outlined">
+                                inventory_2
+                            </span>
+                        </div>
 
-                <div class="last-order-product">
-                    <div class="product-placeholder">
-                        <span class="material-symbols-outlined">
-                            headphones
-                        </span>
+                        <div class="product-info">
+                            <strong>@item.NmProduto</strong>
+
+                            <span>
+                                Quantidade: @item.Quantidade
+                                @(item.Quantidade == 1 ? "unidade" : "unidades")
+                            </span>
+                        </div>
+
+                        <div class="product-values">
+                            <span>Valor unitário</span>
+
+                            <strong>
+                                @item.VlUnitario.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))
+                            </strong>
+                        </div>
                     </div>
-
-                    <div class="product-info">
-                        <strong>Fone Bluetooth Premium</strong>
-                        <span>Quantidade: 1 unidade</span>
-                    </div>
-
-                    <div class="product-values">
-                        <span>Valor unitário</span>
-                        <strong>R$ 299,90</strong>
-                    </div>
-                </div>
-
-                <div class="last-order-product">
-                    <div class="product-placeholder">
-                        <span class="material-symbols-outlined">
-                            watch
-                        </span>
-                    </div>
-
-                    <div class="product-info">
-                        <strong>Smartwatch Esportivo</strong>
-                        <span>Quantidade: 1 unidade</span>
-                    </div>
-
-                    <div class="product-values">
-                        <span>Valor unitário</span>
-                        <strong>R$ 249,90</strong>
-                    </div>
-                </div>
-
-                <div class="last-order-product">
-                    <div class="product-placeholder">
-                        <span class="material-symbols-outlined">
-                            cable
-                        </span>
-                    </div>
-
-                    <div class="product-info">
-                        <strong>Cabo USB-C Reforçado</strong>
-                        <span>Quantidade: 1 unidade</span>
-                    </div>
-
-                    <div class="product-values">
-                        <span>Valor unitário</span>
-                        <strong>R$ 50,00</strong>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="last-order-delivery">
-                <div class="delivery-heading">
-                    <span class="material-symbols-outlined">
-                        location_on
-                    </span>
-
-                    <div>
-                        <h3>Endereço de entrega</h3>
-                        <p>Casa</p>
-                    </div>
-                </div>
-
-                <div class="delivery-address">
-                    <strong>Marina Costa</strong>
-                    <span>Rua das Flores, 125</span>
-                    <span>Apto. 42 — Centro</span>
-                    <span>Santos - SP, CEP 11000-000</span>
-                </div>
+                }
             </div>
 
             <div class="last-order-summary">
                 <div class="summary-row">
                     <span>Subtotal</span>
-                    <strong>R$ 599,80</strong>
+
+                    <strong>
+                        @pedido.VlSubtotal.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))
+                    </strong>
                 </div>
 
-                <div class="summary-row">
-                    <span>Cupom de desconto (BEMVINDO10)</span>
-                    <strong class="summary-discount">− R$ 0,00</strong>
-                </div>
+                @if (pedido.VlDesconto > 0)
+                {
+                    <div class="summary-row">
+                        <span>
+                            Cupom de desconto
+                            @if (!string.IsNullOrWhiteSpace(pedido.CdPromocional))
+                            {
+                                <text>(@pedido.CdPromocional)</text>
+                            }
+                        </span>
+
+                        <strong class="summary-discount">
+                            − @pedido.VlDesconto.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))
+                        </strong>
+                    </div>
+                }
 
                 <div class="summary-row summary-total">
                     <span>Total do pedido</span>
-                    <strong>R$ 599,80</strong>
+
+                    <strong>
+                        @pedido.VlTotal.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))
+                    </strong>
                 </div>
             </div>
 
             <div class="last-order-footer">
                 <div class="last-order-payment-info">
-                    <span class="material-symbols-outlined">
-                        info
-                    </span>
+                    <span class="material-symbols-outlined">info</span>
 
                     <p>
                         Acompanhe o status e os detalhes completos do seu pedido.
@@ -383,15 +371,13 @@
 
                 <a asp-controller="Pedido"
                    asp-action="Detalhes"
-                   asp-route-id="184"
+                   asp-route-id="@pedido.CdPedido"
                    class="last-order-button">
                     Ver detalhes
-                    <span class="material-symbols-outlined">
-                        arrow_forward
-                    </span>
+                    <span class="material-symbols-outlined">arrow_forward</span>
                 </a>
             </div>
-
         </div>
-    </section>
+</section>
+ *@
 </main>
