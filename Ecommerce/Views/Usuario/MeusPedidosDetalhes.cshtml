@@ -1,0 +1,206 @@
+﻿@using System.Globalization
+@model Ecommerce.ViewModels.DetalhePedidoViewModel
+
+@{
+    ViewData["Title"] = $"Pedido #{Model.CdPedido}";
+
+    var ptBr = new CultureInfo("pt-BR");
+
+    (string Texto, string Classe) Status(string? sg) => sg switch
+    {
+        "P" => ("Pendente", "pendente"),
+        "A" => ("Aprovado", "aprovado"),
+        "E" => ("Enviado", "enviado"),
+        "T" => ("Entregue", "entregue"),
+        "C" => ("Cancelado", "cancelado"),
+        _ => ("Desconhecido", "desconhecido")
+    };
+
+    var status = Status(Model.SgStatus);
+
+    string? descricaoCupom = null;
+    if (!string.IsNullOrEmpty(Model.CodigoCupom))
+    {
+        descricaoCupom = Model.TipoDesconto == "P"
+            ? $"{Model.CodigoCupom} ({(Model.VlCupom ?? 0).ToString("0.##", ptBr)}%)"
+            : Model.CodigoCupom;
+    }
+
+    var cep = Model.Endereco?.Cep ?? "";
+    if (cep.Length == 8)
+    {
+        cep = cep.Insert(5, "-");
+    }
+}
+
+@section Styles
+{
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="~/css/meus-pedidos-detalhes.css" asp-append-version="true" />
+}
+
+<partial name="_NavegacaoCategorias" />
+
+<main class="mp-principal">
+
+    <nav class="mp-breadcrumb" aria-label="Navegação estrutural">
+        <a href="/">Início</a>
+        <span>/</span>
+        <a asp-controller="Usuario" asp-action="Conta">Minha Conta</a>
+        <span>/</span>
+        <a asp-controller="Pedido" asp-action="ListarPedidosUsuario">Meus pedidos</a>
+        <span>/</span>
+        <span>Pedido #@Model.CdPedido</span>
+    </nav>
+
+    <section class="mp mp-detalhe">
+
+        <header class="mp-header">
+            <div class="mp-heading">
+                <div class="mp-heading-icon">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                </div>
+
+                <div class="mp-heading-text">
+                    <h1 class="mp-title">Pedido #@Model.CdPedido</h1>
+                    <p class="mp-subtitle">
+                        Realizado em @Model.DtCriacao.ToString("dd/MM/yyyy 'às' HH:mm")
+                    </p>
+                </div>
+            </div>
+
+            <span class="mp-badge @status.Classe">
+                <span class="mp-status-ponto"></span>
+                @status.Texto
+            </span>
+        </header>
+
+        <div class="mp-detalhe-grid">
+
+            <!-- Coluna principal: itens -->
+            <div class="mp-bloco">
+                <h2 class="mp-bloco-titulo">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    Itens do pedido
+                    <span class="mp-bloco-contagem">
+                        @Model.Itens.Count @(Model.Itens.Count == 1 ? "produto" : "produtos")
+                    </span>
+                </h2>
+
+                <div class="mp-itens">
+                    <div class="mp-item mp-item-cabecalho">
+                        <span>Produto</span>
+                        <span>Qtd.</span>
+                        <span>Unitário</span>
+                        <span>Subtotal</span>
+                    </div>
+
+                    @foreach (var item in Model.Itens)
+                    {
+                        <div class="mp-item">
+                            <div class="mp-item-produto">
+                                <span class="mp-item-nome">@item.NmProduto</span>
+                                <span class="mp-item-categoria">@item.NmCategoria</span>
+                            </div>
+
+                            <span class="mp-item-qtd" data-rotulo="Qtd.">@item.Quantidade</span>
+                            <span class="mp-item-valor" data-rotulo="Unitário">@item.VlUnitario.ToString("C", ptBr)</span>
+                            <span class="mp-item-subtotal" data-rotulo="Subtotal">@item.VlSubtotalItem.ToString("C", ptBr)</span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Coluna lateral -->
+            <aside class="mp-detalhe-lateral">
+
+                <div class="mp-bloco">
+                    <h2 class="mp-bloco-titulo">
+                        <span class="material-symbols-outlined">payments</span>
+                        Resumo
+                    </h2>
+
+                    <div class="mp-resumo-linha">
+                        <span>Subtotal</span>
+                        <span>@Model.VlSubtotal.ToString("C", ptBr)</span>
+                    </div>
+
+                    @if (Model.VlDesconto > 0 || descricaoCupom != null)
+                    {
+                        <div class="mp-resumo-linha mp-resumo-desconto">
+                            <span>
+                                Desconto
+                                @if (descricaoCupom != null)
+                                {
+                                    <small class="mp-cupom">@descricaoCupom</small>
+                                }
+                            </span>
+                            <span>− @Model.VlDesconto.ToString("C", ptBr)</span>
+                        </div>
+                    }
+
+                    <div class="mp-resumo-linha mp-resumo-total">
+                        <span>Total</span>
+                        <span>@Model.VlTotal.ToString("C", ptBr)</span>
+                    </div>
+                </div>
+
+                <div class="mp-bloco">
+                    <h2 class="mp-bloco-titulo">
+                        <span class="material-symbols-outlined">local_shipping</span>
+                        Entrega
+                    </h2>
+
+                    @if (Model.Endereco is null)
+                    {
+                        <p class="mp-bloco-vazio">Nenhum endereço de entrega informado para este pedido.</p>
+                    }
+                    else
+                    {
+                        <address class="mp-endereco">
+                            <span>@Model.Endereco.Logradouro, @Model.Endereco.Numero</span>
+                            <span>@Model.Endereco.Bairro</span>
+                            <span>@Model.Endereco.Cidade - @Model.Endereco.Uf</span>
+                            <span>CEP @cep</span>
+                        </address>
+                    }
+                </div>
+
+                <div class="mp-bloco">
+                    <h2 class="mp-bloco-titulo">
+                        <span class="material-symbols-outlined">info</span>
+                        Informações
+                    </h2>
+
+                    <div class="mp-resumo-linha">
+                        <span>Loja</span>
+                        <span>@Model.NmLoja</span>
+                    </div>
+
+                    <div class="mp-resumo-linha">
+                        <span>Criado em</span>
+                        <span>@Model.DtCriacao.ToString("dd/MM/yyyy HH:mm")</span>
+                    </div>
+
+                    @if (Model.DtAtualizacao.HasValue)
+                    {
+                        <div class="mp-resumo-linha">
+                            <span>Atualizado em</span>
+                            <span>@Model.DtAtualizacao.Value.ToString("dd/MM/yyyy HH:mm")</span>
+                        </div>
+                    }
+                </div>
+
+            </aside>
+        </div>
+
+        <div class="mp-detalhe-acoes">
+            <a class="mp-btn mp-btn-secundario" asp-controller="Pedido" asp-action="ListarPedidosUsuario">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Voltar para meus pedidos
+            </a>
+        </div>
+
+    </section>
+</main>

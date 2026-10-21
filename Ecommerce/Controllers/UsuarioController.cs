@@ -69,35 +69,35 @@ public class UsuarioController : BaseController
 
 
 
-    [Authorize]
-    [HttpGet]
-    public async Task<IActionResult> Conta()
-    {
-        var logado = UsuarioLogado;
+    //[Authorize]
+    //[HttpGet]
+    //public async Task<IActionResult> Conta()
+    //{
+    //    var logado = UsuarioLogado;
 
-        if (logado is null)
-            return RedirectToAction(nameof(Login));
+    //    if (logado is null)
+    //        return RedirectToAction(nameof(Login));
 
-        var usuario = await _usuarioService.BuscarPorIdAsync(
-            4
-        );
+    //    var usuario = await _usuarioService.BuscarPorIdAsync(
+    //        4
+    //    );
 
-        if (usuario is null)
-            return RedirectToAction(nameof(Login));
+    //    if (usuario is null)
+    //        return RedirectToAction(nameof(Login));
 
-        var ultimoPedido = await _pedidoService.BuscarUltimoPedidoAsync(
-            4
-        );
+    //    var ultimoPedido = await _pedidoService.BuscarUltimoPedidoAsync(
+    //        4
+    //    );
 
-        int model = ultimoPedido;
+    //    int model = ultimoPedido;
 
-        //var model = new ContaViewModel
-        //{
-        //    UltimoPedido = ultimoPedido
-        //};
+    //    //var model = new ContaViewModel
+    //    //{
+    //    //    UltimoPedido = ultimoPedido
+    //    //};
 
-        return View(model);
-    }
+    //    return View(model);
+    //}
 
 
     [HttpPost]

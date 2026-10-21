@@ -1,0 +1,341 @@
+﻿@using System.Globalization
+@model Ecommerce.ViewModels.MeusPedidosViewModel
+
+@{
+    ViewData["Title"] = "Meus Pedidos";
+
+    var ptBr = new CultureInfo("pt-BR");
+
+    (string Texto, string Classe) Status(string? sg) => sg switch
+    {
+        "P" => ("Pendente", "pendente"),
+        "A" => ("Aprovado", "aprovado"),
+        "E" => ("Enviado", "enviado"),
+        "T" => ("Entregue", "entregue"),
+        "C" => ("Cancelado", "cancelado"),
+        _ => ("Desconhecido", "desconhecido")
+    };
+
+    var filtros = new (string Valor, string Texto)[]
+    {
+        ("", "Todos"),
+        ("P", "Pendentes"),
+        ("A", "Aprovados"),
+        ("E", "Enviados"),
+        ("T", "Entregues"),
+        ("C", "Cancelados")
+    };
+
+    var statusRota = string.IsNullOrEmpty(Model.StatusFiltro) ? null : Model.StatusFiltro;
+
+    var ordemRota = Model.Ordem == "antigos" ? "antigos" : null;
+
+    var ordens = new (string Valor, string Texto)[]
+    {
+        ("recentes", "Mais recentes"),
+        ("antigos", "Mais antigos")
+    };
+}
+
+@section Styles 
+{
+    <link rel="stylesheet" href="~/css/meus-pedidos.css" asp-append-version="true" />
+}
+
+<nav class="navigation">
+
+    <div class="navigation-content">
+
+        <div class="nav-left">
+
+            <a href="#" class="nav-item all-products">
+
+                <span class="material-symbols-outlined">
+                    view_comfy_alt
+                </span>
+
+                Todos os produtos
+
+            </a>
+
+
+            <div class="nav-divider"></div>
+
+            <a href="#" class="nav-item">
+                Celulares e Telefones
+            </a>
+
+            <a href="#" class="nav-item">
+                Moda e Acessórios
+            </a>
+
+            <a href="#" class="nav-item">
+                Eletrodomésticos
+            </a>
+
+            <a href="#" class="nav-item">
+                Casa e Decoração
+            </a>
+
+            <a href="#" class="nav-item">
+                Veículos e Peças
+            </a>
+
+            <a href="#" class="nav-item">
+                Alimentos
+            </a>
+
+        </div>
+
+
+        <a href="#" class="special-offers">
+
+            Ofertas especiais
+
+            <span class="material-symbols-outlined">
+                arrow_forward
+            </span>
+
+        </a>
+
+    </div>
+
+</nav>
+
+<main class="mp-principal">
+
+    <nav class="mp-breadcrumb" aria-label="Navegação estrutural">
+        <a href="/">Início</a>
+        <span>/</span>
+        <a asp-controller="Usuario" asp-action="Conta">Minha Conta</a>
+        <span>/</span>
+        <span>Meus pedidos</span>
+    </nav>
+
+    <section class="mp">
+
+        <header class="mp-header">
+            <div class="mp-heading">
+                <div class="mp-heading-icon">
+                    <span class="material-symbols-outlined">
+                        shopping_bag
+                    </span>
+                </div>
+
+                <div class="mp-heading-text">
+                    <h1 class="mp-title">Meus pedidos</h1>
+                    <p class="mp-subtitle">
+                        Acompanhe o histórico e o andamento das suas compras.
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <div class="mp-barra">
+            <nav class="mp-filtros" aria-label="Filtrar pedidos por status">
+                @foreach (var f in filtros)
+                {
+                    var ativo = (Model.StatusFiltro ?? "") == f.Valor;
+
+                    <a class="mp-filtro @(ativo ? "ativo" : "")"
+                       aria-current="@(ativo ? "page" : null)"
+                       asp-controller="Pedido"
+                       asp-action="ListarPedidosUsuario"
+                       asp-route-status="@(string.IsNullOrEmpty(f.Valor) ? null : f.Valor)"
+                       asp-route-ordem="@ordemRota">
+                        @f.Texto
+                    </a>
+                }
+            </nav>
+
+            <nav class="mp-ordenacao" aria-label="Ordenar pedidos">
+                @foreach (var o in ordens)
+                {
+                    var ativo = Model.Ordem == o.Valor;
+
+                    <a class="mp-filtro @(ativo ? "ativo" : "")"
+                       aria-current="@(ativo ? "page" : null)"
+                       asp-controller="Pedido"
+                       asp-action="ListarPedidosUsuario"
+                       asp-route-status="@statusRota"
+                       asp-route-ordem="@(o.Valor == "antigos" ? "antigos" : null)">
+                        @o.Texto
+                    </a>
+                }
+            </nav>
+        </div>
+
+        @if (Model.Pedidos.Count == 0)
+        {
+            <div class="mp-vazio">
+                <div class="mp-vazio-icone">
+                    <span class="material-symbols-outlined">
+                        package_2
+                    </span>
+                </div>
+
+                <h2>Nenhum pedido encontrado</h2>
+
+                <p>
+                    @if (string.IsNullOrEmpty(Model.StatusFiltro))
+                    {
+                        <text>Você ainda não fez nenhum pedido. Quando realizar uma compra, ela aparecerá aqui.</text>
+                    }
+                    else
+                    {
+                        <text>Não há pedidos com o status selecionado.</text>
+                    }
+                </p>
+
+                @if (!string.IsNullOrEmpty(Model.StatusFiltro))
+                {
+                    <a class="mp-btn"
+                    asp-controller="Pedido"
+                    asp-action="ListarPedidosUsuario">
+                        Ver todos os pedidos
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="mp-lista-info">
+                <span>
+                    <span class="material-symbols-outlined">receipt_long</span>
+                    Histórico de compras
+                </span>
+
+                <span class="mp-lista-contagem">
+                    @Model.Pedidos.Count
+                    @(Model.Pedidos.Count == 1 ? "pedido nesta página" : "pedidos nesta página")
+                </span>
+            </div>
+
+            <div class="mp-lista">
+                @foreach (var pedido in Model.Pedidos)
+                {
+                    var status = Status(pedido.SgStatus);
+
+                    <article class="mp-card">
+
+                        <div class="mp-card-topo">
+                            <div class="mp-pedido-identificacao">
+                                <div class="mp-card-icone">
+                                    <span class="material-symbols-outlined">
+                                        receipt
+                                    </span>
+                                </div>
+
+                                <div class="mp-pedido-titulo">
+                                    <span class="mp-card-numero">
+                                        Pedido #@pedido.CdPedido
+                                    </span>
+
+                                    <span class="mp-card-data">
+                                        Realizado em
+                                        @pedido.DtCriacao.ToString("dd/MM/yyyy 'às' HH:mm")
+                                    </span>
+                                </div>
+                            </div>
+
+                            <span class="mp-badge @status.Classe">
+                                <span class="mp-status-ponto"></span>
+                                @status.Texto
+                            </span>
+                        </div>
+
+                        <div class="mp-card-corpo">
+
+                            <div class="mp-info">
+                                <span class="mp-info-rotulo">
+                                    <span class="material-symbols-outlined">storefront</span>
+                                    Loja
+                                </span>
+
+                                <span class="mp-info-valor">
+                                    @pedido.NmLoja
+                                </span>
+                            </div>
+
+                            <div class="mp-info">
+                                <span class="mp-info-rotulo">
+                                    <span class="material-symbols-outlined">inventory_2</span>
+                                    Quantidade
+                                </span>
+
+                                <span class="mp-info-valor">
+                                    @pedido.QtItens @(pedido.QtItens == 1 ? "item" : "itens")
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <footer class="mp-card-rodape">
+                            <div class="mp-total">
+                                <span class="mp-info-rotulo">Total do pedido</span>
+                                <span class="mp-total-valor">
+                                    @pedido.VlTotal.ToString("C", ptBr)
+                                </span>
+                            </div>
+
+                            <a class="mp-btn"
+                               asp-controller="Pedido"
+                               asp-action="Detalhes"
+                               asp-route-id="@pedido.CdPedido">
+                                Ver detalhes
+                                <span class="material-symbols-outlined">arrow_forward</span>
+                            </a>
+                        </footer>
+
+                    </article>
+                }
+            </div>
+
+            @if (Model.TotalPaginas > 1)
+            {
+                <nav class="mp-paginacao" aria-label="Paginação dos pedidos">
+
+                    @if (Model.PaginaAtual > 1)
+                    {
+                        <a class="mp-pagina mp-pagina-navegacao"
+                        asp-controller="Pedido"
+                        asp-action="ListarPedidosUsuario"
+                        asp-route-status="@statusRota"
+                        asp-route-ordem="@ordemRota"
+                        asp-route-pagina="@(Model.PaginaAtual - 1)">
+                            <span class="material-symbols-outlined">chevron_left</span>
+                            Anterior
+                        </a>
+                    }
+
+                    @for (var i = 1; i <= Model.TotalPaginas; i++)
+                    {
+                        <a class="mp-pagina @(i == Model.PaginaAtual ? "ativo" : "")"
+                        aria-current="@(i == Model.PaginaAtual ? "page" : null)"
+                        asp-controller="Pedido"
+                        asp-action="ListarPedidosUsuario"
+                        asp-route-status="@statusRota"
+                        asp-route-ordem="@ordemRota"
+                        asp-route-pagina="@i">
+                            @i
+                        </a>
+                    }
+
+                    @if (Model.PaginaAtual < Model.TotalPaginas)
+                    {
+                        <a class="mp-pagina mp-pagina-navegacao"
+                        asp-controller="Pedido"
+                        asp-action="ListarPedidosUsuario"
+                        asp-route-status="@statusRota"
+                        asp-route-ordem="@ordemRota"
+                        asp-route-pagina="@(Model.PaginaAtual + 1)">
+                            Próxima
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </a>
+                    }
+
+                </nav>
+            }
+        }
+    </section>
+</main>
