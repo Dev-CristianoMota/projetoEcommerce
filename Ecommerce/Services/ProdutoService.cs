@@ -7,6 +7,9 @@ namespace Ecommerce.Services;
 
 public class ProdutoService
 {
+    private const int TamanhoPagina = 5;
+    private const int TotalMostrado = 15;
+
     private readonly EcommerceDbContext _context;
 
     public ProdutoService(EcommerceDbContext context)
@@ -62,8 +65,8 @@ public class ProdutoService
     public async Task<bool> DesativarProdutoAsync(int id)
     {
         var produto = await _context.Produtos.FindAsync(id);
-        
-        if(produto == null)
+
+        if (produto == null)
         {
             return false;
         }
@@ -95,21 +98,71 @@ public class ProdutoService
             .ToListAsync();
     }
 
-    public async Task<List<DTOProdutoMaisVendido>> ObterMaisVendidosAsync(int quantidade = 5)
+    public async Task<List<DTOProdutoMaisVendido>> ObterProdutosMaisVendidosAsync(int quantidade = TotalMostrado)
     {
         return await _context.ItemPedidos
-            .Where(i => i.CdPedidoNavigation.SgStatusPedido != "C")
-            .GroupBy(i => new { i.CdProduto, i.CdProdutoNavigation.NmProduto, i.CdProdutoNavigation.VlProduto })
+            .AsNoTracking()
+            .Where(i => i.CdPedidoNavigation.SgStatusPedido != "C"
+                     && i.CdProdutoNavigation.IcProdutoAtivo == true
+                     && i.CdProdutoNavigation.CdLojaVirtualNavigation.IcLojaAtiva == true)
+            .GroupBy(i => new
+            {
+                i.CdProduto,
+                i.CdProdutoNavigation.NmProduto,
+                i.CdProdutoNavigation.VlProduto,
+                i.CdProdutoNavigation.CdLojaVirtualNavigation.NmLojaVirtual
+            })
             .Select(g => new DTOProdutoMaisVendido
-
             {
                 CdProduto = g.Key.CdProduto,
                 NmProduto = g.Key.NmProduto,
                 VlProduto = g.Key.VlProduto,
+                NmLojaVirtual = g.Key.NmLojaVirtual,
                 QtdVendida = g.Sum(i => i.QtItem)
             })
             .OrderByDescending(p => p.QtdVendida)
+            .ThenBy(p => p.CdProduto)
             .Take(quantidade)
             .ToListAsync();
+    }
+
+    public async Task<List<List<DTOProdutoMaisVendido>>> ObterProdutosMaisVendidosPaginadosAsync()
+    {
+        var produtos = await ObterProdutosMaisVendidosAsync(TotalMostrado);
+
+        return produtos
+            .Chunk(TamanhoPagina)
+            .Select(pagina => pagina.ToList())
+            .ToList();
+    }
+
+    public async Task<List<DTOProdutoMaisRecentes>> ObterProdutosMaisRecentesAsync(int quantidade = TotalMostrado)
+    {
+        return await _context.Produtos
+            .AsNoTracking()
+            .Where(p => p.IcProdutoAtivo == true
+                     && p.CdLojaVirtualNavigation.IcLojaAtiva == true)
+            .OrderByDescending(p => p.DtCriacao)
+            .ThenByDescending(p => p.CdProduto)
+            .Take(quantidade)
+            .Select(p => new DTOProdutoMaisRecentes
+            {
+                CdProduto = p.CdProduto,
+                NmProduto = p.NmProduto,
+                VlProduto = p.VlProduto,
+                NmLojaVirtual = p.CdLojaVirtualNavigation.NmLojaVirtual,
+                DtCriacao = p.DtCriacao
+            })
+            .ToListAsync();
+    }
+
+    public async Task<List<List<DTOProdutoMaisRecentes>>> ObterProdutosMaisRecentesPaginadosAsync()
+    {
+        var produtos = await ObterProdutosMaisRecentesAsync(TotalMostrado);
+
+        return produtos
+            .Chunk(TamanhoPagina)
+            .Select(pagina => pagina.ToList())
+            .ToList();
     }
 }

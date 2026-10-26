@@ -1,5 +1,6 @@
 ﻿using Ecommerce.DTO;
 using Ecommerce.Helpers;
+using Ecommerce.Models;
 using Ecommerce.Services;
 using Ecommerce.ViewModels;
 using Microsoft.AspNetCore.Authentication;
@@ -67,38 +68,27 @@ public class UsuarioController : BaseController
         return RedirectToAction("Index", "Home");
     }
 
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> Conta()
+    {
+        var logado = UsuarioLogado;
 
+        if (logado is null)
+            return RedirectToAction(nameof(Login));
 
-    //[Authorize]
-    //[HttpGet]
-    //public async Task<IActionResult> Conta()
-    //{
-    //    var logado = UsuarioLogado;
+        var ultimoPedido = await _pedidoService.BuscarUltimoPedidoAsync(
+            logado.CdUsuario
+        );
 
-    //    if (logado is null)
-    //        return RedirectToAction(nameof(Login));
+        var vm = new ContaViewModel
+        {
+            Email = logado.NmEmail,
+            UltimoPedido = ultimoPedido
+        };
 
-    //    var usuario = await _usuarioService.BuscarPorIdAsync(
-    //        4
-    //    );
-
-    //    if (usuario is null)
-    //        return RedirectToAction(nameof(Login));
-
-    //    var ultimoPedido = await _pedidoService.BuscarUltimoPedidoAsync(
-    //        4
-    //    );
-
-    //    int model = ultimoPedido;
-
-    //    //var model = new ContaViewModel
-    //    //{
-    //    //    UltimoPedido = ultimoPedido
-    //    //};
-
-    //    return View(model);
-    //}
-
+        return View(vm);
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]

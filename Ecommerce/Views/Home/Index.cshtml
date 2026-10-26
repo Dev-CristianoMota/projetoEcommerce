@@ -1,72 +1,19 @@
 ﻿@using Ecommerce.DTO
 @{
     ViewData["Title"] = "Ecommerce";
+
+    var categorias = ViewBag.CategoriasMaisVendidas as List<DTOCategoriaMaisVendida> ?? new List<DTOCategoriaMaisVendida>();
+
+    var produtosVendidos = ViewBag.ProdutosMaisVendidos as List<List<DTOProdutoMaisVendido>> ?? new List<List<DTOProdutoMaisVendido>>();
+
+    var produtosRecentes = ViewBag.ProdutosMaisRecentes as List<List<DTOProdutoMaisRecentes>> ?? new List<List<DTOProdutoMaisRecentes>>();
+
+    var pt = new System.Globalization.CultureInfo("pt-BR");
 }
-@{
-    var categorias = ViewBag.CategoriasMaisVendidas as List<DTOCategoriaMaisVendida>;
-}
 
 
-<nav class="navigation">
+<partial name="_NavegacaoCategorias" />
 
-<div class="navigation-content">
-
-    <div class="nav-left">
-
-        <a href="#" class="nav-item all-products">
-
-            <span class="material-symbols-outlined">
-                view_comfy_alt
-            </span>
-
-            Todos os produtos
-
-        </a>
-
-
-        <div class="nav-divider"></div>
-
-        <a href="#" class="nav-item">
-            Celulares e Telefones        
-        </a>
-
-        <a href="#" class="nav-item">
-            Moda e Acessórios
-        </a>
-
-        <a href="#" class="nav-item">
-            Eletrodomésticos
-        </a>
-
-        <a href="#" class="nav-item">
-            Casa e Decoração
-        </a>
-
-        <a href="#" class="nav-item">
-            Veículos e Peças
-        </a>
-
-        <a href="#" class="nav-item">
-            Alimentos
-        </a>
-
-    </div>
-
-
-    <a href="#" class="special-offers">
-
-        Ofertas especiais
-
-        <span class="material-symbols-outlined">
-            arrow_forward
-        </span>
-
-    </a>
-
-</div>
-
-</nav>
-    
 <main class="main-content">
     <section class="hero">
         <div class="hero-content">
@@ -108,7 +55,7 @@
             </div>
         </div>
     </section>
-    
+
     <section class="benefits">
         <div class="benefit">
             <div class="benefit-icon">
@@ -160,176 +107,94 @@
         </div>
     </section>
 
-    <section class="products-section">
-      <div class="products-container">
+    @* =====================================================
+       MAIS VENDIDOS — carrossel de 5 em 5 (15 produtos)
+       ===================================================== *@
+    @if (produtosVendidos.Count > 0)
+    {
+        <section class="products-section">
+            <div class="products-container">
 
-        <!-- Cabeçalho -->
-        <div class="section-header">
-          <div>
-            <span class="eyebrow">FEITO PARA VOCÊ</span>
-            <h2>Os favoritos do momento.</h2>
-            <p>Uma seleção que todo mundo está de olho.</p>
-          </div>
+                <!-- Cabeçalho -->
+                <div class="section-header">
+                    <div>
+                        <span class="eyebrow">FEITO PARA VOCÊ</span>
+                        <h2>Os mais vendidos do momento.</h2>
+                        <p>Uma seleção que todo mundo está de olho.</p>
+                    </div>
 
-          <a href="#" class="view-all">
-            Ver todos os produtos
-            <span class="material-symbols-outlined">
-                arrow_forward
-            </span>
-          </a>
-        </div>
+                    <div class="carousel-controls">
+                        <span class="carousel-indicator" id="carouselIndicador">1 / @produtosVendidos.Count</span>
 
-        <!-- Produtos -->
-        <div class="products-grid">
+                        <button type="button" class="carousel-btn" id="btnPrev" aria-label="Produtos anteriores">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                        </button>
+                        <button type="button" class="carousel-btn" id="btnNext" aria-label="Próximos produtos">
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
 
-          <!-- Produto 1 -->
-          <article class="product-card">
+                <!-- Carrossel -->
+                <div class="products-carousel" id="produtosCarousel">
+                    <div class="carousel-track">
 
-            <div class="product-image product-image-1">
-              <span class="badge">Mais vendido</span>
+                        @for (int p = 0; p < produtosVendidos.Count; p++)
+                        {
+                            <div class="carousel-page">
 
-              <button class="favorite" aria-label="Adicionar aos favoritos">
-                ♡
-              </button>
+                                @for (int i = 0; i < produtosVendidos[p].Count; i++)
+                                {
+                                    var produto = produtosVendidos[p][i];
 
-              <button class="add-button" aria-label="Adicionar ao carrinho">
-                +
-              </button>
+                                    <article class="product-card">
 
-              <img
-                src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
-                alt="Fone de ouvido Studio Pro"
-              >
+                                        <div class="product-image">
+
+                                            @if (p == 0 && i == 0)
+                                            {
+                                                <span class="badge">Mais vendido</span>
+                                            }
+
+                                            <button class="favorite" aria-label="Adicionar aos favoritos">
+                                                ♡
+                                            </button>
+
+                                            <button class="add-button" aria-label="Adicionar ao carrinho">
+                                                +
+                                            </button>
+
+                                            <img src="/images/produtos/@(produto.CdProduto).webp"
+                                                 alt="@produto.NmProduto"
+                                                 onerror="this.style.display='none'">
+                                        </div>
+
+                                        <div class="product-info">
+                                            <span class="product-category">@produto.NmLojaVirtual.ToUpper()</span>
+
+                                            <h3>@produto.NmProduto</h3>
+
+                                            <div class="price">
+                                                <strong>@produto.VlProduto.ToString("C", pt)</strong>
+                                            </div>
+
+                                            <p class="installment">
+                                                ou 10x de @((produto.VlProduto / 10).ToString("C", pt)) sem juros
+                                            </p>
+                                        </div>
+
+                                    </article>
+                                }
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
             </div>
-
-            <div class="product-info">
-              <span class="product-category">AUDIOLAB</span>
-
-              <h3>Fone de ouvido Studio Pro</h3>
-
-              <div class="price">
-                <strong>R$ 899,00</strong>
-                <del>R$ 1.199,00</del>
-              </div>
-
-              <p class="installment">
-                ou 10x de R$ 89,90 sem juros
-              </p>
-            </div>
-
-          </article>
-
-
-          <!-- Produto 2 -->
-          <article class="product-card">
-
-            <div class="product-image product-image-2">
-              <span class="badge">Novidade</span>
-
-              <button class="favorite" aria-label="Adicionar aos favoritos">
-                ♡
-              </button>
-
-              <button class="add-button" aria-label="Adicionar ao carrinho">
-                +
-              </button>
-
-              <img
-                src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=80"
-                alt="Câmera Mirrorless X100"
-              >
-            </div>
-
-            <div class="product-info">
-              <span class="product-category">FRAME STUDIO</span>
-
-              <h3>Câmera Mirrorless X100</h3>
-
-              <div class="price">
-                <strong>R$ 4.299,00</strong>
-              </div>
-
-              <p class="installment">
-                ou 10x de R$ 429,90 sem juros
-              </p>
-            </div>
-
-          </article>
-
-
-          <!-- Produto 3 -->
-          <article class="product-card">
-
-            <div class="product-image product-image-3">
-              <button class="favorite" aria-label="Adicionar aos favoritos">
-                ♡
-              </button>
-
-              <button class="add-button" aria-label="Adicionar ao carrinho">
-                +
-              </button>
-
-              <img
-                src="https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=900&q=80"
-                alt="Fones sem fio Air Buds"
-              >
-            </div>
-
-            <div class="product-info">
-              <span class="product-category">AUDIOLAB</span>
-
-              <h3>Fones sem fio Air Buds</h3>
-
-              <div class="price">
-                <strong>R$ 549,00</strong>
-                <del>R$ 699,00</del>
-              </div>
-
-              <p class="installment">
-                ou 10x de R$ 54,90 sem juros
-              </p>
-            </div>
-
-          </article>
-
-
-          <!-- Produto 4 -->
-          <article class="product-card">
-
-            <div class="product-image product-image-4">
-              <button class="favorite" aria-label="Adicionar aos favoritos">
-                ♡
-              </button>
-
-              <button class="add-button" aria-label="Adicionar ao carrinho">
-                +
-              </button>
-
-              <img
-                src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
-                alt="Relógio Classic One"
-              >
-            </div>
-
-            <div class="product-info">
-              <span class="product-category">FRAME STUDIO</span>
-
-              <h3>Relógio Classic One</h3>
-
-              <div class="price">
-                <strong>R$ 749,00</strong>
-              </div>
-
-              <p class="installment">
-                ou 10x de R$ 74,90 sem juros
-              </p>
-            </div>
-
-          </article>
-
-        </div>
-      </div>
-    </section>
+        </section>
+    }
 
     <section class="highlight highlight-fotografia">
         <div class="highlight-content">
@@ -353,172 +218,108 @@
             </a>
         </div>
         <div class="highlight-image">
-            
+
         </div>
     </section>
 
-    <section class="products-section">
-        <div class="products-container">
+    @if (produtosRecentes.Count > 0)
+    {
+        <section class="products-section">
+            <div class="products-container">
 
-            <!-- Cabeçalho -->
-            <div class="section-header">
-                <div>
-                    <span class="eyebrow">FEITO PARA VOCÊ</span>
-                    <h2>Os favoritos do momento.</h2>
-                    <p>Uma seleção que todo mundo está de olho.</p>
+                <!-- Cabeçalho -->
+                <div class="section-header">
+                    <div>
+                        <span class="eyebrow">ACABARAM DE CHEGAR</span>
+                        <h2>Produtos mais recentes.</h2>
+                        <p>Confira as novidades que chegaram à nossa loja.</p>
+                    </div>
+
+                    <div class="carousel-controls">
+                        <span class="carousel-indicator" id="recentesIndicador">
+                            1 / @produtosRecentes.Count
+                        </span>
+
+                        <button type="button"
+                                class="carousel-btn"
+                                id="recentesPrev"
+                                aria-label="Produtos recentes anteriores">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                        </button>
+
+                        <button type="button"
+                                class="carousel-btn"
+                                id="recentesNext"
+                                aria-label="Próximos produtos recentes">
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </button>
+                    </div>
                 </div>
 
-                <a href="#" class="view-all">
-                    Ver todos os produtos
-                    <span class="material-symbols-outlined">
-                        arrow_forward
-                    </span>
-                </a>
-            </div>
+                <!-- Carrossel dos produtos recentes -->
+                <div class="products-carousel" id="produtosRecentesCarousel">
+                    <div class="carousel-track">
 
-            <!-- Produtos -->
-            <div class="products-grid">
+                        @for (int p = 0; p < produtosRecentes.Count; p++)
+                        {
+                            <div class="carousel-page">
 
-                <!-- Produto 1 -->
-                <article class="product-card">
+                                @for (int i = 0; i < produtosRecentes[p].Count; i++)
+                                {
+                                    var produto = produtosRecentes[p][i];
 
-                    <div class="product-image product-image-1">
-                        <span class="badge">Mais vendido</span>
+                                    <article class="product-card">
+                                        <div class="product-image">
 
-                        <button class="favorite" aria-label="Adicionar aos favoritos">
-                            ♡
-                        </button>
+                                            @if (p == 0 && i == 0)
+                                            {
+                                                <span class="badge">Novidade</span>
+                                            }
 
-                        <button class="add-button" aria-label="Adicionar ao carrinho">
-                            +
-                        </button>
+                                            <button type="button"
+                                                    class="favorite"
+                                                    aria-label="Adicionar aos favoritos">
+                                                ♡
+                                            </button>
 
-                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
-                             alt="Fone de ouvido Studio Pro">
+                                            <button type="button"
+                                                    class="add-button"
+                                                    aria-label="Adicionar ao carrinho">
+                                                +
+                                            </button>
+
+                                            <img src="/images/produtos/@(produto.CdProduto).webp"
+                                                 alt="@produto.NmProduto"
+                                                 onerror="this.style.display='none'">
+                                        </div>
+
+                                        <div class="product-info">
+                                            <span class="product-category">
+                                                @produto.NmLojaVirtual.ToUpper()
+                                            </span>
+
+                                            <h3>@produto.NmProduto</h3>
+
+                                            <div class="price">
+                                                <strong>
+                                                    @produto.VlProduto.ToString("C", pt)
+                                                </strong>
+                                            </div>
+
+                                            <p class="installment">
+                                                ou 10x de
+                                                @((produto.VlProduto / 10).ToString("C", pt))
+                                                sem juros
+                                            </p>
+                                        </div>
+                                    </article>
+                                }
+                            </div>
+                        }
                     </div>
-
-                    <div class="product-info">
-                        <span class="product-category">AUDIOLAB</span>
-
-                        <h3>Fone de ouvido Studio Pro</h3>
-
-                        <div class="price">
-                            <strong>R$ 899,00</strong>
-                            <del>R$ 1.199,00</del>
-                        </div>
-
-                        <p class="installment">
-                            ou 10x de R$ 89,90 sem juros
-                        </p>
-                    </div>
-
-                </article>
-
-
-                <!-- Produto 2 -->
-                <article class="product-card">
-
-                    <div class="product-image product-image-2">
-                        <span class="badge">Novidade</span>
-
-                        <button class="favorite" aria-label="Adicionar aos favoritos">
-                            ♡
-                        </button>
-
-                        <button class="add-button" aria-label="Adicionar ao carrinho">
-                            +
-                        </button>
-
-                        <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=80"
-                             alt="Câmera Mirrorless X100">
-                    </div>
-
-                    <div class="product-info">
-                        <span class="product-category">FRAME STUDIO</span>
-
-                        <h3>Câmera Mirrorless X100</h3>
-
-                        <div class="price">
-                            <strong>R$ 4.299,00</strong>
-                        </div>
-
-                        <p class="installment">
-                            ou 10x de R$ 429,90 sem juros
-                        </p>
-                    </div>
-
-                </article>
-
-
-                <!-- Produto 3 -->
-                <article class="product-card">
-
-                    <div class="product-image product-image-3">
-                        <button class="favorite" aria-label="Adicionar aos favoritos">
-                            ♡
-                        </button>
-
-                        <button class="add-button" aria-label="Adicionar ao carrinho">
-                            +
-                        </button>
-
-                        <img src="https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=900&q=80"
-                             alt="Fones sem fio Air Buds">
-                    </div>
-
-                    <div class="product-info">
-                        <span class="product-category">AUDIOLAB</span>
-
-                        <h3>Fones sem fio Air Buds</h3>
-
-                        <div class="price">
-                            <strong>R$ 549,00</strong>
-                            <del>R$ 699,00</del>
-                        </div>
-
-                        <p class="installment">
-                            ou 10x de R$ 54,90 sem juros
-                        </p>
-                    </div>
-
-                </article>
-
-
-                <!-- Produto 4 -->
-                <article class="product-card">
-
-                    <div class="product-image product-image-4">
-                        <button class="favorite" aria-label="Adicionar aos favoritos">
-                            ♡
-                        </button>
-
-                        <button class="add-button" aria-label="Adicionar ao carrinho">
-                            +
-                        </button>
-
-                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
-                             alt="Relógio Classic One">
-                    </div>
-
-                    <div class="product-info">
-                        <span class="product-category">FRAME STUDIO</span>
-
-                        <h3>Relógio Classic One</h3>
-
-                        <div class="price">
-                            <strong>R$ 749,00</strong>
-                        </div>
-
-                        <p class="installment">
-                            ou 10x de R$ 74,90 sem juros
-                        </p>
-                    </div>
-
-                </article>
-
-            </div>
-        </div>
-    </section>
+                </div>
+        </section>
+    }
 
     <section class="community">
 
@@ -617,3 +418,76 @@
         </div>
     </section>
 </main>
+
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+        function inicializarCarrossel(
+            carouselId,
+            prevId,
+            nextId,
+            indicadorId
+        ) {
+            const carousel = document.getElementById(carouselId);
+
+            if (!carousel) return;
+
+            const track = carousel.querySelector(".carousel-track");
+            const paginas = carousel.querySelectorAll(".carousel-page");
+            const btnPrev = document.getElementById(prevId);
+            const btnNext = document.getElementById(nextId);
+            const indicador = document.getElementById(indicadorId);
+
+            if (!track || paginas.length === 0 || !btnPrev ||
+                !btnNext || !indicador) {
+                return;
+            }
+
+            let atual = 0;
+            const total = paginas.length;
+
+            function atualizar() {
+                track.style.transform =
+                    `translateX(-${atual * 100}%)`;
+
+                btnPrev.disabled = atual === 0;
+                btnNext.disabled = atual === total - 1;
+
+                indicador.textContent = `${atual + 1} / ${total}`;
+            }
+
+            btnPrev.addEventListener("click", function () {
+                if (atual > 0) {
+                    atual--;
+                    atualizar();
+                }
+            });
+
+            btnNext.addEventListener("click", function () {
+                if (atual < total - 1) {
+                    atual++;
+                    atualizar();
+                }
+            });
+
+            atualizar();
+        }
+
+        // Carrossel dos produtos mais vendidos
+        inicializarCarrossel(
+            "produtosCarousel",
+            "btnPrev",
+            "btnNext",
+            "carouselIndicador"
+        );
+
+        // Carrossel dos produtos mais recentes
+        inicializarCarrossel(
+            "produtosRecentesCarousel",
+            "recentesPrev",
+            "recentesNext",
+            "recentesIndicador"
+        );
+
+    });
+</script>

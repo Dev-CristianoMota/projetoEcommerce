@@ -1,5 +1,5 @@
 ﻿@using System.Globalization
-@model int
+@model Ecommerce.ViewModels.ContaViewModel
 
 @{
     ViewData["Title"] = "Minha Conta";
@@ -41,7 +41,7 @@
                     <span class="material-symbols-outlined">
                         mail
                     </span>
-                    @* @Model.NmEmail *@
+                   
                 </p>
             }
             else
@@ -161,165 +161,180 @@
         </div>
     </section>
     
-@* <section class="last-order">
-    <div class="last-order-header">
-        <div class="last-order-heading">
-            <div class="last-order-icon">
-                <span class="material-symbols-outlined">receipt_long</span>
+    @* <section class="last-order">
+        <div class="last-order-header">
+            <div class="last-order-heading">
+                <div class="last-order-icon">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                </div>
+
+                <div>
+                    <h2>Último pedido</h2>
+                    <p>Confira os detalhes da sua compra mais recente.</p>
+                </div>
             </div>
 
-            <div>
-                <h2>Último pedido</h2>
-                <p>Confira os detalhes da sua compra mais recente.</p>
-            </div>
+            @if (Model.UltimoPedido != null)
+            {
+                <a asp-controller="Pedido"
+                   asp-action="ListarPedidosUsuario"
+                   class="last-order-all">
+                    Ver todos
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+            }
         </div>
 
-        <p>Pedidos encontrados para este usuário: <strong>@Model</strong></p>
-        
-        @* @if (Model?.UltimoPedido != null)
+        @if (Model.UltimoPedido == null)
         {
-            <a asp-controller="Pedido"
-               asp-action="Index"
-               class="last-order-all">
-                Ver todos
-                <span class="material-symbols-outlined">arrow_forward</span>
-            </a>
+            <div class="last-order-empty">
+                <p>Você ainda não fez nenhum pedido.</p>
+
+                <a asp-controller="Home" asp-action="Index">
+                    Explorar produtos
+                </a>
+            </div>
         }
-    </div>
+        else
+        {
+            var pedido = Model.UltimoPedido;
 
-    @if (Model?.UltimoPedido == null)
-    {
-        <div class="last-order-empty">
-            <p>Você ainda não fez nenhum pedido.</p>
-            <a asp-controller="Home" asp-action="Index">
-                Explorar produtos
-            </a>
-        </div>
-    }
-    else
-    {
-        var pedido = Model.UltimoPedido;
+            <div class="last-order-content">
+                <div class="last-order-info">
+                    <div class="last-order-number">
+                        <span class="last-order-label">
+                            NÚMERO DO PEDIDO
+                        </span>
 
-        <div class="last-order-content">
-            <div class="last-order-info">
-                <div class="last-order-number">
-                    <span class="last-order-label">NÚMERO DO PEDIDO</span>
+                        <strong>@pedido.NumeroFormatado</strong>
 
-                    <strong>@pedido.NumeroFormatado</strong>
+                        <span class="last-order-date">
+                            Realizado em
+                            @pedido.DtCriacao.ToString("dd/MM/yyyy 'às' HH:mm")
+                        </span>
+                    </div>
 
-                    <span class="last-order-date">
-                        Realizado em
-                        @pedido.DtCriacao.ToString("dd/MM/yyyy 'às' HH:mm")
+                    <span class="last-order-status @pedido.StatusCss">
+                        <span class="status-dot"></span>
+                        @pedido.StatusTexto
                     </span>
                 </div>
 
-                <span class="last-order-status @pedido.StatusCss">
-                    <span class="status-dot"></span>
-                    @pedido.StatusTexto
-                </span>
-            </div>
+                <div class="last-order-store">
+                    <span class="material-symbols-outlined">storefront</span>
 
-            <div class="last-order-store">
-                <span class="material-symbols-outlined">storefront</span>
-
-                <div>
-                    <span>Vendido por</span>
-                    <strong>@pedido.NmLoja</strong>
-                </div>
-            </div>
-
-            <div class="last-order-section-title">
-                <h3>Produtos do pedido</h3>
-
-                <span>
-                    @pedido.QtTotalItens
-                    @(pedido.QtTotalItens == 1 ? "item" : "itens")
-                </span>
-            </div>
-
-            <div class="last-order-products">
-                @foreach (var item in pedido.Itens)
-                {
-                    <div class="last-order-product">
-                        <div class="product-placeholder">
-                            <span class="material-symbols-outlined">
-                                inventory_2
-                            </span>
-                        </div>
-
-                        <div class="product-info">
-                            <strong>@item.NmProduto</strong>
-
-                            <span>
-                                Quantidade: @item.Quantidade
-                                @(item.Quantidade == 1 ? "unidade" : "unidades")
-                            </span>
-                        </div>
-
-                        <div class="product-values">
-                            <span>Valor unitário</span>
-
-                            <strong>
-                                @item.VlUnitario.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))
-                            </strong>
-                        </div>
+                    <div>
+                        <span>Vendido por</span>
+                        <strong>@pedido.NmLoja</strong>
                     </div>
-                }
-            </div>
-
-            <div class="last-order-summary">
-                <div class="summary-row">
-                    <span>Subtotal</span>
-
-                    <strong>
-                        @pedido.VlSubtotal.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))
-                    </strong>
                 </div>
 
-                @if (pedido.VlDesconto > 0)
-                {
-                    <div class="summary-row">
-                        <span>
-                            Cupom de desconto
-                            @if (!string.IsNullOrWhiteSpace(pedido.CdPromocional))
-                            {
-                                <text>(@pedido.CdPromocional)</text>
-                            }
-                        </span>
+                <div class="last-order-section-title">
+                    <h3>Produtos do pedido</h3>
 
-                        <strong class="summary-discount">
-                            − @pedido.VlDesconto.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))
+                    <span>
+                        @pedido.QtTotalItens
+                        @(pedido.QtTotalItens == 1 ? "item" : "itens")
+                    </span>
+                </div>
+
+                <div class="last-order-products">
+                    @foreach (var item in pedido.Itens)
+                    {
+                        <div class="last-order-product">
+                            <div class="product-placeholder">
+                                <span class="material-symbols-outlined">
+                                    inventory_2
+                                </span>
+                            </div>
+
+                            <div class="product-info">
+                                <strong>@item.NmProduto</strong>
+
+                                <span>
+                                    Quantidade: @item.Quantidade
+                                    @(item.Quantidade == 1
+                                        ? "unidade"
+                                        : "unidades")
+                                </span>
+                            </div>
+
+                            <div class="product-values">
+                                <span>Valor unitário</span>
+
+                                <strong>
+                                    @item.VlUnitario.ToString(
+                                        "C",
+                                        CultureInfo.GetCultureInfo("pt-BR"))
+                                </strong>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="last-order-summary">
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+
+                        <strong>
+                            @pedido.VlSubtotal.ToString(
+                                "C",
+                                CultureInfo.GetCultureInfo("pt-BR"))
                         </strong>
                     </div>
-                }
 
-                <div class="summary-row summary-total">
-                    <span>Total do pedido</span>
+                    @if (pedido.VlDesconto > 0)
+                    {
+                        <div class="summary-row">
+                            <span>
+                                Cupom de desconto
 
-                    <strong>
-                        @pedido.VlTotal.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))
-                    </strong>
+                                @if (!string.IsNullOrWhiteSpace(
+                                    pedido.CdPromocional))
+                                {
+                                    <text>(@pedido.CdPromocional)</text>
+                                }
+                            </span>
+
+                            <strong class="summary-discount">
+                                − @pedido.VlDesconto.ToString(
+                                                                "C",
+                                                                CultureInfo.GetCultureInfo("pt-BR"))
+                            </strong>
+                        </div>
+                    }
+
+                    <div class="summary-row summary-total">
+                        <span>Total do pedido</span>
+
+                        <strong>
+                            @pedido.VlTotal.ToString(
+                                "C",
+                                CultureInfo.GetCultureInfo("pt-BR"))
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="last-order-footer">
+                    <div class="last-order-payment-info">
+                        <span class="material-symbols-outlined">info</span>
+
+                        <p>
+                            Acompanhe o status e os detalhes completos do seu pedido.
+                        </p>
+                    </div>
+
+                    <a asp-controller="Pedido"
+                       asp-action="Detalhes"
+                       asp-route-id="@pedido.CdPedido"
+                       class="last-order-button">
+                        Ver detalhes
+                        <span class="material-symbols-outlined">
+                            arrow_forward
+                        </span>
+                    </a>
                 </div>
             </div>
-
-            <div class="last-order-footer">
-                <div class="last-order-payment-info">
-                    <span class="material-symbols-outlined">info</span>
-
-                    <p>
-                        Acompanhe o status e os detalhes completos do seu pedido.
-                    </p>
-                </div>
-
-                <a asp-controller="Pedido"
-                   asp-action="Detalhes"
-                   asp-route-id="@pedido.CdPedido"
-                   class="last-order-button">
-                    Ver detalhes
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </a>
-            </div>
-        </div>
-</section>
- *@
+        }
+    </section> *@
 </main>

@@ -25,6 +25,10 @@ namespace Ecommerce.Controllers
             
             ViewBag.CategoriasMaisVendidas = categorias;
 
+            ViewBag.ProdutosMaisVendidos = await _produtoService.ObterProdutosMaisVendidosPaginadosAsync();
+
+            ViewBag.ProdutosMaisRecentes = await _produtoService.ObterProdutosMaisRecentesPaginadosAsync();
+
             return View();
         }
     }
