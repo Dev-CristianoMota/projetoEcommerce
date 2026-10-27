@@ -409,10 +409,29 @@ nav.navigation {
 ========================================================= */
 
 .hero {
+    position: relative;
     width: 100%;
     height: 469px;
-    display: flex;
     overflow: hidden;
+}
+
+.hero-track {
+    display: grid;
+    height: 100%;
+}
+
+.hero-slide {
+    grid-area: 1 / 1;
+    display: flex;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.7s ease, visibility 0.7s;
+}
+
+.hero-slide.is-active {
+    opacity: 1;
+    visibility: visible;
 }
 
 /* =========================================================
@@ -510,6 +529,7 @@ nav.navigation {
     position: absolute;
     left: 51px;
     bottom: 26px;
+    z-index: 5;
     display: flex;
     align-items: center;
     gap: 15px;
@@ -520,21 +540,33 @@ nav.navigation {
     height: 2px;
     background: #B8C9E0;
     position: relative;
+    overflow: hidden;
 }
 
-.pagination-line span {
+.hero-pagination .pagination-line span {
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 34px;
+    inset: 0;
+    width: 100%;
     height: 2px;
     background: #3266DF;
+    transform: scaleX(0);
+    transform-origin: left;
 }
 
 .pagination-number {
-    color: #172A47;
+    color: #8CA0BC;
     font-size: 11px;
     font-weight: 700;
+}
+
+.pagination-number b {
+    color: #172A47;
+}
+
+.hero-nav {
+    display: flex;
+    gap: 8px;
+    margin-left: 12px;
 }
 
 
@@ -543,21 +575,95 @@ nav.navigation {
 ========================================================= */
 
 .hero-image {
-    width: 47.5%;
+    width: 60%;
     height: 100%;
     position: relative;
     overflow: hidden;
-    background: #D5C6C0;
+    background: var(--hero-bg, #D5C6C0);
 }
 
 .hero-image img {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: -35px;
+    left: 20%;
+    width: 80%;
+    height: auto;
     display: block;
-    object-fit: cover;
+    mix-blend-mode: multiply;
 }
 
+.hero-image::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 38%;
+    background: linear-gradient(to right, #EAF1FB 0%, rgba(234, 241, 251, 0) 100%);
+    z-index: 1;
+    pointer-events: none;
+}
 
+.image-caption {
+    z-index: 2;
+}
+
+/* =========================================================
+   HERO - ANIMAÇÃO DE ENTRADA
+========================================================= */
+
+.hero-slide.is-active .hero-label,
+.hero-slide.is-active .hero-content h1,
+.hero-slide.is-active .hero-content p,
+.hero-slide.is-active .hero-button {
+    animation: heroUp 0.7s ease both;
+}
+
+.hero-slide.is-active .hero-content h1 {
+    animation-delay: 0.08s;
+}
+
+.hero-slide.is-active .hero-content p {
+    animation-delay: 0.16s;
+}
+
+.hero-slide.is-active .hero-button {
+    animation-delay: 0.24s;
+}
+
+.hero-slide.is-active .hero-image img {
+    animation: heroZoom 1.4s ease both;
+}
+
+@keyframes heroUp {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes heroZoom {
+    from {
+        transform: scale(1.05);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-slide,
+    .hero-slide * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
 
 /* =========================================================
    HIGHLIGHT
@@ -664,10 +770,106 @@ nav.navigation {
     position: absolute;
     right: 18px;
     bottom: 25px;
-    color: #3E5069;
+    color: #EAF2FF;
     font-size: 8px;
     font-weight: 600;
     letter-spacing: 1.5px;
+}
+
+
+.highlight-smartphones {
+    background-color: #183470;
+}
+
+    .highlight-smartphones .highlight-content {
+        background-color: transparent;
+    }
+
+.highlight-stage {
+    position: relative;
+    width: 52%;
+    height: 100%;
+    overflow: hidden;
+}
+
+    /* círculos decorativos */
+    .highlight-stage::before,
+    .highlight-stage::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+    }
+
+    .highlight-stage::before {
+        width: 500px;
+        height: 450px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .highlight-stage::after {
+        width: 400px;
+        height: 370px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+/* brilho atrás do aparelho */
+.phone-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 350px;
+    height: 340px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(79, 140, 255, 0.50) 0%, rgba(79, 140, 255, 0) 70%);
+}
+
+/* imagem do smartphone */
+.phone-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 340px;
+    width: auto;
+    transform: translate(-50%, -50%);
+}
+
+/* chips flutuantes */
+.stage-chip {
+    position: absolute;
+    z-index: 2;
+    padding: 9px 15px;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.chip-1 {
+    top: 62px;
+    left: 14%;
+}
+
+.chip-2 {
+    bottom: 70px;
+    left: 11%;
+    animation-delay: -1.5s;
+}
+
+.chip-3 {
+    top: 50%;
+    right: 5%;
+    animation-delay: -3s;
 }
 
 /* =========================================================
@@ -1069,6 +1271,12 @@ nav.navigation {
     .categories-grid {
         grid-template-columns: repeat(3, 1fr);
     }
+
+    .hero-image img {
+        width: 70%;
+        left: 15%;
+        top: 0;
+    }
 }
 
 
@@ -1346,7 +1554,11 @@ nav.navigation {
 
     .hero {
         height: auto;
+    }
+
+    .hero-slide {
         flex-direction: column;
+        height: auto;
     }
 
     .hero-content {
@@ -1397,7 +1609,12 @@ nav.navigation {
     }
 
     .hero-content {
-        padding: 45px 30px;
+        padding: 45px 30px 95px;
+    }
+
+    .hero-pagination {
+        left: 30px;
+        bottom: 24px;
     }
 
     .hero-content h1 {

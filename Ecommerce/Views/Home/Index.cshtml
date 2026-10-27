@@ -9,51 +9,119 @@
     var produtosRecentes = ViewBag.ProdutosMaisRecentes as List<List<DTOProdutoMaisRecentes>> ?? new List<List<DTOProdutoMaisRecentes>>();
 
     var pt = new System.Globalization.CultureInfo("pt-BR");
+
+    var slidesHero = new[]
+    {
+        new {
+                Rotulo   = "A ESCOLHA É SUA. O EXTRA É NOSSO.",
+                Titulo   = "O próximo nível",
+                Linha2   = "começa ",
+                Destaque = "aqui.",
+                Texto    = "Descubra produtos que combinam com o seu jeito de viver.",
+                Texto2   = "Tecnologia, design e novas possibilidades em um só lugar.",
+                Botao    = "Explorar coleção",
+                Link     = "#",
+                Imagem   = "banner_inicial_1.png",
+                Alt      = "Fone de ouvido Bluetooth",
+                Legenda  = "SOM QUE TE LEVA ALÉM — STUDIO PRO",
+                Fundo    = "linear-gradient(135deg, #EAF2FF 0%, #D5E1F5 20%, #A9BCDE 40%, #7189B1 60%, #344B70 80%, #071426 100%)"
+        },
+        new {
+                Rotulo   = "ELETRODOMÉSTICOS",
+                Titulo   = "Sua casa",
+                Linha2   = "em outro ",
+                Destaque = "nível.",
+                Texto    = "Mais praticidade, conforto e eficiência para o seu dia a dia.",
+                Texto2   = "Descubra eletrodomésticos que transformam sua rotina.",
+                Botao    = "Explorar produtos",
+                Link     = "#",
+                Imagem   = "banner_inicial_2.png",
+                Alt      = "Eletrodomésticos modernos para a casa",
+                Legenda  = "TECNOLOGIA E PRATICIDADE PARA SUA CASA",
+                Fundo    = "linear-gradient(135deg, #EAF2FF 0%, #D5E1F5 20%, #A9BCDE 40%, #7189B1 60%, #344B70 80%, #071426 100%)"
+        },
+        new {
+                Rotulo   = "CUPONS E OFERTAS ESPECIAIS!",
+                Titulo   = "Comprar bem",
+                Linha2   = "é economizar ",
+                Destaque = "mais.",
+                Texto    = "Aproveite cupons especiais e economize nas suas compras.",
+                Texto2   = "Mais vantagens para você aproveitar o que realmente importa.",
+                Botao    = "Ver cupons",
+                Link     = "#",
+                Imagem   = "banner_inicial_3.png",
+                Alt      = "Cupom promocional de desconto",
+                Legenda  = "MAIS VANTAGENS EM CADA COMPRA",
+                Fundo    = "linear-gradient(135deg, #EAF2FF 0%, #D5E1F5 20%, #A9BCDE 40%, #7189B1 60%, #344B70 80%, #071426 100%)"
+            }
+    };
 }
 
 
 <partial name="_NavegacaoCategorias" />
 
 <main class="main-content">
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-label">
-                <span class="hero-line"></span>
-                <span>A ESCOLHA É SUA. O EXTRA É NOSSO.</span>
-            </div>
-            <h1>O próximo nível<br />
-                começa <strong>aqui.</strong>
-            </h1>
-            <p>
-                Descubra produtos que combinam com o seu jeito de viver.
-                <br />
-                Tecnologia, design e novas possibilidades em um só lugar.
-            </p>
-            <a href="#" class="hero-button">
-                <span>
-                    Explorar coleção
-                </span>
-                <span class="material-symbols-outlined">
-                    arrow_forward
-                </span>
-            </a>
-            <div class="hero-pagination">
-                <div class="pagination-line">
-                    <span></span>
+    <section class="hero" id="heroCarousel" aria-roledescription="carousel" aria-label="Destaques">
+
+        <div class="hero-track">
+            @for (int i = 0; i < slidesHero.Length; i++)
+            {
+                var s = slidesHero[i];
+
+                <div class="hero-slide @(i == 0 ? "is-active" : "")"
+                     aria-hidden="@(i == 0 ? "false" : "true")">
+
+                    <div class="hero-content">
+                        <div class="hero-label">
+                            <span class="hero-line"></span>
+                            <span>@s.Rotulo</span>
+                        </div>
+
+                        <h1>
+                            @s.Titulo<br />
+                            @s.Linha2<strong>@s.Destaque</strong>
+                        </h1>
+
+                        <p>
+                            @s.Texto
+                            <br />
+                            @s.Texto2
+                        </p>
+
+                        <a href="@s.Link" class="hero-button">
+                            <span>@s.Botao</span>
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </a>
+                    </div>
+
+                    <div class="hero-image" style="--hero-bg: @s.Fundo">
+                        <img src="~/images/@s.Imagem" alt="@s.Alt" />
+                        <div class="image-caption">@s.Legenda</div>
+                    </div>
                 </div>
-                <span class="pagination-number">
-                    01 / 03
-                </span>
+            }
+        </div>
+
+        <!-- Controles -->
+        <div class="hero-pagination">
+            <div class="pagination-line">
+                <span id="heroProgresso"></span>
+            </div>
+
+            <span class="pagination-number">
+                <b id="heroAtual">01</b> / @slidesHero.Length.ToString("00")
+            </span>
+
+            <div class="hero-nav">
+                <button type="button" class="carousel-btn" id="heroPrev" aria-label="Banner anterior">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <button type="button" class="carousel-btn" id="heroNext" aria-label="Próximo banner">
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
             </div>
         </div>
 
-        <div class="hero-image">
-            <img src="~/images/banner-headphone.jpg"
-                 alt="Fone de ouvido" />
-            <div class="image-caption">
-                SOM QUE TE LEVA ALÉM — STUDIO PRO
-            </div>
-        </div>
     </section>
 
     <section class="benefits">
@@ -196,29 +264,36 @@
         </section>
     }
 
-    <section class="highlight highlight-fotografia">
+    <section class="highlight highlight-smartphones">
         <div class="highlight-content">
-            <span class="highlight-label">NOVA PERSPECTIVA</span>
+            <span class="highlight-label">TELEFONIA</span>
 
             <h1>
-                Encontre inspiração<br>
-                em cada detalhe.
+                Tudo na palma<br>
+                da sua mão.
             </h1>
 
             <p>
-                Equipamentos feitos para capturar ideias, momentos e tudo
-                o que ainda está por vir.
+                Telas maiores, câmeras que não perdoam e bateria para o dia
+                inteiro. Os smartphones mais desejados, em até 10x sem juros.
             </p>
 
             <a href="#" class="highlight-button">
-                <span>Explorar fotografia</span>
+                <span>Ver smartphones</span>
                 <span class="material-symbols-outlined">
                     arrow_forward
                 </span>
             </a>
         </div>
-        <div class="highlight-image">
 
+        <div class="highlight-stage">
+            <div class="phone-glow"></div>
+
+            <img class="phone-img" src="~/images/banner_secundario_1.png" alt="Smartphone" />
+
+            <span class="stage-chip chip-1">128 GB</span>
+            <span class="stage-chip chip-2">Câmera tripla</span>
+            <span class="stage-chip chip-3">6,5″ · 8 GB RAM</span>
         </div>
     </section>
 
@@ -490,4 +565,94 @@
         );
 
     });
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const hero = document.getElementById("heroCarousel");
+            if (!hero) return;
+
+            const slides   = hero.querySelectorAll(".hero-slide");
+            const total    = slides.length;
+            const btnPrev  = document.getElementById("heroPrev");
+            const btnNext  = document.getElementById("heroNext");
+            const numero   = document.getElementById("heroAtual");
+            const barra    = document.getElementById("heroProgresso");
+            const controles = hero.querySelector(".hero-pagination");
+
+            if (total === 0) return;
+
+            if (total === 1) {
+                controles.style.display = "none";
+                return;
+            }
+
+            const DURACAO = 10000; // tempo de cada banner (ms)
+
+            let atual = 0;
+            let decorrido = 0;
+            let ultimo = performance.now();
+            let pausado = false;
+
+            function mostrar(indice) {
+                atual = (indice + total) % total;
+
+                slides.forEach(function (slide, i) {
+                    const ativo = i === atual;
+                    slide.classList.toggle("is-active", ativo);
+                    slide.setAttribute("aria-hidden", String(!ativo));
+                });
+
+                numero.textContent = String(atual + 1).padStart(2, "0");
+                decorrido = 0; // reinicia os 15s ao trocar (manual ou automático)
+            }
+
+            function tick(agora) {
+                // limita o intervalo para não "pular" ao voltar de outra aba
+                const dt = Math.min(agora - ultimo, 100);
+                ultimo = agora;
+
+                if (!pausado && !document.hidden) {
+                    decorrido += dt;
+
+                    if (decorrido >= DURACAO) {
+                        mostrar(atual + 1);
+                    }
+                }
+
+                barra.style.transform = "scaleX(" + Math.min(decorrido / DURACAO, 1) + ")";
+                requestAnimationFrame(tick);
+            }
+
+            btnPrev.addEventListener("click", function () { mostrar(atual - 1); });
+            btnNext.addEventListener("click", function () { mostrar(atual + 1); });
+
+            // pausa enquanto o mouse ou o foco estiverem no banner
+            hero.addEventListener("mouseenter", function () { pausado = true; });
+            hero.addEventListener("mouseleave", function () { pausado = false; });
+            hero.addEventListener("focusin",    function () { pausado = true; });
+            hero.addEventListener("focusout",   function () { pausado = false; });
+
+            // setas do teclado
+            hero.addEventListener("keydown", function (e) {
+                if (e.key === "ArrowLeft")  mostrar(atual - 1);
+                if (e.key === "ArrowRight") mostrar(atual + 1);
+            });
+
+            // arrastar no celular
+            let inicioX = 0;
+
+            hero.addEventListener("touchstart", function (e) {
+                inicioX = e.changedTouches[0].clientX;
+            }, { passive: true });
+
+            hero.addEventListener("touchend", function (e) {
+                const diff = e.changedTouches[0].clientX - inicioX;
+
+                if (Math.abs(diff) > 50) {
+                    mostrar(diff < 0 ? atual + 1 : atual - 1);
+                }
+            }, { passive: true });
+
+            requestAnimationFrame(tick);
+        });
 </script>
