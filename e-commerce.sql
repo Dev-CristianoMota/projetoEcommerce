@@ -105,6 +105,8 @@ CREATE TABLE produto
     ic_produto_ativo  BOOLEAN NOT NULL DEFAULT TRUE,
     dt_criacao  DATETIME NOT NULL,
     dt_atualizacao  DATETIME NULL,
+    nm_url_imagem VARCHAR(500) NULL,
+    cd_public_id_imagem VARCHAR(255) NULL,
 
     CONSTRAINT  pk_produto PRIMARY KEY (cd_produto),
     CONSTRAINT ck_produto_vl_produto CHECK (vl_produto >= 0),
