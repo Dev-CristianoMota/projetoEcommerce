@@ -99,6 +99,42 @@ public class UsuarioController : BaseController
         return RedirectToAction("Index", "Home");
     }
 
+    [HttpGet]
+    public IActionResult Cadastro(string? returnUrl = null)
+    {
+        if (User.Identity?.IsAuthenticated == true)
+            return RedirectToAction("Index", "Home");
+
+        ViewData["ReturnUrl"] = returnUrl;
+        return View(new CadastroViewModel());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Cadastro(CadastroViewModel model, string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var resultado = await _usuarioService.CadastrarAsync(model);
+
+        if (!resultado.Sucesso)
+        {
+            ModelState.AddModelError(string.Empty, resultado.Erro ?? "Não foi possível criar a conta.");
+            return View(model);
+        }
+
+        // Já deixa o usuário logado (grava sessão + cookie)
+        await AtualizarSessaoAsync(resultado.Usuario!);
+
+        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            return Redirect(returnUrl);
+
+        return RedirectToAction("Index", "Home");
+    }
+
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> MeusDados()

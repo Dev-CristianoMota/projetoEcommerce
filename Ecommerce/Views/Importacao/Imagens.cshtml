@@ -1,0 +1,24 @@
+﻿@{
+    var produtos = ViewBag.Produtos as IEnumerable<dynamic>;
+}
+
+<h2>Upload de imagem de produto (temporário)</h2>
+
+@if (TempData["Msg"] != null)
+{
+    <p><strong>@TempData["Msg"]</strong></p>
+}
+
+<form method="post" enctype="multipart/form-data">
+    <select name="cdProduto" required>
+        @foreach (var p in produtos)
+        {
+            <option value="@p.CdProduto">
+                @p.CdProduto - @p.NmProduto @(p.NmUrlImagem != null ? "(com imagem)" : "")
+            </option>
+        }
+    </select>
+
+    <input type="file" name="imagem" accept="image/png, image/jpeg, image/webp" required />
+    <button type="submit">Enviar</button>
+</form>

@@ -9,6 +9,7 @@
 @section Styles {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
 }
 
@@ -43,32 +44,34 @@
             <p class="login-form__subtitle">Acesse sua conta para continuar de onde parou.</p>
 
             <div class="tabs" role="tablist">
-                <button class="tab is-active" type="button" role="tab" aria-selected="true">Entrar</button>
-                <button class="tab" type="button" role="tab" aria-selected="false">Criar conta</button>
+                <span class="tab is-active" role="tab" aria-selected="true">Entrar</span>
+                <a class="tab" asp-controller="Usuario" asp-action="Cadastro">Criar conta</a>
             </div>
 
             <form class="login-form" asp-controller="Usuario" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
-                <div asp-validation-summary="ModelOnly" class="login-error"></div>
-
                 <div class="field">
                     <label asp-for="Email">E-mail ou Apelido</label>
-                    <input asp-for="Email"/>
+                    <input asp-for="Email" placeholder="Digite seu e-mail ou apelido" autocomplete="username" />
                     <span asp-validation-for="Email" class="login-error"></span>
                 </div>
 
                 <div class="field">
                     <label asp-for="Senha">Senha</label>
-                    <input asp-for="Senha" type="password" placeholder="Mínimo de 6 caracteres" />
+                    <input asp-for="Senha" type="password" placeholder="Mínimo de 6 caracteres" autocomplete="current-password" />
                     <span asp-validation-for="Senha" class="login-error"></span>
                 </div>
 
-                <button type="submit" class="login-btn"> Entrar </button>
+                <div asp-validation-summary="ModelOnly" class="login-error"></div>
+
+                <button type="submit" class="login-btn">
+                    <span>Entrar</span>
+                </button>
             </form>
 
-            <div class="demo-box">
-                <strong>Acesso para demonstração</strong>
-                <span>E-mail: cliente@nexo.com · Senha: demo123</span>
-            </div>
+            <p class="login-signup">
+                Ainda não tem conta?
+                <a asp-controller="Usuario" asp-action="Cadastro" asp-route-returnUrl="@ViewData["ReturnUrl"]">Criar conta</a>
+            </p>
         </div>
     </section>
 </div>

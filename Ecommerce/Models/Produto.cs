@@ -25,6 +25,10 @@ public partial class Produto
 
     public DateTime? DtAtualizacao { get; set; }
 
+    public string? NmUrlImagem { get; set; }
+
+    public string? CdPublicIdImagem { get; set; }
+
     public virtual Categoria CdCategoriaNavigation { get; set; } = null!;
 
     public virtual LojaVirtual CdLojaVirtualNavigation { get; set; } = null!;

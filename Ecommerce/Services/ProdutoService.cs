@@ -110,7 +110,8 @@ public class ProdutoService
                 i.CdProduto,
                 i.CdProdutoNavigation.NmProduto,
                 i.CdProdutoNavigation.VlProduto,
-                i.CdProdutoNavigation.CdLojaVirtualNavigation.NmLojaVirtual
+                i.CdProdutoNavigation.CdLojaVirtualNavigation.NmLojaVirtual,
+                i.CdProdutoNavigation.NmUrlImagem
             })
             .Select(g => new DTOProdutoMaisVendido
             {
@@ -118,6 +119,7 @@ public class ProdutoService
                 NmProduto = g.Key.NmProduto,
                 VlProduto = g.Key.VlProduto,
                 NmLojaVirtual = g.Key.NmLojaVirtual,
+                NmUrlImagem = g.Key.NmUrlImagem,
                 QtdVendida = g.Sum(i => i.QtItem)
             })
             .OrderByDescending(p => p.QtdVendida)
@@ -151,7 +153,8 @@ public class ProdutoService
                 NmProduto = p.NmProduto,
                 VlProduto = p.VlProduto,
                 NmLojaVirtual = p.CdLojaVirtualNavigation.NmLojaVirtual,
-                DtCriacao = p.DtCriacao
+                DtCriacao = p.DtCriacao,
+                NmUrlImagem = p.NmUrlImagem
             })
             .ToListAsync();
     }

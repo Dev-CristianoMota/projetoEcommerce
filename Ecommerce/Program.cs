@@ -2,8 +2,15 @@ using Ecommerce.Data;
 using Ecommerce.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using CloudinaryDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var cfg = builder.Configuration.GetSection("Cloudinary");
+var cloudinary = new Cloudinary(new Account(cfg["CloudName"], cfg["ApiKey"], cfg["ApiSecret"]))
+{
+    Api = { Secure = true }
+};
 
 builder.Services.AddControllersWithViews();
 
@@ -16,11 +23,14 @@ builder.Services.AddDbContext<EcommerceDbContext>(options =>
     )
 );
 
+builder.Services.AddSingleton(cloudinary);
+builder.Services.AddScoped<ImagemService>();
 builder.Services.AddScoped<ProdutoService>();
 builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<EnderecoService>();
 builder.Services.AddScoped<PedidoService>();
+builder.Services.AddScoped<ProdutoFeedService>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

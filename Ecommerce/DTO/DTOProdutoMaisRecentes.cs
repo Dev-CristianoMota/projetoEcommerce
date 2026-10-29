@@ -7,5 +7,6 @@
         public string NmLojaVirtual { get; set; } = "";
         public decimal VlProduto { get; set; }
         public DateTime DtCriacao { get; set; }
+        public string? NmUrlImagem { get; set; }
     }
 }

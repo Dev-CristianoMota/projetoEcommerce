@@ -221,6 +221,7 @@ public partial class EcommerceDbContext : DbContext
             entity.Property(e => e.CdProduto).HasColumnName("cd_produto");
             entity.Property(e => e.CdCategoria).HasColumnName("cd_categoria");
             entity.Property(e => e.CdLojaVirtual).HasColumnName("cd_loja_virtual");
+
             entity.Property(e => e.DsProduto)
                 .HasColumnType("text")
                 .HasColumnName("ds_produto");
@@ -241,6 +242,13 @@ public partial class EcommerceDbContext : DbContext
             entity.Property(e => e.VlProduto)
                 .HasPrecision(10, 2)
                 .HasColumnName("vl_produto");
+            entity.Property(e => e.NmUrlImagem)
+                .HasMaxLength(500)
+                .HasColumnName("nm_url_imagem");
+            entity.Property(e => e.CdPublicIdImagem)
+                .HasMaxLength(255)
+                .HasColumnName("cd_public_id_imagem");
+
 
             entity.HasOne(d => d.CdCategoriaNavigation).WithMany(p => p.Produtos)
                 .HasForeignKey(d => d.CdCategoria)

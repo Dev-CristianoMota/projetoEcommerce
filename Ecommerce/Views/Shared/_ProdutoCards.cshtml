@@ -1,0 +1,51 @@
+﻿@using Ecommerce.DTO
+@using Ecommerce.Services
+@using Ecommerce.ViewModels
+@model IEnumerable<DTOProdutoFeed>
+@{
+    var pt = new System.Globalization.CultureInfo("pt-BR");
+    var limiteNovidade = DateTime.Now.AddDays(-7);
+}
+
+@foreach (var produto in Model)
+{
+    <article class="product-card">
+        <div class="product-image">
+
+            @if (produto.QtEstoque <= 0)
+            {
+                <span class="badge">Esgotado</span>
+            }
+            else if (produto.DtCriacao >= limiteNovidade)
+            {
+                <span class="badge">Novidade</span>
+            }
+
+            <button type="button" class="favorite" aria-label="Adicionar aos favoritos">
+                <span class="material-symbols-outlined">favorite</span>
+            </button>
+
+            <button type="button" class="add-button" aria-label="Adicionar ao carrinho">
+                <span class="material-symbols-outlined">add</span>
+            </button>
+
+            <img src="@(produto.NmUrlImagem.Miniatura(400, 400) ?? Url.Content("~/images/sem-imagem.png"))"
+                 alt="@produto.NmProduto"
+                 loading="lazy">
+        </div>
+
+        <div class="product-info">
+            <span class="product-category">@produto.NmLojaVirtual.ToUpper()</span>
+
+            <h3>@produto.NmProduto</h3>
+
+            <div class="price">
+                <strong>@produto.VlProduto.ToString("C", pt)</strong>
+            </div>
+
+            <p class="installment">
+                ou 10x de @((produto.VlProduto / 10).ToString("C", pt)) sem juros
+            </p>
+        </div>
+    </article>
+}

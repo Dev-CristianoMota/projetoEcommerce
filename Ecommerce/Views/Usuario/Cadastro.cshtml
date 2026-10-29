@@ -1,0 +1,126 @@
+﻿@using Ecommerce.ViewModels
+
+@model CadastroViewModel
+@{
+    ViewData["Title"] = "Criar conta";
+}
+
+@section Styles {
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+}
+
+<div class="login-page">
+    <section class="login-card">
+
+        <!-- Lado esquerdo: apresentação -->
+        <div class="login-hero">
+            <div class="login-hero__content">
+                <span class="eyebrow">Junte-se à Nexo</span>
+                <h1 class="login-hero__title">
+                    Sua próxima <br />
+                    descoberta começa <br />
+                    <span class="highlight">aqui.</span>
+                </h1>
+                <p class="login-hero__text">
+                    Crie sua conta em poucos minutos para acompanhar pedidos,
+                    salvar seus dados e comprar com mais agilidade.
+                </p>
+            </div>
+
+            <div class="login-hero__footer">
+                <span class="login-hero__line"></span>
+                <span class="login-hero__slogan">Escolhas que conectam.</span>
+            </div>
+        </div>
+
+        <!-- Lado direito: formulário -->
+        <div class="login-form-wrap">
+            <span class="eyebrow">Nova conta Nexo</span>
+            <h2 class="login-form__title">Vamos começar.</h2>
+            <p class="login-form__subtitle">Preencha seus dados para criar sua conta.</p>
+
+            <div class="tabs" role="tablist">
+                <a class="tab" asp-controller="Usuario" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]">Entrar</a>
+                <span class="tab is-active" role="tab" aria-selected="true">Criar conta</span>
+            </div>
+
+            <form class="login-form" asp-controller="Usuario" asp-action="Cadastro" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" novalidate>
+                <div asp-validation-summary="ModelOnly" class="login-error"></div>
+
+                <fieldset class="account-type">
+                    <legend class="account-type__legend">Tipo de conta</legend>
+
+                    <div class="account-type__options">
+                        <div class="account-type__option">
+                            <input asp-for="CdTipoUsuario" type="radio" value="2" id="tipo-comprador" />
+                            <label class="account-type__card" for="tipo-comprador">
+                                <span class="account-type__title">Comprador</span>
+                                <span class="account-type__desc">Quero comprar e acompanhar meus pedidos.</span>
+                            </label>
+                        </div>
+
+                        <div class="account-type__option">
+                            <input asp-for="CdTipoUsuario" type="radio" value="1" id="tipo-vendedor" />
+                            <label class="account-type__card" for="tipo-vendedor">
+                                <span class="account-type__title">Vendedor</span>
+                                <span class="account-type__desc">Quero ter uma loja e vender meus produtos.</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <span asp-validation-for="CdTipoUsuario" class="login-error"></span>
+                </fieldset>
+
+                <div class="field">
+                    <label asp-for="NmUsuario"></label>
+                    <input asp-for="NmUsuario" placeholder="Seu nome completo" autocomplete="name" />
+                    <span asp-validation-for="NmUsuario" class="login-error"></span>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label asp-for="NmApelido"></label>
+                        <input asp-for="NmApelido" placeholder="Como quer ser chamado" autocomplete="username" />
+                        <span asp-validation-for="NmApelido" class="login-error"></span>
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="NmTelefone"></label>
+                        <input asp-for="NmTelefone" type="tel" placeholder="(11) 98765-4321" autocomplete="tel" inputmode="tel" />
+                        <span asp-validation-for="NmTelefone" class="login-error"></span>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label asp-for="NmEmail"></label>
+                    <input asp-for="NmEmail" type="email" placeholder="voce@email.com" autocomplete="email" />
+                    <span asp-validation-for="NmEmail" class="login-error"></span>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label asp-for="Senha"></label>
+                        <input asp-for="Senha" type="password" placeholder="Mínimo de 6 caracteres" autocomplete="new-password" />
+                        <span asp-validation-for="Senha" class="login-error"></span>
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="ConfirmarSenha"></label>
+                        <input asp-for="ConfirmarSenha" type="password" placeholder="Repita a senha" autocomplete="new-password" />
+                        <span asp-validation-for="ConfirmarSenha" class="login-error"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">Criar conta</button>
+            </form>
+
+            <p class="login-signup">
+                Já tem uma conta?
+                <a asp-controller="Usuario" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]">Entrar</a>
+            </p>
+        </div>
+    </section>
+</div>

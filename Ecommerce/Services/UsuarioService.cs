@@ -10,6 +10,8 @@ public class UsuarioService
 {
     private readonly EcommerceDbContext _context;
     private readonly PasswordHasher<Usuario> _hasher = new();
+    private const int TipoVendedor = 1;   // cd_tipo_usuario = 1 ('Vendedor')
+    private const int TipoComprador = 2;  // cd_tipo_usuario = 2 ('Comprador')
 
     public UsuarioService(EcommerceDbContext context)
     {
@@ -85,6 +87,56 @@ public class UsuarioService
         _context.Usuarios.Add(usuario);
         await _context.SaveChangesAsync();
         return usuario;
+    }
+
+    public async Task<ResultadoEdicao> CadastrarAsync(CadastroViewModel dados)
+    {
+        // Segurança: o cadastro público só aceita Vendedor ou Comprador (nunca Admin),
+        // mesmo que alguém altere o valor do formulário no navegador.
+        if (dados.CdTipoUsuario is not (TipoVendedor or TipoComprador))
+            return new ResultadoEdicao(false, "Tipo de conta inválido.");
+
+        var apelido = dados.NmApelido.Trim();
+        var nome = dados.NmUsuario.Trim();
+        var email = dados.NmEmail.Trim();
+        var telefone = new string(dados.NmTelefone.Where(char.IsDigit).ToArray());
+
+        if (telefone.Length is < 10 or > 11)
+            return new ResultadoEdicao(false, "Telefone deve ter DDD + número (10 ou 11 dígitos).");
+
+        if (await _context.Usuarios.AnyAsync(u => u.NmApelido == apelido))
+            return new ResultadoEdicao(false, "Este apelido já está em uso.");
+
+        if (await _context.Usuarios.AnyAsync(u => u.NmEmail == email))
+            return new ResultadoEdicao(false, "Este e-mail já está em uso.");
+
+        if (await _context.Usuarios.AnyAsync(u => u.NmTelefone == telefone))
+            return new ResultadoEdicao(false, "Este telefone já está em uso.");
+
+        var novo = await CriarUsuarioAsync(new Usuario
+        {
+            NmApelido = apelido,
+            NmUsuario = nome,
+            NmEmail = email,
+            NmTelefone = telefone,
+            NmSenha = dados.Senha,
+            CdTipoUsuario = dados.CdTipoUsuario
+        });
+
+        var criado = await _context.Usuarios
+            .AsNoTracking()
+            .Include(u => u.CdTipoUsuarioNavigation)
+            .FirstAsync(u => u.CdUsuario == novo.CdUsuario);
+
+        return new ResultadoEdicao(true, null, new DTOUsuarioLogado
+        {
+            CdUsuario = criado.CdUsuario,
+            NmApelido = criado.NmApelido,
+            NmUsuario = criado.NmUsuario,
+            NmEmail = criado.NmEmail,
+            CdTipoUsuario = criado.CdTipoUsuario,
+            NmTipoUsuario = criado.CdTipoUsuarioNavigation.NmTipoUsuario
+        });
     }
 
     public async Task<ResultadoEdicao> EditarAsync(int cdUsuario, DadosUsuarioViewModel dados)

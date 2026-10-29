@@ -1,0 +1,361 @@
+﻿/* Feed de produtos — os cards (.product-card, .badge, .favorite, .add-button)
+   são reaproveitados do CSS da Home. */
+
+.feed-page {
+    padding: 32px 0 80px;
+    background: #fff;
+    color: #172f47;
+}
+
+.feed-page [hidden] {
+    display: none !important;
+}
+
+.feed-page .section-header {
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+/* ===== Barra superior (contagem + ordenar) ===== */
+.feed-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.feed-count {
+    font-size: 12px;
+    color: #9aa6b2;
+}
+
+.feed-count strong {
+    color: #172f47;
+    font-weight: 700;
+}
+
+.feed-sort {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #172f47;
+}
+
+.feed-sort select {
+    height: 38px;
+    padding: 0 34px 0 12px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    color: #172f47;
+    background: #fff;
+    border: 1px solid #dce3ec;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.feed-sort select:focus {
+    border-color: #4775ee;
+    box-shadow: 0 0 0 3px rgba(71, 117, 238, 0.14);
+}
+
+.feed-filter-toggle {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 14px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    color: #172f47;
+    background: #fff;
+    border: 1px solid #dce3ec;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    .feed-filter-toggle .material-symbols-outlined {
+        font-size: 18px;
+    }
+
+/* ===== Layout ===== */
+.feed-layout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+}
+
+/* ===== Filtros ===== */
+.feed-filters {
+    position: sticky;
+    top: 16px;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
+.filter-box {
+    margin-bottom: 14px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #e6ebf2;
+}
+
+.filter-title {
+    margin: 0 0 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #172f47;
+}
+
+.price-range {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+    .price-range label {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 10px;
+        font-weight: 600;
+        color: #9aa6b2;
+    }
+
+    .price-range input {
+        width: 100%;
+        height: 38px;
+        padding: 0 10px;
+        font-family: inherit;
+        font-size: 12px;
+        color: #172f47;
+        border: 1px solid #dce3ec;
+        border-radius: 4px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+        .price-range input:focus {
+            border-color: #4775ee;
+            box-shadow: 0 0 0 3px rgba(71, 117, 238, 0.14);
+        }
+
+.price-sep {
+    padding-bottom: 10px;
+    color: #9aa6b2;
+}
+
+.filter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.filter-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: #172f47;
+    cursor: pointer;
+}
+
+    .filter-check input {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        accent-color: #4775ee;
+        cursor: pointer;
+    }
+
+.filter-check__text {
+    flex: 1;
+}
+
+.filter-count {
+    font-size: 11px;
+    color: #9aa6b2;
+}
+
+.filter-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.filter-apply {
+    height: 40px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    background: #4775ee;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+    .filter-apply:hover {
+        background: #3266df;
+    }
+
+.filter-clear {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4775ee;
+    text-decoration: none;
+}
+
+    .filter-clear:hover {
+        text-decoration: underline;
+    }
+
+/* ===== Grid do feed ===== */
+.feed-page .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 24px 16px;
+}
+
+.feed-page .product-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e6ebf2;
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feed-page .product-card:hover {
+    border-color: #c9d5ec;
+    box-shadow: 0 8px 24px rgba(20, 40, 75, 0.08);
+}
+
+/* a imagem passa a ficar colada nas bordas do card, com uma linha separando das informações */
+.feed-page .product-card .product-image {
+    height: 220px;
+    border: 0;
+    border-bottom: 1px solid #eef1f6;
+    border-radius: 0;
+}
+
+/* as informações ganham respiro interno, já que agora estão dentro da caixa */
+.feed-page .product-card .product-info {
+    flex: 1;
+    padding: 14px;
+}
+
+/* ===== Estados ===== */
+.feed-empty {
+    padding: 80px 20px;
+    text-align: center;
+    color: #9aa6b2;
+}
+
+    .feed-empty .material-symbols-outlined {
+        font-size: 44px;
+        color: #c3ccd6;
+    }
+
+    .feed-empty h3 {
+        margin: 12px 0 4px;
+        font-size: 16px;
+        color: #172f47;
+    }
+
+    .feed-empty p {
+        margin: 0;
+        font-size: 12px;
+    }
+
+.feed-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 36px 0;
+    font-size: 12px;
+    color: #9aa6b2;
+}
+
+.feed-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #dce3ec;
+    border-top-color: #4775ee;
+    border-radius: 50%;
+    animation: feed-giro 0.7s linear infinite;
+}
+
+@keyframes feed-giro {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.feed-error {
+    padding: 36px 0;
+    text-align: center;
+    font-size: 12px;
+    color: #9aa6b2;
+}
+
+    .feed-error button {
+        height: 36px;
+        padding: 0 18px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 700;
+        color: #4775ee;
+        background: #fff;
+        border: 1px solid #4775ee;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .feed-error button:hover {
+            background: #4775ee;
+            color: #fff;
+        }
+
+.feed-end {
+    padding: 40px 0 0;
+    text-align: center;
+    font-size: 12px;
+    color: #9aa6b2;
+}
+
+/* ===== Responsivo ===== */
+@media (max-width: 900px) {
+    .feed-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .feed-filter-toggle {
+        display: inline-flex;
+    }
+
+    .feed-filters {
+        display: none;
+        position: static;
+        max-height: none;
+    }
+
+        .feed-filters.is-open {
+            display: block;
+        }
+
+    .feed-page .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
