@@ -1,4 +1,6 @@
 ﻿@using System.Globalization
+@using Ecommerce.ViewModels
+@using Ecommerce.Services
 @model Ecommerce.ViewModels.DetalhePedidoViewModel
 
 @{
@@ -96,18 +98,39 @@
                         <span>Subtotal</span>
                     </div>
 
-                    @foreach (var item in Model.Itens)
+                    @foreach (var grupo in Model.ItensPorLoja)
                     {
-                        <div class="mp-item">
-                            <div class="mp-item-produto">
-                                <span class="mp-item-nome">@item.NmProduto</span>
-                                <span class="mp-item-categoria">@item.NmCategoria</span>
-                            </div>
-
-                            <span class="mp-item-qtd" data-rotulo="Qtd.">@item.Quantidade</span>
-                            <span class="mp-item-valor" data-rotulo="Unitário">@item.VlUnitario.ToString("C", ptBr)</span>
-                            <span class="mp-item-subtotal" data-rotulo="Subtotal">@item.VlSubtotalItem.ToString("C", ptBr)</span>
+                        <div class="mp-item-loja">
+                            <span class="material-symbols-outlined">storefront</span>
+                            <span class="mp-item-loja-nome">@grupo.Key</span>
+                            <span class="mp-item-loja-total">
+                                @grupo.Sum(i => i.VlSubtotalItem).ToString("C", ptBr)
+                            </span>
                         </div>
+
+                        @foreach (var item in grupo)
+                        {
+                            <div class="mp-item">
+                                <a asp-controller="Produto" asp-action="Detalhes" asp-route-id="@item.cdProduto"
+                                   class="mp-item-imagem" tabindex="-1" aria-hidden="true">
+                                    <img src="@(item.NmUrlImagem?.Miniatura(200, 200) ?? Url.Content("~/images/sem-imagem.png"))"
+                                         alt="" loading="lazy" />
+                                </a>
+
+                                <div class="mp-item-produto">
+                                    <a asp-controller="Produto" asp-action="Detalhes" asp-route-id="@item.cdProduto"
+                                       class="mp-item-nome">@item.NmProduto</a>
+
+                                    <a asp-controller="FeedProduto" asp-action="Index"
+                                       asp-route-Ordem="recentes" asp-route-Categorias="@item.cdCategoria"
+                                       class="mp-item-categoria">@item.NmCategoria</a>
+                                </div>
+
+                                <span class="mp-item-qtd" data-rotulo="Qtd.">@item.Quantidade</span>
+                                <span class="mp-item-valor" data-rotulo="Unitário">@item.VlUnitario.ToString("C", ptBr)</span>
+                                <span class="mp-item-subtotal" data-rotulo="Subtotal">@item.VlSubtotalItem.ToString("C", ptBr)</span>
+                            </div>
+                        }
                     }
                 </div>
             </div>
@@ -174,8 +197,8 @@
                     </h2>
 
                     <div class="mp-resumo-linha">
-                        <span>Loja</span>
-                        <span>@Model.NmLoja</span>
+                        <span>@(Model.Lojas.Count > 1 ? "Lojas" : "Loja")</span>
+                        <span class="mp-resumo-lojas">@string.Join(", ", Model.Lojas)</span>
                     </div>
 
                     <div class="mp-resumo-linha">

@@ -39,7 +39,8 @@ namespace Ecommerce.Controllers
                 Produtos = resultado.Itens,
                 Total = resultado.Total ?? 0,
                 TemMais = resultado.TemMais,
-                Categorias = await _feedService.ListarCategoriasAsync()
+                Categorias = await _feedService.ListarCategoriasAsync(),
+                Lojas = await _feedService.ListarLojasAsync()
             };
 
             return View(vm);

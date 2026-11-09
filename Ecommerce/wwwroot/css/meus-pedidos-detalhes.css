@@ -10,6 +10,13 @@
     margin: 0 auto 100px;
 }
 
+    .mp-principal,
+    .mp-principal *,
+    .mp-principal *::before,
+    .mp-principal *::after {
+        box-sizing: border-box;
+    }
+
 .mp-breadcrumb {
     display: flex;
     align-items: center;
@@ -41,7 +48,6 @@
 
 .mp-detalhe {
     width: 100%;
-    box-sizing: border-box;
     margin-top: 35px;
     padding: 26px 28px;
     border: 1px solid #dce4ed;
@@ -183,7 +189,6 @@
     border: 1px solid #e1e7ef;
     border-radius: 7px;
     background-color: #fff;
-    box-sizing: border-box;
     transition: border-color 0.2s ease;
 }
 
@@ -226,6 +231,11 @@
 /* Produtos do pedido */
 
 .mp-detalhe .mp-itens {
+    --mp-img: 60px;
+    --mp-gap: 10px;
+    --mp-col-qtd: 45px;
+    --mp-col-valor: 90px;
+    --mp-col-subtotal: 100px;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -233,22 +243,46 @@
 
 .mp-detalhe .mp-item {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 45px 90px 100px;
+    grid-template-columns: var(--mp-img) minmax(0, 1fr) var(--mp-col-qtd) var(--mp-col-valor) var(--mp-col-subtotal);
     align-items: center;
-    gap: 10px;
-    padding: 15px 0;
-    border-bottom: 1px solid #e7ebf0;
+    gap: var(--mp-gap);
+    padding: 15px 10px 0px 0px;
     color: #526b87;
     font-size: 12px;
+
 }
 
-    .mp-detalhe .mp-item:last-child {
-        padding-bottom: 0;
-        border-bottom: none;
-    }
+/* Divisória só entre produtos seguidos (não entre loja e produto) */
+.mp-detalhe .mp-item + .mp-item {
+    border-top: 1px solid #e7ebf0;
+}
+
+.mp-detalhe .mp-item:last-child {
+    padding-bottom: 0;
+}
+
+.mp-detalhe .mp-item-imagem {
+    display: block;
+    width: var(--mp-img);
+    height: var(--mp-img);
+}
+
+.mp-detalhe .mp-item-imagem img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 1px solid #e7ebf0;
+    border-radius: 6px;
+    background-color: #f3f6fa;
+}
+
+/* Cabeçalho: 4 colunas, recuado para alinhar com o texto do produto */
 
 .mp-detalhe .mp-item-cabecalho {
-    padding: 0 0 12px;
+    grid-template-columns: minmax(0, 1fr) var(--mp-col-qtd) var(--mp-col-valor) var(--mp-col-subtotal);
+    padding: 0 0 12px calc(var(--mp-img) + var(--mp-gap));
+    border-bottom: 1px solid #e7ebf0;
     color: #8292a5;
     font-size: 10px;
     font-weight: 750;
@@ -259,6 +293,45 @@
     .mp-detalhe .mp-item-cabecalho span:not(:first-child) {
         text-align: right;
     }
+
+/* Cabeçalho de cada loja dentro do pedido */
+
+.mp-detalhe .mp-item-loja {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 10px 12px;
+    border-radius: 5px;
+    background-color: #f8fafd;
+    color: #142a43;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.mp-detalhe .mp-item-cabecalho + .mp-item-loja {
+    margin-top: 12px;
+}
+
+.mp-detalhe .mp-item-loja > .material-symbols-outlined {
+    flex-shrink: 0;
+    color: #3266df;
+    font-size: 18px;
+}
+
+.mp-detalhe .mp-item-loja-nome {
+    min-width: 0;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.mp-detalhe .mp-item-loja-total {
+    margin-left: auto;
+    flex-shrink: 0;
+    color: #526b87;
+    font-size: 11px;
+    font-weight: 650;
+}
 
 .mp-detalhe .mp-item-produto {
     display: flex;
@@ -347,6 +420,10 @@
         font-size: 18px;
         font-weight: 800;
     }
+
+.mp-detalhe .mp-resumo-lojas {
+    line-height: 1.5;
+}
 
 /* Endereço de entrega */
 
@@ -460,7 +537,6 @@
         width: 100%;
         margin-bottom: 60px;
         padding: 0 16px;
-        box-sizing: border-box;
     }
 
     .mp-breadcrumb {
@@ -514,6 +590,10 @@
             display: none;
         }
 
+            .mp-detalhe .mp-item-cabecalho + .mp-item-loja {
+                margin-top: 0;
+            }
+
         .mp-detalhe .mp-item {
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 13px 10px;
@@ -557,7 +637,6 @@
 
     .mp-detalhe .mp-btn-secundario {
         width: 100%;
-        box-sizing: border-box;
     }
 }
 
@@ -581,4 +660,12 @@
         .mp-detalhe .mp-bloco {
             padding: 14px;
         }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mp-principal a,
+    .mp-detalhe .mp-bloco,
+    .mp-detalhe .mp-btn-secundario {
+        transition: none;
+    }
 }

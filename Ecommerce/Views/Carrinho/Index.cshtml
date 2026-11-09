@@ -1,0 +1,21 @@
+﻿@using Ecommerce.ViewModels
+@model CarrinhoViewModel
+@{
+    ViewData["Title"] = "Meu carrinho";
+}
+
+<partial name="_NavegacaoCategorias" />
+
+<main class="main-content cart-page">
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">SUA COMPRA</span>
+            <h2>Meu carrinho</h2>
+            <p>Revise os produtos antes de finalizar.</p>
+        </div>
+    </div>
+
+    <div id="carrinhoPagina">
+        <partial name="_CarrinhoLista" model="Model" />
+    </div>
+</main>

@@ -10,42 +10,46 @@
 @foreach (var produto in Model)
 {
     <article class="product-card">
-        <div class="product-image">
 
-            @if (produto.QtEstoque <= 0)
-            {
-                <span class="badge">Esgotado</span>
-            }
-            else if (produto.DtCriacao >= limiteNovidade)
-            {
-                <span class="badge">Novidade</span>
-            }
+        <a class="product-card__link"
+           asp-controller="Produto" asp-action="Detalhes" asp-route-id="@produto.CdProduto">
 
-            <button type="button" class="favorite" aria-label="Adicionar aos favoritos">
-                <span class="material-symbols-outlined">favorite</span>
-            </button>
+            <div class="product-image">
 
-            <button type="button" class="add-button" aria-label="Adicionar ao carrinho">
-                <span class="material-symbols-outlined">add</span>
-            </button>
+                @if (produto.QtEstoque <= 0)
+                {
+                    <span class="badge">Esgotado</span>
+                }
+                else if (produto.DtCriacao >= limiteNovidade)
+                {
+                    <span class="badge">Novidade</span>
+                }
 
-            <img src="@(produto.NmUrlImagem.Miniatura(400, 400) ?? Url.Content("~/images/sem-imagem.png"))"
-                 alt="@produto.NmProduto"
-                 loading="lazy">
-        </div>
-
-        <div class="product-info">
-            <span class="product-category">@produto.NmLojaVirtual.ToUpper()</span>
-
-            <h3>@produto.NmProduto</h3>
-
-            <div class="price">
-                <strong>@produto.VlProduto.ToString("C", pt)</strong>
+                <img src="@(produto.NmUrlImagem.Miniatura(400, 400) ?? Url.Content("~/images/sem-imagem.png"))"
+                     alt="@produto.NmProduto"
+                     loading="lazy">
             </div>
 
-            <p class="installment">
-                ou 10x de @((produto.VlProduto / 10).ToString("C", pt)) sem juros
-            </p>
-        </div>
+            <div class="product-info">
+                <span class="product-category">@produto.NmLojaVirtual.ToUpper()</span>
+
+                <h3>@produto.NmProduto</h3>
+
+                <div class="price">
+                    <strong>@produto.VlProduto.ToString("C", pt)</strong>
+                </div>
+
+                <p class="installment">
+                    ou 10x de @((produto.VlProduto / 10).ToString("C", pt)) sem juros
+                </p>
+            </div>
+        </a>
+
+        <button type="button" class="add-button"
+                data-carrinho-acao="Adicionar"
+                data-cd-produto="@produto.CdProduto"
+                aria-label="Adicionar ao carrinho">
+            <span class="material-symbols-outlined">add</span>
+        </button>
     </article>
 }

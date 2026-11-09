@@ -156,13 +156,11 @@ public partial class EcommerceDbContext : DbContext
 
             entity.HasIndex(e => e.CdCupom, "fk_pedido_cupom");
 
-            entity.HasIndex(e => e.CdLojaVirtual, "fk_pedido_loja_virtual");
 
             entity.HasIndex(e => e.CdUsuario, "fk_pedido_usuario");
 
             entity.Property(e => e.CdPedido).HasColumnName("cd_pedido");
             entity.Property(e => e.CdCupom).HasColumnName("cd_cupom");
-            entity.Property(e => e.CdLojaVirtual).HasColumnName("cd_loja_virtual");
             entity.Property(e => e.CdUsuario).HasColumnName("cd_usuario");
             entity.Property(e => e.CdEnderecoEntrega).HasColumnName("cd_endereco_entrega");
 
@@ -191,11 +189,6 @@ public partial class EcommerceDbContext : DbContext
                 .HasForeignKey(d => d.CdCupom)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("fk_pedido_cupom");
-
-            entity.HasOne(d => d.CdLojaVirtualNavigation).WithMany(p => p.Pedidos)
-                .HasForeignKey(d => d.CdLojaVirtual)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_pedido_loja_virtual");
 
             entity.HasOne(d => d.CdUsuarioNavigation).WithMany(p => p.Pedidos)
                 .HasForeignKey(d => d.CdUsuario)

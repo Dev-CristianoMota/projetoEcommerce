@@ -12,5 +12,8 @@
 
         public EnderecoEntregaViewModel? Endereco { get; set; }
         public List<ItemPedidoViewModel> Itens { get; set; } = new();
+
+        public IEnumerable<IGrouping<string, ItemPedidoViewModel>> ItensPorLoja
+            => Itens.GroupBy(i => i.NmLoja);
     }
 }

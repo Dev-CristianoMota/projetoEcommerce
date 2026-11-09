@@ -8,5 +8,6 @@
         public string SgStatus { get; set; } = string.Empty;
         public decimal VlTotal { get; set; }
         public int QtItens { get; set; }
+        public List<string> Lojas { get; set; } = new();
     }
 }

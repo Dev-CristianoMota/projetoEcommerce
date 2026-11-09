@@ -68,27 +68,19 @@ public class UsuarioController : BaseController
         return RedirectToAction("Index", "Home");
     }
 
-    [Authorize]
-    [HttpGet]
-    public async Task<IActionResult> Conta()
-    {
-        var logado = UsuarioLogado;
+    //[Authorize]
+    //[HttpGet]
+    //public async Task<IActionResult> Conta()
+    //{
+    //    var logado = UsuarioLogado;
 
-        if (logado is null)
-            return RedirectToAction(nameof(Login));
+    //    if (logado is null)
+    //        return RedirectToAction(nameof(Login));
 
-        var ultimoPedido = await _pedidoService.BuscarUltimoPedidoAsync(
-            logado.CdUsuario
-        );
+    //    UltimoPedidoContaViewModel? pedido = await _pedidoService.BuscarUltimoPedidoAsync(logado.CdUsuario);
 
-        var vm = new ContaViewModel
-        {
-            Email = logado.NmEmail,
-            UltimoPedido = ultimoPedido
-        };
-
-        return View(vm);
-    }
+    //    return View("Conta", pedido);
+    //}
 
     [HttpPost]
     [ValidateAntiForgeryToken]

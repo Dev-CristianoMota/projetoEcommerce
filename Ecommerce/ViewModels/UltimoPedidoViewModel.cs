@@ -4,25 +4,15 @@ namespace Ecommerce.ViewModels
     public class UltimoPedidoContaViewModel
     {
         public int CdPedido { get; set; }
-
-        public string NumeroFormatado => $"#{CdPedido:D6}";
-
+        public string NumeroFormatado { get; set; } = string.Empty;
         public DateTime DtCriacao { get; set; }
-
         public string SgStatus { get; set; } = "P";
-
         public string NmLoja { get; set; } = string.Empty;
-
         public string? CdPromocional { get; set; }
-
         public decimal VlSubtotal { get; set; }
-
         public decimal VlDesconto { get; set; }
-
         public decimal VlTotal { get; set; }
-
         public List<ItemUltimoPedidoViewModel> Itens { get; set; } = new();
-
         public int QtTotalItens => Itens.Sum(i => i.Quantidade);
 
         public string StatusTexto => SgStatus switch

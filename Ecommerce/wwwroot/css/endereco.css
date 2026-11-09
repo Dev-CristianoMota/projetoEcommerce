@@ -17,6 +17,10 @@
     text-decoration: none;
 }
 
+.breadcrumb a:hover {
+    color: #3266df;
+}
+
 .breadcrumb span {
     color: #aeb8c4;
 }

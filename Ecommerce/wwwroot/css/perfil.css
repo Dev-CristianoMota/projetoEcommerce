@@ -27,6 +27,10 @@
     text-decoration: none;
 }
 
+.breadcrumb a:hover {
+    color: #3266df;
+}
+
 .breadcrumb span {
     color: #aeb8c4;
 }
@@ -289,7 +293,7 @@
 .last-order {
     width: 100%;
     margin-top: 25px;
-    padding: 26px 28px;
+    padding: 26px 28px 28px;
     border: 1px solid #dce4ed;
     background-color: #ffffff;
     box-sizing: border-box;
@@ -299,11 +303,7 @@
 .last-order-heading,
 .last-order-info,
 .last-order-store,
-.last-order-product,
-.last-order-delivery,
-.delivery-heading,
-.last-order-footer,
-.last-order-payment-info {
+.last-order-product {
     display: flex;
     align-items: center;
 }
@@ -311,7 +311,7 @@
 .last-order-header {
     justify-content: space-between;
     gap: 20px;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
 }
 
 .last-order-heading {
@@ -343,347 +343,57 @@
     letter-spacing: -0.4px;
 }
 
-.last-order-heading p {
-    margin: 5px 0 0;
-    color: #8292a5;
-    font-size: 12px;
-    line-height: 1.5;
-}
-
 .last-order-all {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
     flex-shrink: 0;
     color: #3266df;
     font-size: 12px;
     font-weight: 700;
     text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
 }
 
-    .last-order-all .material-symbols-outlined {
-        font-size: 17px;
-        transition: transform 0.2s ease;
+    .last-order-all:hover {
+        border-bottom-color: #3266df;
     }
 
-    .last-order-all:hover .material-symbols-outlined {
-        transform: translateX(3px);
-    }
+/* ---------- Card do pedido ---------- */
 
 .last-order-content {
-    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     border: 1px solid #e1e7ef;
-    border-radius: 6px;
+    border-radius: 8px;
     background-color: #ffffff;
 }
 
 .last-order-info {
     justify-content: space-between;
     gap: 15px;
-    padding-bottom: 20px;
+    padding: 16px 22px;
     border-bottom: 1px solid #e7ebf0;
+    background-color: #f7f9fc;
 }
 
 .last-order-number {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
+    color: #526b87;
+    font-size: 13px;
 }
 
-.last-order-label {
-    color: #8292a5;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.2px;
-}
-
-.last-order-number strong {
-    color: #142a43;
-    font-size: 17px;
-    font-weight: 750;
-}
-
-.last-order-date {
-    color: #8292a5;
-    font-size: 11px;
-}
-
-.last-order-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 8px 11px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.status-transit {
-    background-color: #edf5ff;
-    color: #3266df;
-}
-
-.status-dot {
-    width: 7px;
-    height: 7px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background-color: currentColor;
-}
-
-.last-order-store {
-    gap: 11px;
-    padding: 17px 0;
-    border-bottom: 1px solid #e7ebf0;
-}
-
-    .last-order-store > .material-symbols-outlined {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 37px;
-        height: 37px;
-        flex-shrink: 0;
-        border-radius: 6px;
-        background-color: #f1f5fd;
-        color: #3266df;
-        font-size: 20px;
-    }
-
-    .last-order-store div {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-
-        .last-order-store div span {
-            color: #8292a5;
-            font-size: 11px;
-        }
-
-        .last-order-store div strong {
-            color: #183451;
-            font-size: 12px;
-            font-weight: 750;
-        }
-
-.last-order-section-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding-top: 22px;
-}
-
-    .last-order-section-title h3,
-    .delivery-heading h3 {
-        margin: 0;
+    .last-order-number strong {
         color: #142a43;
-        font-size: 13px;
         font-weight: 750;
-    }
-
-    .last-order-section-title > span {
-        color: #8292a5;
-        font-size: 11px;
-    }
-
-.last-order-products {
-    padding: 8px 0;
-}
-
-.last-order-product {
-    gap: 13px;
-    min-width: 0;
-    padding: 14px 0;
-    border-bottom: 1px solid #edf0f4;
-}
-
-    .last-order-product:last-child {
-        border-bottom: none;
-    }
-
-.product-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
-    border: 1px solid #e1e7ef;
-    border-radius: 6px;
-    background-color: #f7f9fc;
-    color: #3266df;
-}
-
-    .product-placeholder .material-symbols-outlined {
-        font-size: 23px;
-    }
-
-.product-info {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 5px;
-    min-width: 0;
-}
-
-    .product-info strong {
-        color: #263b52;
-        font-size: 12px;
-        font-weight: 700;
-        line-height: 1.5;
-    }
-
-    .product-info span {
-        color: #8292a5;
-        font-size: 11px;
-    }
-
-.product-values {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 5px;
-    flex-shrink: 0;
-}
-
-    .product-values span {
-        color: #8292a5;
-        font-size: 10px;
-    }
-
-    .product-values strong {
-        color: #183451;
-        font-size: 12px;
-        font-weight: 750;
-    }
-
-.last-order-delivery {
-    align-items: flex-start;
-    gap: 20px;
-    padding: 20px 0;
-    border-top: 1px solid #e7ebf0;
-    border-bottom: 1px solid #e7ebf0;
-}
-
-.delivery-heading {
-    align-items: flex-start;
-    gap: 10px;
-    min-width: 155px;
-}
-
-    .delivery-heading > .material-symbols-outlined {
-        color: #3266df;
-        font-size: 22px;
-    }
-
-    .delivery-heading h3 {
-        margin-top: 2px;
-    }
-
-    .delivery-heading p {
-        margin: 5px 0 0;
-        color: #8292a5;
-        font-size: 11px;
-    }
-
-.delivery-address {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    color: #8292a5;
-    font-size: 11px;
-    line-height: 1.5;
-}
-
-    .delivery-address strong {
-        color: #183451;
-        font-size: 12px;
-    }
-
-.last-order-summary {
-    display: flex;
-    flex-direction: column;
-    gap: 13px;
-    width: 100%;
-    max-width: 340px;
-    margin: 0 0 0 auto;
-    padding: 20px 0;
-}
-
-.summary-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 15px;
-    color: #8292a5;
-    font-size: 11px;
-}
-
-    .summary-row strong {
-        flex-shrink: 0;
-        color: #183451;
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    .summary-row .summary-discount {
-        color: #25845b;
-    }
-
-.summary-total {
-    padding-top: 14px;
-    border-top: 1px solid #e1e7ef;
-}
-
-    .summary-total span {
-        color: #142a43;
-        font-size: 12px;
-        font-weight: 750;
-    }
-
-    .summary-total strong {
-        color: #142a43;
-        font-size: 18px;
-        font-weight: 800;
-    }
-
-.last-order-footer {
-    justify-content: space-between;
-    gap: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #e7ebf0;
-}
-
-.last-order-payment-info {
-    align-items: flex-start;
-    gap: 8px;
-    min-width: 0;
-}
-
-    .last-order-payment-info .material-symbols-outlined {
-        color: #3266df;
-        font-size: 18px;
-    }
-
-    .last-order-payment-info p {
-        margin: 1px 0 0;
-        color: #8292a5;
-        font-size: 11px;
-        line-height: 1.6;
     }
 
 .last-order-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    min-height: 43px;
-    padding: 0 16px;
+    gap: 6px;
     flex-shrink: 0;
+    min-height: 38px;
+    padding: 0 14px 0 16px;
     border: 1px solid #142a43;
     border-radius: 5px;
     background-color: #142a43;
@@ -708,56 +418,266 @@
         transform: translateX(3px);
     }
 
-    .last-order-button:focus-visible,
-    .last-order-all:focus-visible {
-        outline: 2px solid #3266df;
-        outline-offset: 3px;
+/* ---------- Status ---------- */
+
+.last-order-status {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 7px;
+    margin: 18px 22px 0;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.status-pending {
+    background-color: #fff6e5;
+    color: #b7791f;
+}
+
+.status-approved {
+    background-color: #e6f6f4;
+    color: #0f766e;
+}
+
+.status-transit {
+    background-color: #edf3ff;
+    color: #3266df;
+}
+
+.status-delivered {
+    background-color: #eaf7f0;
+    color: #25845b;
+}
+
+.status-canceled {
+    background-color: #fdecec;
+    color: #c53030;
+}
+
+/* ---------- Loja ---------- */
+
+.last-order-store {
+    gap: 11px;
+    padding: 16px 22px;
+    border-bottom: 1px solid #e7ebf0;
+}
+
+    .last-order-store > .material-symbols-outlined {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 37px;
+        height: 37px;
+        flex-shrink: 0;
+        border-radius: 6px;
+        background-color: #f1f5fd;
+        color: #3266df;
+        font-size: 20px;
     }
+
+    .last-order-store div {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+    }
+
+        .last-order-store div span {
+            color: #8292a5;
+            font-size: 11px;
+        }
+
+        .last-order-store div strong {
+            color: #183451;
+            font-size: 12px;
+            font-weight: 750;
+            overflow-wrap: anywhere;
+        }
+
+/* ---------- Produtos ---------- */
+
+.last-order-products {
+    padding: 4px 22px;
+}
+
+.last-order-product {
+    gap: 14px;
+    min-width: 0;
+    padding: 14px 0;
+    border-bottom: 1px solid #edf0f4;
+}
+
+    .last-order-product:last-child {
+        border-bottom: none;
+    }
+
+.product-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    border: 1px solid #e1e7ef;
+    border-radius: 6px;
+    background-color: #f7f9fc;
+    color: #3266df;
+}
+
+    .product-placeholder .material-symbols-outlined {
+        font-size: 24px;
+    }
+
+.product-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+    .product-info strong {
+        color: #263b52;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+    }
+
+    .product-info span {
+        color: #8292a5;
+        font-size: 11px;
+    }
+
+.product-values {
+    flex-shrink: 0;
+    text-align: right;
+}
+
+    .product-values strong {
+        color: #183451;
+        font-size: 13px;
+        font-weight: 750;
+    }
+
+/* ---------- Total ---------- */
+
+.last-order-summary {
+    padding: 16px 22px;
+    border-top: 1px solid #e7ebf0;
+    background-color: #f7f9fc;
+}
+
+    .last-order-summary .summary-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .last-order-summary .summary-total {
+        padding-top: 0;
+        border-top: none;
+    }
+
+        .last-order-summary .summary-total span {
+            color: #526b87;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .last-order-summary .summary-total strong {
+            color: #142a43;
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+/* ---------- Sem pedidos ---------- */
+
+.last-order-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 36px 20px;
+    border: 1px dashed #cfd9e6;
+    border-radius: 8px;
+    background-color: #f7f9fc;
+    text-align: center;
+}
+
+    .last-order-empty p {
+        margin: 0;
+        color: #8292a5;
+        font-size: 13px;
+    }
+
+    .last-order-empty a {
+        padding: 11px 18px;
+        border-radius: 5px;
+        background-color: #142a43;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 750;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+    }
+
+        .last-order-empty a:hover {
+            background-color: #234568;
+        }
+
+        /* ---------- Focus ---------- */
+
+        .last-order-button:focus-visible,
+        .last-order-all:focus-visible,
+        .last-order-empty a:focus-visible {
+            outline: 2px solid #3266df;
+            outline-offset: 3px;
+        }
+
+/* ---------- Responsivo ---------- */
 
 @media (max-width: 700px) {
     .last-order {
         padding: 21px 16px;
     }
 
-    .last-order-content {
-        padding: 16px 12px;
-    }
-
-    .last-order-details {
-        grid-template-columns: 1fr;
-    }
-
-    .last-order-delivery {
-        flex-direction: column;
-        gap: 15px;
-    }
-
+    .last-order-info,
+    .last-order-store,
+    .last-order-products,
     .last-order-summary {
-        max-width: none;
+        padding-left: 14px;
+        padding-right: 14px;
     }
 
-    .last-order-footer {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .last-order-button {
-        width: 100%;
-        box-sizing: border-box;
+    .last-order-status {
+        margin-left: 14px;
+        margin-right: 14px;
     }
 }
 
 @media (max-width: 450px) {
     .last-order-header {
         align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
     }
 
     .last-order-heading h2 {
         font-size: 17px;
-    }
-
-    .last-order-heading p {
-        font-size: 11px;
     }
 
     .last-order-info {
@@ -765,22 +685,22 @@
         flex-direction: column;
     }
 
+    .last-order-button {
+        width: 100%;
+    }
+
     .last-order-product {
-        gap: 9px;
+        gap: 10px;
     }
 
     .product-placeholder {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
     }
 
     .product-info strong,
     .product-values strong {
-        font-size: 11px;
-    }
-
-    .product-values span {
-        font-size: 9px;
+        font-size: 12px;
     }
 }
 

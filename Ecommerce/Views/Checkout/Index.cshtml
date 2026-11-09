@@ -1,0 +1,140 @@
+﻿@using System.Globalization
+@using Ecommerce.Services
+@using Ecommerce.ViewModels
+@model CheckoutViewModel
+@{
+    ViewData["Title"] = "Finalizar compra";
+    var pt = new CultureInfo("pt-BR");
+    var carrinho = Model.Carrinho;
+    var semEndereco = !Model.Enderecos.Any();
+}
+
+<partial name="_NavegacaoCategorias" />
+
+<main class="main-content cart-page">
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">SUA COMPRA</span>
+            <h2>Finalizar compra</h2>
+            <p>Escolha o endereço de entrega e confirme o pedido.</p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Erro))
+    {
+        <div class="cart-alert">@Model.Erro</div>
+    }
+
+    <form asp-controller="Checkout" asp-action="Finalizar" method="post" class="cart-page-layout">
+
+        <section class="cart-page-items">
+
+            <!-- 1. Endereço -->
+            <div class="cart-store">
+                <header class="cart-store-header">
+                    <span class="material-symbols-outlined">location_on</span>
+                    <h3>Endereço de entrega</h3>
+                </header>
+
+                @if (semEndereco)
+                {
+                    <div class="cart-page-empty">
+                        <span class="material-symbols-outlined cart-empty-icon">home_pin</span>
+                        <p>Você ainda não tem um endereço cadastrado.</p>
+                        <a asp-controller="Endereco" asp-action="Endereco" class="cart-btn cart-btn-primary">Cadastrar endereço</a>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var end in Model.Enderecos)
+                    {
+                        <label class="cart-line checkout-endereco">
+                            <input type="radio" name="cdEndereco" value="@end.CdEndereco"
+                            @(end.CdEndereco == Model.CdEnderecoSelecionado ? "checked" : "") required />
+                            <div class="cart-line-info">
+                                <h4>
+                                    @end.NmIdentificacao
+                                    @if (end.IcPrincipal)
+                                    {
+                                        <small>(principal)</small>
+                                    }
+                                </h4>
+                                <span class="cart-line-unit">@end.NmDestinatario</span>
+                                <span class="cart-line-unit">@end.Linha1</span>
+                                <span class="cart-line-unit">@end.Linha2</span>
+                            </div>
+                        </label>
+                    }
+
+                    <a asp-controller="Endereco" asp-action="Endereco" class="cart-btn cart-btn-link">Gerenciar endereços</a>
+                }
+            </div>
+
+            <!-- 2. Produtos por loja -->
+            @foreach (var loja in Model.Lojas)
+            {
+                <div class="cart-store">
+                    <header class="cart-store-header">
+                        <span class="material-symbols-outlined">store</span>
+                        <h3>@loja.NmLojaVirtual</h3>
+                        <span class="cart-store-subtotal">@loja.Subtotal.ToString("C", pt)</span>
+                    </header>
+
+                    @foreach (var item in loja.Itens)
+                    {
+                        <article class="cart-line">
+                            <img src="@(item.NmUrlImagem.Miniatura(200, 200) ?? Url.Content("~/images/sem-imagem.png"))"
+                                 alt="@item.NmProduto" loading="lazy" />
+
+                            <div class="cart-line-info">
+                                <h4>@item.NmProduto</h4>
+                                <span class="cart-line-unit">@item.QtItem × @item.VlProduto.ToString("C", pt)</span>
+                            </div>
+
+                            <strong class="cart-line-total">
+                                @((item.VlProduto * item.QtItem).ToString("C", pt))
+                            </strong>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+
+        <aside class="cart-summary" aria-label="Resumo do pedido">
+            <h3>Resumo do pedido</h3>
+
+            <div class="cart-summary-row">
+                <span>Produtos (@carrinho.QuantidadeTotal @(carrinho.QuantidadeTotal == 1 ? "item" : "itens"))</span>
+                <span>@carrinho.Subtotal.ToString("C", pt)</span>
+            </div>
+
+            @if (carrinho.CupomAplicado)
+            {
+                <div class="cart-summary-row cart-summary-discount">
+                    <span>Desconto (@carrinho.CodigoCupom)</span>
+                    <span>− @carrinho.Desconto.ToString("C", pt)</span>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(carrinho.ErroCupom))
+            {
+                <p class="cart-coupon-erro">@carrinho.ErroCupom</p>
+            }
+
+            <div class="cart-summary-row cart-summary-total">
+                <span>Total</span>
+                <strong>@carrinho.Total.ToString("C", pt)</strong>
+            </div>
+
+            @if (Model.Lojas.Count > 1)
+            {
+                <p class="cart-summary-note">
+                    Produtos de @Model.Lojas.Count lojas diferentes, tudo em um único pedido.
+                </p>
+            }
+
+            <button type="submit" class="cart-btn cart-btn-primary" disabled="@semEndereco">Confirmar pedido</button>
+            <a asp-controller="Carrinho" asp-action="Index" class="cart-btn cart-btn-link">Voltar ao carrinho</a>
+        </aside>
+    </form>
+</main>

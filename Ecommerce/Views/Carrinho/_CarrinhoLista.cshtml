@@ -1,0 +1,164 @@
+﻿@using System.Globalization
+@using Ecommerce.Services
+@using Ecommerce.ViewModels
+@model CarrinhoViewModel
+@{
+    var pt = new CultureInfo("pt-BR");
+    var lojas = Model.Itens.GroupBy(i => i.NmLojaVirtual).ToList();
+}
+
+@if (!Model.UsuarioLogado)
+{
+    <div class="cart-page-empty">
+        <span class="material-symbols-outlined cart-empty-icon">lock</span>
+        <h3>Sua sessão expirou</h3>
+        <p>Entre novamente para ver o seu carrinho.</p>
+        <a href="@Model.UrlLogin" class="cart-btn cart-btn-primary">Fazer login</a>
+    </div>
+}
+else if (!Model.Itens.Any())
+{
+    <div class="cart-page-empty">
+        <span class="material-symbols-outlined cart-empty-icon">shopping_cart</span>
+        <h3>Seu carrinho está vazio</h3>
+        <p>Que tal explorar os produtos da plataforma?</p>
+        <a asp-controller="FeedProduto" asp-action="Index" class="cart-btn cart-btn-primary">Ver produtos</a>
+    </div>
+}
+else
+{
+    <div class="cart-page-layout">
+
+        <section class="cart-page-items" aria-label="Produtos no carrinho">
+            @if (!string.IsNullOrEmpty(Model.Mensagem))
+            {
+                <div class="cart-alert">@Model.Mensagem</div>
+            }
+
+            @foreach (var loja in lojas)
+            {
+                <div class="cart-store">
+                    <header class="cart-store-header">
+                        <span class="material-symbols-outlined">store</span>
+                        <h3>@loja.Key</h3>
+                        <span class="cart-store-subtotal">
+                            @(loja.Sum(i => i.VlProduto * i.QtItem).ToString("C", pt))
+                        </span>
+                    </header>
+
+                    @foreach (var item in loja)
+                    {
+                        <article class="cart-line">
+                            <img src="@(item.NmUrlImagem.Miniatura(200, 200) ?? Url.Content("~/images/sem-imagem.png"))"
+                                 alt="@item.NmProduto" loading="lazy" />
+
+                            <div class="cart-line-info">
+                                <h4>@item.NmProduto</h4>
+                                <span class="cart-line-unit">@item.VlProduto.ToString("C", pt) cada</span>
+                                <button type="button" class="cart-line-remove"
+                                        data-carrinho-acao="Remover"
+                                        data-carrinho-origem="pagina"
+                                        data-cd-produto="@item.CdProduto">
+                                    <span class="material-symbols-outlined">delete</span>
+                                    Remover
+                                </button>
+                            </div>
+
+                            <div class="cart-qty">
+                                <button type="button" aria-label="Diminuir quantidade"
+                                        data-carrinho-acao="AlterarQuantidade"
+                                        data-carrinho-origem="pagina"
+                                        data-cd-produto="@item.CdProduto"
+                                        data-quantidade="@(item.QtItem - 1)"
+                                        disabled="@(item.QtItem <= 1)">
+                                    <span class="material-symbols-outlined">remove</span>
+                                </button>
+
+                                <span>@item.QtItem</span>
+
+                                <button type="button" aria-label="Aumentar quantidade"
+                                        data-carrinho-acao="AlterarQuantidade"
+                                        data-carrinho-origem="pagina"
+                                        data-cd-produto="@item.CdProduto"
+                                        data-quantidade="@(item.QtItem + 1)">
+                                    <span class="material-symbols-outlined">add</span>
+                                </button>
+                            </div>
+
+                            <strong class="cart-line-total">
+                                @((item.VlProduto * item.QtItem).ToString("C", pt))
+                            </strong>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+
+        <aside class="cart-summary" aria-label="Resumo">
+            <h3>Resumo</h3>
+
+            <div class="cart-coupon">
+                    <h4>Cupom de desconto</h4>
+
+                    @if (Model.CupomAplicado)
+                    {
+                        <div class="cart-coupon-applied">
+                            <span class="material-symbols-outlined">sell</span>
+                            <div>
+                                <strong>@Model.CodigoCupom</strong>
+                                <small>@Model.DescricaoCupom</small>
+                            </div>
+                            <button type="button" class="cart-coupon-remove" aria-label="Remover cupom"
+                                    data-carrinho-acao="RemoverCupom"
+                                    data-carrinho-origem="pagina">
+                                <span class="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <form class="cart-coupon-form" data-cupom-form>
+                            <input type="text" name="codigo" placeholder="Digite o código"
+                                   maxlength="45" autocomplete="off" aria-label="Código do cupom" />
+                            <button type="submit">Aplicar</button>
+                        </form>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.ErroCupom))
+                    {
+                        <p class="cart-coupon-erro">@Model.ErroCupom</p>
+                    }
+
+                    <small class="cart-coupon-hint">Cada cupom pode ser usado uma vez por conta.</small>
+                </div>
+
+                <div class="cart-summary-row">
+                    <span>Produtos (@Model.QuantidadeTotal @(Model.QuantidadeTotal == 1 ? "item" : "itens"))</span>
+                    <span>@Model.Subtotal.ToString("C", pt)</span>
+                </div>
+
+                @if (Model.CupomAplicado)
+                {
+                    <div class="cart-summary-row cart-summary-discount">
+                        <span>Desconto (@Model.CodigoCupom)</span>
+                        <span>− @Model.Desconto.ToString("C", pt)</span>
+                    </div>
+                }
+
+                <div class="cart-summary-row cart-summary-total">
+                    <span>Total</span>
+                    <strong>@Model.Total.ToString("C", pt)</strong>
+                </div>
+
+                @if (lojas.Count > 1)
+                {
+                    <p class="cart-summary-note">
+                        Produtos de @lojas.Count lojas diferentes, tudo em um único pedido.
+                    </p>
+                }
+
+                <a asp-controller="Checkout" asp-action="Index" class="cart-btn cart-btn-primary">Finalizar compra</a>
+                <a asp-controller="FeedProduto" asp-action="Index" class="cart-btn cart-btn-link">Continuar comprando</a>
+        </aside>
+    </div>
+}

@@ -1,0 +1,120 @@
+﻿@model Ecommerce.ViewModels.ConfirmacaoPedidoViewModel
+@{ ViewData["Title"] = "Pedido realizado"; }
+
+<link rel="stylesheet" href="~/css/checkout-concluido.css" asp-append-version="true" />
+
+<main class="concluido-principal">
+    <section class="concluido">
+        <div class="concluido-header">
+            <div class="concluido-icone">
+                <span class="material-symbols-outlined">check</span>
+            </div>
+            <h2>Pedido realizado com sucesso!</h2>
+            <p>Número do pedido: <strong>#@Model.CdPedido</strong> · @Model.DtCriacao.ToString("dd/MM/yyyy 'às' HH:mm")</p>
+        </div>
+
+        @* ===== Itens por loja ===== *@
+        <div class="concluido-secao">
+            <div class="concluido-secao-titulo">
+                <span class="material-symbols-outlined">shopping_bag</span>
+                <h3>Itens do pedido</h3>
+            </div>
+
+            @foreach (var loja in Model.Lojas)
+            {
+                <div class="concluido-loja">
+                    <div class="concluido-loja-header">
+                        <span class="material-symbols-outlined">storefront</span>
+                        <strong>@loja.NmLojaVirtual</strong>
+                    </div>
+
+                    @foreach (var item in loja.Itens)
+                    {
+                        <div class="concluido-item">
+                            <div class="concluido-item-info">
+                                <span class="concluido-item-nome">@item.NmProduto</span>
+                                <span class="concluido-item-detalhe">@item.QtItem x @item.VlProduto.ToString("C")</span>
+                            </div>
+                            <span class="concluido-item-valor">@((item.QtItem * item.VlProduto).ToString("C"))</span>
+                        </div>
+                    }
+
+                    <div class="concluido-loja-subtotal">
+                        <span>Subtotal da loja</span>
+                        <strong>@loja.Subtotal.ToString("C")</strong>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @* ===== Endereço de entrega ===== *@
+        @if (Model.Endereco != null)
+        {
+            <div class="concluido-secao">
+                <div class="concluido-secao-titulo">
+                    <span class="material-symbols-outlined">location_on</span>
+                    <h3>Endereço de entrega</h3>
+                </div>
+
+                <div class="concluido-endereco">
+                    <div class="concluido-endereco-topo">
+                        <strong>@Model.Endereco.NmIdentificacao</strong>
+                        @if (Model.Endereco.IcPrincipal)
+                        {
+                            <span class="concluido-badge">
+                                <span class="material-symbols-outlined">star</span>
+                                Principal
+                            </span>
+                        }
+                    </div>
+                    <span class="concluido-endereco-destinatario">@Model.Endereco.NmDestinatario</span>
+                    <p>@Model.Endereco.Linha1</p>
+                    <p>@Model.Endereco.Linha2</p>
+                </div>
+            </div>
+        }
+
+        @* ===== Resumo de valores ===== *@
+        <div class="concluido-secao">
+            <div class="concluido-secao-titulo">
+                <span class="material-symbols-outlined">payments</span>
+                <h3>Resumo</h3>
+            </div>
+
+            <div class="concluido-resumo">
+                <div class="concluido-linha">
+                    <span class="concluido-linha-rotulo">Itens</span>
+                    <span class="concluido-linha-valor">@Model.QtItens @(Model.QtItens == 1 ? "item" : "itens")</span>
+                </div>
+                <div class="concluido-linha">
+                    <span class="concluido-linha-rotulo">Subtotal</span>
+                    <span class="concluido-linha-valor">@Model.VlSubtotal.ToString("C")</span>
+                </div>
+                @if (Model.VlDesconto > 0)
+                {
+                    <div class="concluido-linha">
+                        <span class="concluido-linha-rotulo">
+                            Desconto@(string.IsNullOrEmpty(Model.CodigoCupom) ? "" : $" ({Model.CodigoCupom})")
+                        </span>
+                        <span class="concluido-linha-valor concluido-desconto">- @Model.VlDesconto.ToString("C")</span>
+                    </div>
+                }
+                <div class="concluido-linha concluido-linha-total">
+                    <span class="concluido-linha-rotulo">Total</span>
+                    <span class="concluido-linha-valor">@Model.VlTotal.ToString("C")</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="concluido-acoes">
+            <a class="concluido-btn concluido-btn-primario" asp-controller="Pedido" asp-action="ListarPedidosUsuario">
+                <span class="material-symbols-outlined">receipt_long</span>
+                Ver meus pedidos
+            </a>
+            <a class="concluido-btn concluido-btn-secundario" asp-controller="FeedProduto" asp-action="Index">
+                <span class="material-symbols-outlined">storefront</span>
+                Continuar comprando
+            </a>
+        </div>
+    </section>
+</main>

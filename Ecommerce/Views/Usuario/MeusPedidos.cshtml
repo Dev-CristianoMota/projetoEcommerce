@@ -191,10 +191,10 @@
                             <div class="mp-info">
                                 <span class="mp-info-rotulo">
                                     <span class="material-symbols-outlined">storefront</span>
-                                    Loja
+                                    @(pedido.Lojas.Count > 1 ? "Lojas" : "Loja")
                                 </span>
 
-                                <span class="mp-info-valor">
+                                <span class="mp-info-valor" title="@string.Join(", ", pedido.Lojas)">
                                     @pedido.NmLoja
                                 </span>
                             </div>

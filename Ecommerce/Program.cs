@@ -29,8 +29,12 @@ builder.Services.AddScoped<ProdutoService>();
 builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<EnderecoService>();
+builder.Services.AddScoped<LojaVirtualService>();
 builder.Services.AddScoped<PedidoService>();
 builder.Services.AddScoped<ProdutoFeedService>();
+builder.Services.AddScoped<CarrinhoService>();
+builder.Services.AddScoped<CheckoutService>();
+builder.Services.AddScoped<CupomService>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

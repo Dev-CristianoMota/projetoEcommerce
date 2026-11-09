@@ -9,12 +9,14 @@ namespace Ecommerce.Controllers
         private readonly EcommerceDbContext _context;
         private readonly ProdutoService _produtoService;
         private readonly CategoriaService _categoriaService;
+        private readonly LojaVirtualService _lojaService;
 
-        public HomeController(EcommerceDbContext context, ProdutoService produtoService, CategoriaService categoriaService, UsuarioService usuarioService)
+        public HomeController(EcommerceDbContext context, ProdutoService produtoService, CategoriaService categoriaService, LojaVirtualService lojaService)
         {
             _context = context;
             _produtoService = produtoService;
             _categoriaService = categoriaService;
+            _lojaService = lojaService;
         }
 
         public async Task<IActionResult> Index()
@@ -28,6 +30,8 @@ namespace Ecommerce.Controllers
             ViewBag.ProdutosMaisVendidos = await _produtoService.ObterProdutosMaisVendidosPaginadosAsync();
 
             ViewBag.ProdutosMaisRecentes = await _produtoService.ObterProdutosMaisRecentesPaginadosAsync();
+
+            ViewBag.LojasMaisCompradas = await _lojaService.ObterLojasMaisCompradasAsync(3);
 
             return View();
         }

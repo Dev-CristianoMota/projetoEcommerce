@@ -1,7 +1,6 @@
 ﻿using Ecommerce.Data;
 using Ecommerce.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 
 namespace Ecommerce.Services
 {
@@ -36,19 +35,32 @@ namespace Ecommerce.Services
                 ? query.OrderBy(p => p.DtCriacaoPedido).ThenBy(p => p.CdPedido)
                 : query.OrderByDescending(p => p.DtCriacaoPedido).ThenByDescending(p => p.CdPedido);
 
-            var pedidos = await ordenada
+            var dados = await ordenada
                 .Skip((pagina - 1) * TamanhoPagina)
                 .Take(TamanhoPagina)
-                .Select(p => new ResumoPedidoViewModel
+                .Select(p => new
                 {
-                    CdPedido = p.CdPedido,
-                    DtCriacao = p.DtCriacaoPedido,
-                    NmLoja = p.CdLojaVirtualNavigation.NmLojaVirtual,
-                    SgStatus = p.SgStatusPedido,
-                    VlTotal = p.VlTotalPedido,
-                    QtItens = p.ItemPedidos.Count()
+                    p.CdPedido,
+                    p.DtCriacaoPedido,
+                    p.SgStatusPedido,
+                    p.VlTotalPedido,
+                    QtItens = p.ItemPedidos.Count(),
+                    Lojas = p.ItemPedidos
+                        .Select(i => i.CdProdutoNavigation.CdLojaVirtualNavigation.NmLojaVirtual)
+                        .ToList()
                 })
                 .ToListAsync();
+
+            var pedidos = dados.Select(d => new ResumoPedidoViewModel
+            {
+                CdPedido = d.CdPedido,
+                DtCriacao = d.DtCriacaoPedido,
+                NmLoja = RotuloLojas(d.Lojas),
+                Lojas = d.Lojas.Distinct().OrderBy(l => l).ToList(),
+                SgStatus = d.SgStatusPedido,
+                VlTotal = d.VlTotalPedido,
+                QtItens = d.QtItens
+            }).ToList();
 
             return new MeusPedidosViewModel
             {
@@ -63,14 +75,13 @@ namespace Ecommerce.Services
 
         public async Task<DetalhePedidoViewModel?> ObterDetalhesPedidoAsync(int cdPedido, int cdUsuario)
         {
-            return await _context.Pedidos
+            var vm = await _context.Pedidos
                 .AsNoTracking()
                 .Where(p => p.CdPedido == cdPedido && p.CdUsuario == cdUsuario)
                 .Select(p => new DetalhePedidoViewModel
                 {
                     CdPedido = p.CdPedido,
                     DtCriacao = p.DtCriacaoPedido,
-                    NmLoja = p.CdLojaVirtualNavigation.NmLojaVirtual,
                     SgStatus = p.SgStatusPedido,
                     VlTotal = p.VlTotalPedido,
                     QtItens = p.ItemPedidos.Count(),
@@ -93,48 +104,93 @@ namespace Ecommerce.Services
                         Uf = p.CdEnderecoEntregaNavigation.UF
                     },
 
+                    // Ordenado por loja para o agrupamento ficar natural na tela
                     Itens = p.ItemPedidos
+                        .OrderBy(i => i.CdProdutoNavigation.CdLojaVirtualNavigation.NmLojaVirtual)
+                        .ThenBy(i => i.CdProdutoNavigation.NmProduto)
                         .Select(i => new ItemPedidoViewModel
                         {
+                            cdProduto = i.CdProduto,
+                            cdCategoria = i.CdProdutoNavigation.CdCategoriaNavigation.CdCategoria,
+                            NmLoja = i.CdProdutoNavigation.CdLojaVirtualNavigation.NmLojaVirtual,
                             NmProduto = i.CdProdutoNavigation.NmProduto,
                             NmCategoria = i.CdProdutoNavigation.CdCategoriaNavigation.NmCategoria,
+                            NmUrlImagem = i.CdProdutoNavigation.NmUrlImagem,
                             Quantidade = i.QtItem,
                             VlUnitario = i.VlPrecoUnitario
                         })
                         .ToList()
                 })
                 .FirstOrDefaultAsync();
-        }
 
+            if (vm is null) return null;
+
+            vm.Lojas = vm.Itens.Select(i => i.NmLoja).Distinct().ToList();
+            vm.NmLoja = RotuloLojas(vm.Lojas);
+
+            return vm;
+        }
 
         public async Task<UltimoPedidoContaViewModel?> BuscarUltimoPedidoAsync(int cdUsuario)
         {
-            return await _context.Pedidos
+            var dados = await _context.Pedidos
                 .AsNoTracking()
                 .Where(p => p.CdUsuario == cdUsuario)
                 .OrderByDescending(p => p.DtCriacaoPedido)
                 .ThenByDescending(p => p.CdPedido)
-                .Select(p => new UltimoPedidoContaViewModel
+                .Select(p => new
                 {
-                    CdPedido = p.CdPedido,
-                    DtCriacao = p.DtCriacaoPedido,
-                    SgStatus = p.SgStatusPedido,
-                    NmLoja = p.CdLojaVirtualNavigation.NmLojaVirtual,
+                    p.CdPedido,
+                    p.DtCriacaoPedido,
+                    p.SgStatusPedido,
+                    p.VlSubtotalPedido,
+                    p.VlDescontoPedido,
+                    p.VlTotalPedido,
                     CdPromocional = p.CdCupomNavigation != null ? p.CdCupomNavigation.CdPromocional : null,
-                    VlSubtotal = p.VlSubtotalPedido,
-                    VlDesconto = p.VlDescontoPedido,
-                    VlTotal = p.VlTotalPedido,
                     Itens = p.ItemPedidos
-                        .OrderBy(i => i.CdProduto)
                         .Select(i => new ItemUltimoPedidoViewModel
                         {
                             NmProduto = i.CdProdutoNavigation.NmProduto,
                             Quantidade = i.QtItem,
                             VlUnitario = i.VlPrecoUnitario
                         })
+                        .ToList(),
+                    NmLojas = p.ItemPedidos
+                        .Select(i => i.CdProdutoNavigation.CdLojaVirtualNavigation.NmLojaVirtual)
                         .ToList()
                 })
                 .FirstOrDefaultAsync();
+
+            if (dados is null)
+                return null;
+
+            return new UltimoPedidoContaViewModel
+            {
+                CdPedido = dados.CdPedido,
+                NumeroFormatado = $"#{dados.CdPedido:D6}",
+                DtCriacao = dados.DtCriacaoPedido,
+                SgStatus = dados.SgStatusPedido,
+                NmLoja = RotuloLojas(dados.NmLojas),
+                CdPromocional = dados.CdPromocional,
+                VlSubtotal = dados.VlSubtotalPedido,
+                VlDesconto = dados.VlDescontoPedido,
+                VlTotal = dados.VlTotalPedido,
+                Itens = dados.Itens
+            };
+        }
+
+
+        // "Loja A" quando é uma só; "Loja A +2 lojas" quando são várias
+        private static string RotuloLojas(IEnumerable<string> lojas)
+        {
+            var lista = lojas.Distinct().OrderBy(l => l).ToList();
+
+            return lista.Count switch
+            {
+                0 => "—",
+                1 => lista[0],
+                _ => $"{lista[0]} +{lista.Count - 1} {(lista.Count - 1 == 1 ? "loja" : "lojas")}"
+            };
         }
     }
 }

@@ -1,0 +1,90 @@
+﻿@using Ecommerce.Services
+@using Ecommerce.ViewModels
+
+@model CarrinhoViewModel
+@{
+    var pt = new System.Globalization.CultureInfo("pt-BR");
+}
+
+<div class="cart-header">
+    <h2>Meu carrinho</h2>
+    <button type="button" class="cart-close" data-carrinho-fechar aria-label="Fechar carrinho">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+</div>
+
+@if (!Model.UsuarioLogado)
+{
+    <div class="cart-body cart-body-center">
+        <span class="material-symbols-outlined cart-empty-icon">shopping_cart</span>
+        <p>Entre na sua conta para ver e montar seu carrinho.</p>
+        <a href="@Model.UrlLogin" class="cart-btn cart-btn-primary">Fazer login</a>
+    </div>
+}
+else
+{
+    <div class="cart-body @(Model.Itens.Any() ? "" : "cart-body-center")">
+        @if (!string.IsNullOrEmpty(Model.Mensagem))
+        {
+            <div class="cart-alert">@Model.Mensagem</div>
+        }
+
+        @if (!Model.Itens.Any())
+        {
+            <span class="material-symbols-outlined cart-empty-icon">shopping_cart</span>
+            <p>Seu carrinho está vazio.</p>
+        }
+
+        @foreach (var item in Model.Itens)
+        {
+            <article class="cart-item">
+                <img src="@(item.NmUrlImagem.Miniatura(160, 160) ?? Url.Content("~/images/sem-imagem.png"))"
+                     alt="@item.NmProduto" loading="lazy" />
+
+                <div class="cart-item-info">
+                    <span class="cart-item-store">@item.NmLojaVirtual.ToUpper()</span>
+                    <h3>@item.NmProduto</h3>
+                    <strong>@item.VlProduto.ToString("C", pt)</strong>
+
+                    <div class="cart-qty">
+                        @if (item.QtItem > 1)
+                        {
+                            <button type="button" aria-label="Diminuir quantidade"
+                                    data-carrinho-acao="AlterarQuantidade"
+                                    data-cd-produto="@item.CdProduto"
+                                    data-quantidade="@(item.QtItem - 1)">
+                                <span class="material-symbols-outlined">remove</span>
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="cart-qty-remove" aria-label="Remover do carrinho"
+                                    data-carrinho-acao="Remover"
+                                    data-cd-produto="@item.CdProduto">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        }
+
+                        <span>@item.QtItem</span>
+
+                        <button type="button" aria-label="Aumentar quantidade"
+                                data-carrinho-acao="AlterarQuantidade"
+                                data-cd-produto="@item.CdProduto"
+                                data-quantidade="@(item.QtItem + 1)">
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+
+    <div class="cart-footer">
+        <div class="cart-subtotal">
+            <span>Subtotal dos produtos:</span>
+            <strong>@Model.Subtotal.ToString("C", pt)</strong>
+        </div>
+        <a asp-controller="Carrinho" asp-action="Index" class="cart-btn cart-btn-primary">Ir para o carrinho</a>
+        <button type="button" class="cart-btn cart-btn-link" data-carrinho-fechar>Continuar comprando</button>
+    </div>
+}

@@ -71,6 +71,24 @@ public class ProdutoFeedService
             .ToListAsync();
     }
 
+    public async Task<List<DTOLojaFiltro>> ListarLojasAsync()
+    {
+        return await _context.Produtos
+            .AsNoTracking()
+            .Where(p =>
+                        p.IcProdutoAtivo == true &&
+                        p.CdLojaVirtualNavigation.IcLojaAtiva == true)
+            .GroupBy(p => new { p.CdLojaVirtual, p.CdLojaVirtualNavigation.NmLojaVirtual })
+            .Select(g => new DTOLojaFiltro
+            {
+                CdLojaVirtual = g.Key.CdLojaVirtual,
+                NmLojaVirtual = g.Key.NmLojaVirtual,
+                QtProdutos = g.Count()
+            })
+            .OrderBy(l => l.NmLojaVirtual)
+            .ToListAsync();
+    }
+
     private IQueryable<Produto> AplicarFiltros(FiltroProdutos f)
     {
         var query = _context.Produtos
@@ -79,8 +97,20 @@ public class ProdutoFeedService
                     p.IcProdutoAtivo == true &&
                     p.CdLojaVirtualNavigation.IcLojaAtiva == true);
 
+        if (!string.IsNullOrWhiteSpace(f.Busca))
+        {
+            foreach (var palavra in f.Busca.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries))
+            {
+                var termo = palavra;
+                query = query.Where(p => EF.Functions.Like(p.NmProduto, $"%{termo}%"));
+            }
+        }
+
         if (f.Categorias.Count > 0)
             query = query.Where(p => f.Categorias.Contains(p.CdCategoria));
+
+        if (f.Lojas.Count > 0)
+            query = query.Where(p => f.Lojas.Contains(p.CdLojaVirtual));
 
         if (f.PrecoMin is > 0)
             query = query.Where(p => p.VlProduto >= f.PrecoMin.Value);

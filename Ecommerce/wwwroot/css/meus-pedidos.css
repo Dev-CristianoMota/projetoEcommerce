@@ -1,16 +1,15 @@
-﻿
-.mp-principal {
+﻿.mp-principal {
     width: 76%;
     margin: 0 auto 100px;
     color: #142a43;
     box-sizing: border-box;
 }
 
-.mp-principal *,
-.mp-principal *::before,
-.mp-principal *::after {
-    box-sizing: border-box;
-}
+    .mp-principal *,
+    .mp-principal *::before,
+    .mp-principal *::after {
+        box-sizing: border-box;
+    }
 
 /* Breadcrumb */
 
@@ -114,15 +113,30 @@
     line-height: 1.5;
 }
 
-/* Filtros de status */
+/* Barra: filtros de status (esquerda) e ordenação (direita) */
+
+.mp-barra {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px 24px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e7ebf0;
+}
 
 .mp-filtros {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e7ebf0;
+}
+
+.mp-ordenacao {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-left: auto;
 }
 
 .mp-filtro {
@@ -147,7 +161,8 @@
         color: var(--mp-primaria);
     }
 
-    .mp-filtro.ativo {
+    .mp-filtro.ativo,
+    .mp-filtro.ativo:hover {
         border-color: var(--mp-marinho);
         background: var(--mp-marinho);
         color: #fff;
@@ -263,6 +278,7 @@
 .mp-status-ponto {
     width: 6px;
     height: 6px;
+    flex-shrink: 0;
     border-radius: 50%;
     background: currentColor;
 }
@@ -471,7 +487,8 @@
         color: var(--mp-primaria);
     }
 
-    .mp-pagina.ativo {
+    .mp-pagina.ativo,
+    .mp-pagina.ativo:hover {
         border-color: var(--mp-marinho);
         background: var(--mp-marinho);
         color: #fff;
@@ -486,26 +503,6 @@
 .mp a:focus-visible {
     outline: 2px solid var(--mp-primaria);
     outline-offset: 3px;
-}
-
-/* Barra com filtros de status (esquerda) e ordenação (direita) */
-.mp-barra {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px 24px;
-    margin-bottom: 24px;
-}
-
-    .mp-barra .mp-filtros {
-        margin-bottom: 0;
-    }
-
-.mp-ordenacao {
-    display: flex;
-    gap: 8px;
-    margin-left: auto;
 }
 
 /* Responsividade */
@@ -536,8 +533,14 @@
         font-size: 17px;
     }
 
-    .mp-filtros {
+    .mp-filtros,
+    .mp-ordenacao {
         gap: 7px;
+    }
+
+    .mp-ordenacao {
+        width: 100%;
+        margin-left: 0;
     }
 
     .mp-filtro {

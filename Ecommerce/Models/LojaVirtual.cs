@@ -19,7 +19,5 @@ public partial class LojaVirtual
 
     public virtual Usuario CdUsuarioNavigation { get; set; } = null!;
 
-    public virtual ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
-
     public virtual ICollection<Produto> Produtos { get; set; } = new List<Produto>();
 }

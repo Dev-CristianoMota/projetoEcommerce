@@ -9,8 +9,6 @@ public partial class Pedido
 
     public int CdUsuario { get; set; }
 
-    public int CdLojaVirtual { get; set; }
-
     public int? CdCupom { get; set; }
 
     public string SgStatusPedido { get; set; } = null!;
@@ -26,8 +24,6 @@ public partial class Pedido
     public DateTime? DtAtualizacaoPedido { get; set; }
 
     public virtual Cupom? CdCupomNavigation { get; set; }
-
-    public virtual LojaVirtual CdLojaVirtualNavigation { get; set; } = null!;
 
     public virtual Usuario CdUsuarioNavigation { get; set; } = null!;
 

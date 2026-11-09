@@ -1,0 +1,128 @@
+﻿@using Ecommerce.DTO
+@using Ecommerce.Services
+@model DTOProdutoDetalhe
+@{
+    ViewData["Title"] = Model.NmProduto;
+    var pt = new System.Globalization.CultureInfo("pt-BR");
+    var emEstoque = Model.QtEstoque > 0;
+    var poucasUnidades = emEstoque && Model.QtEstoque <= 5;
+    var novidade = emEstoque && Model.DtCriacao >= DateTime.Now.AddDays(-7);
+}
+
+@section Styles {
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="~/css/produto-detalhes.css" asp-append-version="true" />
+}
+
+<partial name="_NavegacaoCategorias" />
+
+<main class="main-content produto-page">
+
+    <nav class="produto-breadcrumb" aria-label="Navegação">
+        <a asp-controller="FeedProduto" asp-action="Index">Produtos</a>
+        <span>/</span>
+        <a asp-controller="FeedProduto" asp-action="Index"
+           asp-route-Categorias="@Model.CdCategoria">@Model.NmCategoria</a>
+        <span>/</span>
+        <span class="produto-breadcrumb__atual">@Model.NmProduto</span>
+    </nav>
+
+    <section class="produto-detalhe">
+
+        <!-- ===== Galeria ===== -->
+        <div class="produto-galeria">
+            <div class="produto-galeria__moldura">
+                @if (!emEstoque)
+                {
+                    <span class="produto-selo produto-selo--esgotado">Esgotado</span>
+                }
+                else if (novidade)
+                {
+                    <span class="produto-selo">Novidade</span>
+                }
+
+                <img src="@(Model.NmUrlImagem.Miniatura(800, 800) ?? Url.Content("~/images/sem-imagem.png"))"
+                     alt="@Model.NmProduto">
+            </div>
+        </div>
+
+        <!-- ===== Caixa de compra ===== -->
+        <div class="produto-compra">
+
+            <a class="produto-compra__categoria"
+               asp-controller="FeedProduto" asp-action="Index"
+               asp-route-Categorias="@Model.CdCategoria">@Model.NmCategoria</a>
+
+            <h1>@Model.NmProduto</h1>
+
+            <div class="produto-preco">
+                <strong>@Model.VlProduto.ToString("C", pt)</strong>
+                <span>ou <b>10x de @((Model.VlProduto / 10).ToString("C", pt))</b> sem juros</span>
+            </div>
+
+            <div class="produto-estoque @(emEstoque ? (poucasUnidades ? "is-poucas" : "is-disponivel") : "is-esgotado")">
+                <span class="produto-estoque__ponto"></span>
+                @if (!emEstoque)
+                {
+                    <text>Produto esgotado</text>
+                }
+                else if (poucasUnidades)
+                {
+                    <text>Últimas unidades: restam @Model.QtEstoque</text>
+                }
+                else
+                {
+                    <text>Em estoque</text>
+                }
+            </div>
+
+            <button type="button" class="produto-comprar"
+                    data-carrinho-acao="Adicionar"
+                    data-cd-produto="@Model.CdProduto"
+                    @(emEstoque ? null : "disabled")>
+                <span class="material-symbols-outlined">shopping_cart</span>
+                @(emEstoque ? "Adicionar ao carrinho" : "Indisponível")
+            </button>
+
+            <a class="produto-loja"
+               asp-controller="FeedProduto" asp-action="Index"
+               asp-route-Lojas="@Model.CdLojaVirtual">
+                <span class="produto-loja__avatar">@Model.NmLojaVirtual.Substring(0, 1).ToUpper()</span>
+                <span class="produto-loja__texto">
+                    <small>Vendido por</small>
+                    <strong>@Model.NmLojaVirtual</strong>
+                </span>
+                <span class="produto-loja__ver">
+                    Ver produtos da loja
+                    <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                </span>
+            </a>
+        </div>
+    </section>
+
+    <!-- ===== Descrição + ficha ===== -->
+    <section class="produto-extra">
+
+        <div class="produto-bloco">
+            <h2>Descrição</h2>
+            @if (!string.IsNullOrWhiteSpace(Model.DsProduto))
+            {
+                <p>@Model.DsProduto</p>
+            }
+            else
+            {
+                <p class="produto-bloco__vazio">Este produto ainda não possui descrição.</p>
+            }
+        </div>
+
+        <div class="produto-bloco">
+            <h2>Ficha do produto</h2>
+            <dl class="produto-ficha">
+                <div><dt>Categoria</dt><dd>@Model.NmCategoria</dd></div>
+                <div><dt>Loja</dt><dd>@Model.NmLojaVirtual</dd></div>
+                <div><dt>Disponibilidade</dt><dd>@(emEstoque ? $"{Model.QtEstoque} un." : "Esgotado")</dd></div>
+            </dl>
+        </div>
+    </section>
+</main>

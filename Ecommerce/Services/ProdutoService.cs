@@ -31,6 +31,56 @@ public class ProdutoService
             .FirstOrDefaultAsync(p => p.CdProduto == id);
     }
 
+    public async Task<DTOProdutoDetalhe?> BuscarDetalheAsync(int id)
+    {
+        return await _context.Produtos
+            .AsNoTracking()
+            .Where(p => p.CdProduto == id
+                     && p.IcProdutoAtivo == true
+                     && p.CdLojaVirtualNavigation.IcLojaAtiva == true)
+            .Select(p => new DTOProdutoDetalhe
+            {
+                CdProduto = p.CdProduto,
+                NmProduto = p.NmProduto,
+                DsProduto = p.DsProduto,
+                VlProduto = p.VlProduto,
+                QtEstoque = p.QtdEstoque,
+                NmUrlImagem = p.NmUrlImagem,
+                DtCriacao = p.DtCriacao,
+                CdLojaVirtual = p.CdLojaVirtual,
+                NmLojaVirtual = p.CdLojaVirtualNavigation.NmLojaVirtual,
+                CdCategoria = p.CdCategoria,
+                NmCategoria = p.CdCategoriaNavigation.NmCategoria
+            })
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<List<DTOProdutoSugestao>> BuscarSugestoesAsync(string termo, int quantidade = 6)
+    {
+        var query = _context.Produtos
+            .AsNoTracking()
+            .Where(p => p.IcProdutoAtivo == true
+                     && p.CdLojaVirtualNavigation.IcLojaAtiva == true);
+
+        foreach (var palavra in termo.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var t = palavra;
+            query = query.Where(p => EF.Functions.Like(p.NmProduto, $"%{t}%"));
+        }
+
+        return await query
+            .OrderBy(p => p.NmProduto)
+            .Take(quantidade)
+            .Select(p => new DTOProdutoSugestao
+            {
+                CdProduto = p.CdProduto,
+                NmProduto = p.NmProduto,
+                VlProduto = p.VlProduto,
+                NmUrlImagem = p.NmUrlImagem
+            })
+            .ToListAsync();
+    }
+
     public async Task<Produto> CriarProdutoAsync(Produto produto)
     {
         produto.DtCriacao = DateTime.Now;

@@ -9,6 +9,10 @@
 
     var produtosRecentes = ViewBag.ProdutosMaisRecentes as List<List<DTOProdutoMaisRecentes>> ?? new List<List<DTOProdutoMaisRecentes>>();
 
+    var lojas = ViewBag.LojasMaisCompradas as List<DTOLojasMaisCompradas> ?? new List<DTOLojasMaisCompradas>();
+
+    var coresCards = new[] { "card-cor1", "card-cor2", "card-cor3"};
+
     var pt = new System.Globalization.CultureInfo("pt-BR");
 
     var slidesHero = new[]
@@ -35,7 +39,7 @@
                 Texto    = "Mais praticidade, conforto e eficiência para o seu dia a dia.",
                 Texto2   = "Descubra eletrodomésticos que transformam sua rotina.",
                 Botao    = "Explorar produtos",
-                Link     = "/FeedProduto?Ordem=recentes&Categorias=6",
+                Link     = "/FeedProduto?Ordem=recentes&Categorias=4",
                 Imagem   = "banner_inicial_2.png",
                 Alt      = "Eletrodomésticos modernos para a casa",
                 Legenda  = "TECNOLOGIA E PRATICIDADE PARA SUA CASA",
@@ -225,23 +229,25 @@
                                                 <span class="badge">Mais vendido</span>
                                             }
 
-                                            <button class="favorite" aria-label="Adicionar aos favoritos">
-                                                <span class="material-symbols-outlined">favorite</span>
-                                            </button>
-
-                                            <button class="add-button" aria-label="Adicionar ao carrinho">
+                                            <button class="add-button" data-carrinho-acao="Adicionar" data-cd-produto="@produto.CdProduto" aria-label="Adicionar ao carrinho">
                                                 <span class="material-symbols-outlined">add</span>
                                             </button>
 
-                                            <img src="@(produto.NmUrlImagem.Miniatura(400, 400) ?? Url.Content("~/images/sem-imagem.png"))"
+                                            <a asp-controller="Produto" asp-action="Detalhes" asp-route-id="@produto.CdProduto"
+                                               aria-label="Ver detalhes de @produto.NmProduto">
+                                                <img src="@(produto.NmUrlImagem.Miniatura(400, 400) ?? Url.Content("~/images/sem-imagem.png"))"
                                                      alt="@produto.NmProduto"
                                                      loading="lazy">
+                                            </a>
                                         </div>
 
                                         <div class="product-info">
                                             <span class="product-category">@produto.NmLojaVirtual.ToUpper()</span>
 
-                                            <h3>@produto.NmProduto</h3>
+                                            <h3>
+                                                <a asp-controller="Produto" asp-action="Detalhes" asp-route-id="@produto.CdProduto"
+                                                   class="product-link">@produto.NmProduto</a>
+                                            </h3>
 
                                             <div class="price">
                                                 <strong>@produto.VlProduto.ToString("C", pt)</strong>
@@ -280,7 +286,7 @@
             </p>
 
             <a href="/FeedProduto?Ordem=recentes&Categorias=3" class="highlight-button">
-                <span>Acessar smartphones</span>
+                <span>Explorar smartphones</span>
                 <span class="material-symbols-outlined">
                     arrow_forward
                 </span>
@@ -345,47 +351,43 @@
                                     var produto = produtosRecentes[p][i];
 
                                     <article class="product-card">
+
                                         <div class="product-image">
 
                                             @if (p == 0 && i == 0)
                                             {
-                                                <span class="badge">Novidade</span>
+                                                <span class="badge">Mais vendido</span>
                                             }
 
-                                            <button type="button"
-                                                    class="favorite"
-                                                    aria-label="Adicionar aos favoritos">
-                                                <span class="material-symbols-outlined">favorite</span>
-                                            </button>
-
-                                            <button class="add-button" aria-label="Adicionar ao carrinho">
+                                            <button class="add-button" data-carrinho-acao="Adicionar" data-cd-produto="@produto.CdProduto" aria-label="Adicionar ao carrinho">
                                                 <span class="material-symbols-outlined">add</span>
                                             </button>
 
-                                            <img src="@(produto.NmUrlImagem.Miniatura(400, 400) ?? Url.Content("~/images/sem-imagem.png"))" 
-                                                    alt="@produto.NmProduto"
-                                                    loading="lazy">
+                                            <a asp-controller="Produto" asp-action="Detalhes" asp-route-id="@produto.CdProduto"
+                                               aria-label="Ver detalhes de @produto.NmProduto">
+                                                <img src="@(produto.NmUrlImagem.Miniatura(400, 400) ?? Url.Content("~/images/sem-imagem.png"))"
+                                                     alt="@produto.NmProduto"
+                                                     loading="lazy">
+                                            </a>
                                         </div>
 
                                         <div class="product-info">
-                                            <span class="product-category">
-                                                @produto.NmLojaVirtual.ToUpper()
-                                            </span>
+                                            <span class="product-category">@produto.NmLojaVirtual.ToUpper()</span>
 
-                                            <h3>@produto.NmProduto</h3>
+                                            <h3>
+                                                <a asp-controller="Produto" asp-action="Detalhes" asp-route-id="@produto.CdProduto"
+                                                   class="product-link">@produto.NmProduto</a>
+                                            </h3>
 
                                             <div class="price">
-                                                <strong>
-                                                    @produto.VlProduto.ToString("C", pt)
-                                                </strong>
+                                                <strong>@produto.VlProduto.ToString("C", pt)</strong>
                                             </div>
 
                                             <p class="installment">
-                                                ou 10x de
-                                                @((produto.VlProduto / 10).ToString("C", pt))
-                                                sem juros
+                                                ou 10x de @((produto.VlProduto / 10).ToString("C", pt)) sem juros
                                             </p>
                                         </div>
+
                                     </article>
                                 }
                             </div>
@@ -413,7 +415,8 @@
                 encontre o que você procura.
             </p>
 
-            <a href="#" class="community-button">
+            <a asp-controller="FeedProduto" asp-action="Index"
+                   asp-route-Ordem="recentes" class="community-button">
                 <span>Conhecer Lojas</span>
 
                 <span class="material-symbols-outlined">
@@ -425,40 +428,26 @@
 
 
         <div class="community-stores">
+            @for (int i = 0; i < lojas.Count; i++)
+            {
+                var loja = lojas[i];
+                var descricao = string.IsNullOrWhiteSpace(loja.DsLojaVirtual)
+                    ? "Conheça nossos produtos"
+                    : (loja.DsLojaVirtual.Length > 45 ? loja.DsLojaVirtual[..45].TrimEnd() + "…" : loja.DsLojaVirtual);
 
-            <a href="#" class="community-card community-card-blue">
+                <a asp-controller="FeedProduto" asp-action="Index"
+                   asp-route-Ordem="recentes"
+                   asp-route-Lojas="@loja.CdLojaVirtual"
+                   class="community-card @coresCards[i % coresCards.Length]">
 
-                <span class="material-symbols-outlined community-card-icon">
-                    store
-                </span>
+                    <span class="material-symbols-outlined community-card-icon">store</span>
 
-                <div class="community-card-info">
-                    <h3>AudioLab</h3>
-
-                    <span>
-                        Som para sentir mais
-                    </span>
-                </div>
-
-            </a>
-
-
-            <a href="#" class="community-card community-card-dark">
-
-                <span class="material-symbols-outlined community-card-icon">
-                    store
-                </span>
-
-                <div class="community-card-info">
-                    <h3>Frame Studio</h3>
-
-                    <span>
-                        Novos olhares sempre
-                    </span>
-                </div>
-
-            </a>
-
+                    <div class="community-card-info">
+                        <h3>@loja.NmLojaVirtual</h3>
+                        <span>@descricao</span>
+                    </div>
+                </a>
+            }
         </div>
 
     </section>
