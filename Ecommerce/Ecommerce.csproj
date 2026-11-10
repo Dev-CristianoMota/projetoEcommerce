@@ -9,9 +9,13 @@
 
   <ItemGroup>
     <Compile Remove="Repository\**" />
+    <Compile Remove="Views\Importacao\**" />
     <Content Remove="Repository\**" />
+    <Content Remove="Views\Importacao\**" />
     <EmbeddedResource Remove="Repository\**" />
+    <EmbeddedResource Remove="Views\Importacao\**" />
     <None Remove="Repository\**" />
+    <None Remove="Views\Importacao\**" />
   </ItemGroup>
 
   <ItemGroup>
