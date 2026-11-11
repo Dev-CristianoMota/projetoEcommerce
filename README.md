@@ -21,9 +21,9 @@ O **Nexo** é uma aplicação web de e-commerce **multilojas**, desenvolvida com
 5. [APIs consumidas](#5-apis-consumidas)
 6. [Arquitetura e estrutura do projeto](#6-arquitetura-e-estrutura-do-projeto)
 7. [Banco de dados](#7-banco-de-dados)
-8. [Demonstração](#10-demonstração)
-9. [Melhorias futuras](#11-melhorias-futuras)
-10. [Autor](#12-autor)
+8. [Demonstração](#8-demonstração)
+9. [Melhorias futuras](#9-melhorias-futuras)
+10. [Autor](#10-autor)
 
 ---
 
@@ -195,20 +195,7 @@ Nexo/                                  <- raiz do repositório
 O esquema é criado pelos scripts da pasta `database/` e mapeado no `EcommerceDbContext`. As tabelas seguem o padrão de nomenclatura `cd_` (código), `nm_` (nome), `ds_` (descrição), `vl_` (valor), `qt_` (quantidade), `dt_` (data), `ic_` (indicador) e `sg_` (sigla).
 
 ### 7.1 Modelo de dados
-
-```mermaid
-erDiagram
-    TIPO_USUARIO ||--o{ USUARIO : classifica
-    USUARIO ||--o{ LOJA_VIRTUAL : possui
-    USUARIO ||--o{ ENDERECO : cadastra
-    USUARIO ||--o{ PEDIDO : realiza
-    LOJA_VIRTUAL ||--o{ PRODUTO : oferece
-    CATEGORIA ||--o{ PRODUTO : agrupa
-    CUPOM |o--o{ PEDIDO : desconta
-    ENDERECO ||--o{ PEDIDO : entrega
-    PEDIDO ||--|{ ITEM_PEDIDO : contem
-    PRODUTO ||--o{ ITEM_PEDIDO : compoe
-```
+![Modelo de dados](Ecommerce/wwwroot/images/modelo.png)
 
 ### 7.2 Tabelas
 
@@ -235,29 +222,30 @@ erDiagram
 
 ## 8. Demonstração
 
-### Página inicial
+### Página inicial + Busca de sugestões
+![Pagina Inicial](Ecommerce/wwwroot/images/home.png)
 
-<!-- ![Página inicial](docs/home.png) -->
+![Busca de Sugestoes](Ecommerce/wwwroot/images/home-pesquisa.png)
 
-### Busca com sugestões e feed de produtos
+### Feed de produtos + Página do Produto + Painel do Carrinho
+![Feed de produtos](Ecommerce/wwwroot/images/feed-produtos.png)
 
-<!-- ![Busca e feed](docs/feed.png) -->
+![Página do Produto](Ecommerce/wwwroot/images/produto-detalhes.png)
 
-### Página do produto e painel do carrinho
-
-<!-- ![Produto](docs/produto.png) -->
+![Painel Carrinho](Ecommerce/wwwroot/images/painel-carrinho.png)
 
 ### Carrinho com cupom
+![Carrinho](Ecommerce/wwwroot/images/carrinho.png)
 
-<!-- ![Carrinho](docs/carrinho.png) -->
+### Checkout + Pedido Finalizado
+![Checkout](Ecommerce/wwwroot/images/checkout.png)
 
-### Checkout
+![Pedido Finalizado](Ecommerce/wwwroot/images/pedido-finalizado.png)
 
-<!-- ![Checkout](docs/checkout.png) -->
+### Meus Pedidos + Detalhes do Pedido
+![Meus Pedidos](Ecommerce/wwwroot/images/meus-pedidos.png)
 
-### Meus Pedidos
-
-<!-- ![Meus pedidos](docs/pedidos.png) -->
+![Detalhes Pedido](Ecommerce/wwwroot/images/meus-pedidos-detalhe.png)
 
 ---
 
@@ -275,6 +263,6 @@ erDiagram
 **Cristiano Faria Mota**
 
 - GitHub: [Dev-CristianoMota](https://github.com/Dev-CristianoMota)
-- LinkedIn: [LINKEDIN](https://www.linkedin.com/in/cristiano-faria-mota)
+- LinkedIn: [www.linkedin.com/in/cristiano-faria-mota](https://www.linkedin.com/in/cristiano-faria-mota)
 
 Sugestões, dúvidas e feedbacks são bem-vindos!
